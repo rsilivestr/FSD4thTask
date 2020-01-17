@@ -1,0 +1,23 @@
+{
+  "name": "fsd4thtask",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsilivestr/FSD4hTask.git"
+  },
+  "author": "Roman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rsilivestr/FSD4hTask/issues"
+  },
+  "homepage": "https://github.com/rsilivestr/FSD4hTask#readme",
+  "devDependencies": {
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5"
+  }
+}
