@@ -5,14 +5,14 @@ const merge = require('webpack-merge'),
 
 module.exports = merge(common, {  
   optimization: {
-    minimizer: [
-      new TerserJSPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: false,
-      }), 
-      new OptimizeCSSAssetsPlugin(),
-    ],
+    // minimizer: [
+    //   // new TerserJSPlugin({
+    //   //   cache: true,
+    //   //   parallel: true,
+    //   //   sourceMap: false,
+    //   // }), 
+    //   // new OptimizeCSSAssetsPlugin(),
+    // ],
     splitChunks: {
       cacheGroups: {
         commons: {

@@ -8,6 +8,6 @@ module.exports = merge(common, {
     contentBase: './dist',
     compress: true,
     overlay: true,
-    port: 8081,
+    port: 8088,
   },
 });

@@ -1,4 +1,4 @@
-class Rslider {
+export class Rslider {
   container: object | null;
 
   constructor(selector: string = '.rslider') {
