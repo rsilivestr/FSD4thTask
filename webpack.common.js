@@ -19,7 +19,7 @@ module.exports = {
       filename: 'demo.html'
     }),
     new MiniCssExtractPlugin({
-      filename: 'styles/[name].css',
+      filename: '[name].css',
       ignoreOrder: false,
     })
   ],
@@ -34,7 +34,7 @@ module.exports = {
       },
       {
         test: /\.s[ac]ss$/i,
-        include: path.resolve(__dirname, 'src/styles'),
+        include: path.resolve(__dirname, 'src'),
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

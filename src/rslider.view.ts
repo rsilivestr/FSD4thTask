@@ -1,5 +1,9 @@
 export class View {
-  clg(str: string) {
-    console.log(str);
+
+
+  renderSquare(selector: string) {
+    const square = document.createElement('div');
+    square.className = 'square';
+    document.querySelector(selector)?.appendChild(square);
   }
 }
