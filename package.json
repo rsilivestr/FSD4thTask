@@ -1,7 +1,7 @@
 {
   "name": "fsd4thtask",
   "version": "1.0.0",
-  "description": "",
+  "description": "Full stack development 4th task: range slider jquery plugin",
   "main": "index.ts",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js",

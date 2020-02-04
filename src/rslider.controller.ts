@@ -9,4 +9,6 @@ export class Controller {
     this.view = view;
     this.model = model;
   }
+
+  // add event listeners for mousedown (grab handler), mousemove, mouseup
 }
