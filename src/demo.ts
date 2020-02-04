@@ -1,3 +1,5 @@
+import './demo.sass'
+
 // import { Rslider } from './rslider'
 
 // const mySlider = new Rslider();

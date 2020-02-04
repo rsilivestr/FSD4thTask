@@ -1,6 +1,52 @@
-.square
+$color_border: #cacaca
+$color_main: #fe40da
+$color_secondary: #fafafa
+
+$horHeihgt: 20px
+$horWidth: 300px
+$baseHeight: 6px
+$baseOffset: ( $horHeihgt - $baseHeight ) / 2
+$handlerSize: 16px
+$handlerOffset: ( $horHeihgt - $handlerSize ) / 2
+$handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
+
+.rslider
   position: relative
-  display: block
-  width: 100px
-  height: 100px
-  background: blue
+  box-sizing: border-box
+
+  &--layout_horizontal
+    width: $horWidth
+    height: $horHeihgt
+
+  &--layout_vertical
+    width: $horHeihgt
+    height: $horWidth
+
+  &__container
+    position: relative
+    box-sizing: border-box
+    width: 100%
+    height: 100%
+
+  &__base-track
+    position: absolute
+    box-sizing: border-box
+    left: $handlerBaseOffset
+    right: $handlerBaseOffset
+    top: $baseOffset
+    height: $baseHeight
+    border: 1px solid $color_border
+    border-radius: $baseHeight / 2
+    z-index: 90
+
+  &__handler
+    position: absolute
+    box-sizing: border-box
+    width: $handlerSize
+    height: $handlerSize
+    top: $handlerOffset
+    left: 284px
+    background: $color_main
+    border: 2px solid $color_secondary
+    border-radius: $handlerSize / 2
+    z-index: 100
