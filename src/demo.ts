@@ -1,9 +1,6 @@
-import './demo.sass'
+import './styles/demo.sass';
+import rslider from './rslider';
 
-// import { Rslider } from './rslider'
+rslider('#foo');
 
-// const mySlider = new Rslider();
-
-// let foo: string = 'foo123';
-
-// console.log(foo);
+rslider('#moo');
