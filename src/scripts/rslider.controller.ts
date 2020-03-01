@@ -10,7 +10,7 @@ export default class Controller {
 
   // add event listeners for mousedown (grab handler), mousemove, mouseup
   static handleMousedown(target: HTMLElement) {
-    console.log(target);
+    console.log(`${target}`);
 
     if (target.classList.contains('rslider__handler')) {
       // listen to mouse position, notify to model

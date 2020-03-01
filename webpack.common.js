@@ -1,27 +1,35 @@
-const path = require('path'),
-      { CleanWebpackPlugin } = require('clean-webpack-plugin'),
-      HtmlWebpackPlugin = require('html-webpack-plugin'),
-      MiniCssExtractPlugin = require('mini-css-extract-plugin');
+/* eslint-disable global-require */
+/* eslint-disable import/no-extraneous-dependencies */
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
-    demo: './src/demo.ts',
-    rslider: './src/rslider.ts',
+    rslider: [
+      './src/scripts/rslider.ts',
+      './src/styles/rslider.sass',
+    ],
+    demo: [
+      './src/scripts/demo.ts',
+      './src/styles/demo.sass',
+    ],
   },
   output: {
-    filename: '[name].js',
+    filename: 'scripts/[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/demo.pug',
-      filename: 'demo.html'
+      filename: 'demo.html',
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: 'styles/[name].css',
       ignoreOrder: false,
-    })
+    }),
   ],
   module: {
     rules: [
@@ -43,8 +51,8 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              url: false
-            }
+              url: false,
+            },
           },
           {
             loader: 'postcss-loader',
@@ -52,8 +60,8 @@ module.exports = {
               ident: 'postcss',
               plugins: [
                 require('autoprefixer'),
-              ]
-            }
+              ],
+            },
           },
           'sass-loader',
         ],
@@ -61,11 +69,11 @@ module.exports = {
       {
         test: /\.pug$/,
         include: path.resolve(__dirname, 'src'),
-        use: [ 'pug-loader', ],
+        use: ['pug-loader'],
       },
     ],
   },
   resolve: {
-    extensions: [".js", ".ts"],
-  }
+    extensions: ['.js', '.ts'],
+  },
 };
