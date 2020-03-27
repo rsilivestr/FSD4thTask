@@ -1,28 +1,57 @@
+type ViewOptions = {
+  orientation?: string;
+  valuePrefix?: string;
+  valuePostfix?: string;
+  handlerRadius?: number;
+  showTooltip?: boolean;
+}
+
 export default class View {
   container: HTMLElement;
 
-  constructor(selector: string) {
+  slider: HTMLElement;
+
+  track: HTMLElement;
+
+  handler: HTMLElement;
+
+  // orientation: string;
+
+  // valuePrefix: string;
+
+  // valuePostfix: string;
+
+  // handlerRadius: number;
+
+  // tooltip: boolean;
+
+  options: ViewOptions;
+
+  constructor(selector: string, options: ViewOptions) {
     this.container = document.querySelector(selector);
+
+    this.options.orientation = options.orientation || 'horizontal';
+    this.options.valuePrefix = options.valuePrefix || '';
+    this.options.valuePostfix = options.valuePostfix || '';
+    this.options.handlerRadius = options.handlerRadius || 16;
+    this.options.showTooltip = options.showTooltip || false;
   }
 
-  // container: HTMLElement;
-
-  // track: HTMLElement;
-
-  // handler: HTMLElement;
-
-  // TODO: Add options: vertical, scale, popup hint
-
-  render(selector: string) {
+  render() {
     if (this.container !== null) {
-      this.container.innerHTML = `
-        <div class='rslider rslider--layout_horizontal'>
-          <div class='rslider__track'></div>
-          <div class='rslider__handler'></div>
-        </div>
-      `;
+      this.slider = document.createElement('div');
+      this.slider.className = 'rslider rslider--layout_horizontal';
+      this.container.appendChild(this.slider);
+
+      this.track = document.createElement('div');
+      this.track.className = 'rslider__track';
+      this.slider.appendChild(this.track);
+
+      this.handler = document.createElement('div');
+      this.handler.className = 'rslider__handler';
+      this.slider.appendChild(this.handler);
     } else {
-      throw new Error(`There is no element matching selector "${selector}"...`);
+      throw new Error('There is no element matching provided selector...');
     }
   }
 }
