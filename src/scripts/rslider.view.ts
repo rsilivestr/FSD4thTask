@@ -1,12 +1,17 @@
-type ViewOptions = {
-  orientation?: string;
+export interface ViewOptions {
+  // orientation?: string;
+  isHorizontal?: boolean;
   valuePrefix?: string;
   valuePostfix?: string;
   handlerRadius?: number;
   showTooltip?: boolean;
 }
 
-export default class View {
+interface View {
+  render(): any;
+}
+
+export default class RSView implements View {
   container: HTMLElement;
 
   slider: HTMLElement;
@@ -15,22 +20,15 @@ export default class View {
 
   handler: HTMLElement;
 
-  // orientation: string;
-
-  // valuePrefix: string;
-
-  // valuePostfix: string;
-
-  // handlerRadius: number;
-
-  // tooltip: boolean;
-
   options: ViewOptions;
 
-  constructor(selector: string, options: ViewOptions) {
-    this.container = document.querySelector(selector);
+  constructor(container: HTMLElement, options: ViewOptions = {}) {
+    this.container = container;
 
-    this.options.orientation = options.orientation || 'horizontal';
+    this.options = {};
+
+    // this.options.orientation = options.orientation || 'horizontal';
+    this.options.isHorizontal = options.isHorizontal || true;
     this.options.valuePrefix = options.valuePrefix || '';
     this.options.valuePostfix = options.valuePostfix || '';
     this.options.handlerRadius = options.handlerRadius || 16;
@@ -50,8 +48,23 @@ export default class View {
       this.handler = document.createElement('div');
       this.handler.className = 'rslider__handler';
       this.slider.appendChild(this.handler);
-    } else {
-      throw new Error('There is no element matching provided selector...');
+
+      return this.slider;
     }
+    throw new Error('There is no element matching provided selector...');
+  }
+
+  returnBorders() {
+    const rect = this.track.getBoundingClientRect();
+    if (this.options.isHorizontal) {
+      return {
+        min: rect.left,
+        max: rect.right,
+      };
+    }
+    return {
+      min: rect.bottom,
+      max: rect.top,
+    };
   }
 }

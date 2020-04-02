@@ -1,4 +1,19 @@
 // import Controller from './rslider.controller';
-// import Model from './rslider.model';
-// import View from './rslider.view';
-// import './styles/rslider.sass';
+
+// import { RSModel, ModelOptions } from './rslider.model';
+import RSModel from './rslider.model';
+// import { RSView, ViewOptions } from './rslider.view';
+import RSView from './rslider.view';
+import RSController from './rslider.controller';
+
+const model = new RSModel({});
+
+// mock container
+const foo = document.getElementById('foo');
+
+const view = new RSView(foo);
+
+view.render();
+
+const ctrl = new RSController(model, view);
+document.body.addEventListener('mousedown', ctrl.grab.bind(ctrl));
