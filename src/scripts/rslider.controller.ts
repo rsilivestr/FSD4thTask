@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-unused-vars
+import { Subject, Observer } from './interfaces';
 // import RSView from './rslider.view';
 // import RSModel from './rslider.model';
 
-interface Controller {
+interface Controller extends Observer {
   grab(e);
   drag(handler): any;
   release(handler): any;
@@ -24,7 +26,7 @@ export default class RSController implements Controller {
 
   view;
 
-  constructor(model, view) {
+  constructor(model: Subject, view) {
     this.handlers = [];
     this.grabbedHandler = null;
 
@@ -62,14 +64,18 @@ export default class RSController implements Controller {
     if (relativeCoord < 0) {
       handlerPosition = 0;
     } else if (relativeCoord > max - min) {
-      // hardcored
-      handlerPosition = max - min - 6;
+      // hardcored handler diameter 16px
+      // handlerPosition = 100 - (16 * 100) / (max - min);
+      handlerPosition = 100;
     } else {
-      // hardcored
-      handlerPosition = relativeCoord - 6;
+      // hardcored handler diameter 16px
+      // handlerPosition = (relativeCoord / (max - min + 16)) * 100;
+      handlerPosition = (relativeCoord / (max - min)) * 100;
     }
 
-    this.grabbedHandler.style = isHorizontal ? `left: ${handlerPosition}px` : `bottom: ${handlerPosition}px`;
+    this.model.updateHandler(handlerPosition);
+    // this.grabbedHandler.style = isHorizontal
+    // ? `left: ${handlerPosition}%` : `bottom: ${handlerPosition}%`;
 
     return handlerPosition;
   }
@@ -81,5 +87,10 @@ export default class RSController implements Controller {
     window.removeEventListener('mouseup', this.boundRelease);
 
     // save position
+  }
+
+  update(str) {
+    console.log(`Controller updating, ${str}`);
+    console.log(this);
   }
 }

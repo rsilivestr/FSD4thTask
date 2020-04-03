@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-unused-vars
+import { Subject, Observer } from './interfaces';
+
 export interface ViewOptions {
   // orientation?: string;
   isHorizontal?: boolean;
@@ -7,8 +10,8 @@ export interface ViewOptions {
   showTooltip?: boolean;
 }
 
-interface View {
-  render(): any;
+interface View extends Observer {
+  render();
 }
 
 export default class RSView implements View {
@@ -18,11 +21,20 @@ export default class RSView implements View {
 
   track: HTMLElement;
 
+  trackRect: ClientRect;
+
   handler: HTMLElement;
 
   options: ViewOptions;
 
-  constructor(container: HTMLElement, options: ViewOptions = {}) {
+  model;
+
+  coord;
+
+  constructor(model: Subject, container: HTMLElement, options: ViewOptions = {}) {
+    this.model = model;
+    model.addObserver(this);
+
     this.container = container;
 
     this.options = {};
@@ -45,6 +57,8 @@ export default class RSView implements View {
       this.track.className = 'rslider__track';
       this.slider.appendChild(this.track);
 
+      this.trackRect = this.track.getBoundingClientRect();
+
       this.handler = document.createElement('div');
       this.handler.className = 'rslider__handler';
       this.slider.appendChild(this.handler);
@@ -54,8 +68,22 @@ export default class RSView implements View {
     throw new Error('There is no element matching provided selector...');
   }
 
+  update(coord) {
+    // this.handler.style = this.options.isHorizontal ? `left: ${coord}%` : `bottom: ${coord}%`;
+    // console.log(`Imma updating, ${str}!`);
+    // const trackLength = this.trackRect.right - this.trackRect.left;
+
+    // hardcoded css
+    const sliderLength = 300;
+    const handlerRadius = 8;
+    const viewCoord = coord * ((sliderLength - handlerRadius * 2) / (sliderLength));
+
+    this.handler.style.left = `${viewCoord}%`;
+  }
+
   returnBorders() {
-    const rect = this.track.getBoundingClientRect();
+    const rect = this.trackRect;
+
     if (this.options.isHorizontal) {
       return {
         min: rect.left,

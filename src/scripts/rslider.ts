@@ -11,7 +11,7 @@ const model = new RSModel({});
 // mock container
 const foo = document.getElementById('foo');
 
-const view = new RSView(foo);
+const view = new RSView(model, foo);
 
 view.render();
 

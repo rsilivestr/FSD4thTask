@@ -1,35 +1,32 @@
-export interface ModelOptions {
+// eslint-disable-next-line no-unused-vars
+import { Subject, Observer } from './interfaces';
+
+interface ModelOptions {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
 }
 
-interface Model {
-  addObserver(o: Function): any;
-  removeObserver(o: Function): any;
-  notifyObservers(): any;
-}
-
-export default class RSModel implements Model {
-  observers: Array<Function>;
+export default class RSModel implements Subject {
+  observers: Observer[] = [];
 
   options: ModelOptions = {};
 
-  constructor(options?: ModelOptions) {
-    this.observers = [];
+  handlerValues = [];
 
+  constructor(options?: ModelOptions) {
     this.options.minValue = options.minValue || 0;
     this.options.maxValue = options.minValue || 100;
     this.options.stepSize = options.stepSize || 10;
     this.options.handlerCount = options.handlerCount || 1;
   }
 
-  addObserver(o: Function) {
+  addObserver(o: Observer) {
     this.observers.push(o);
   }
 
-  removeObserver(o: Function) {
+  removeObserver(o: Observer) {
     this.observers = this.observers.filter((fn) => {
       if (fn === o) {
         return fn;
@@ -38,11 +35,9 @@ export default class RSModel implements Model {
     });
   }
 
-  notifyObservers() {
+  notifyObservers(param) {
     this.observers.forEach((o) => {
-      // o.call();
-      // (o)();
-      o();
+      o.update(param);
     });
   }
 
@@ -69,5 +64,14 @@ export default class RSModel implements Model {
     Object.keys(options).forEach((key) => {
       this.options[key] = options[key];
     });
+  }
+
+  updateHandler(coord) {
+    // hardcoded step size 10%
+    const foo = coord + 10 / 2;
+    const bar = foo - (foo % 10);
+
+    this.handlerValues[0] = bar;
+    this.notifyObservers(bar);
   }
 }
