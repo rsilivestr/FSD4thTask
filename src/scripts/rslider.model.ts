@@ -6,6 +6,7 @@ interface ModelOptions {
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
+  range?: boolean;
 }
 
 export default class RSModel implements Subject {
@@ -20,6 +21,7 @@ export default class RSModel implements Subject {
     this.options.maxValue = options.minValue || 100;
     this.options.stepSize = options.stepSize || 10;
     this.options.handlerCount = options.handlerCount || 1;
+    this.options.range = options.range || false;
   }
 
   addObserver(o: Observer) {
@@ -35,9 +37,9 @@ export default class RSModel implements Subject {
     });
   }
 
-  notifyObservers(param) {
+  notifyObservers(index) {
     this.observers.forEach((o) => {
-      o.update(param);
+      o.update(index, this.handlerValues[index]);
     });
   }
 
@@ -66,12 +68,19 @@ export default class RSModel implements Subject {
     });
   }
 
-  updateHandler(coord) {
-    // hardcoded step size 10%
-    const foo = coord + 10 / 2;
-    const bar = foo - (foo % 10);
+  updateHandler(index, coord) {
+    // hardcoded step size
+    const stepSize = 20;
+    const x = coord + stepSize / 2;
+    let handlerValue = x - (x % stepSize);
 
-    this.handlerValues[0] = bar;
-    this.notifyObservers(bar);
+    if (handlerValue < 0) {
+      handlerValue = 0;
+    } else if (handlerValue > 100) {
+      handlerValue = 100;
+    }
+
+    this.handlerValues[index] = handlerValue;
+    this.notifyObservers(index);
   }
 }

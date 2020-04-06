@@ -3,7 +3,7 @@ import { Subject, Observer } from './interfaces';
 // import RSView from './rslider.view';
 // import RSModel from './rslider.model';
 
-interface Controller extends Observer {
+interface Controller {
   grab(e);
   drag(handler): any;
   release(handler): any;
@@ -39,18 +39,12 @@ export default class RSController implements Controller {
   }
 
   grab(e) {
-    // if (e.target.classList.contains('rslider__handler')
-    // && this.handlers.indexOf(e.target) !== -1) {
     if (e.target.classList.contains('rslider__handler')) {
-      const handler = e.target;
+      this.grabbedHandler = e.target;
 
-      this.grabbedHandler = handler;
       window.addEventListener('mousemove', this.boundDrag);
       window.addEventListener('mouseup', this.boundRelease);
-
-      return handler;
     }
-    return null;
   }
 
   drag(e) {
@@ -59,23 +53,11 @@ export default class RSController implements Controller {
     const { min, max } = this.view.returnBorders();
     const relativeCoord = coord - min;
 
-    let handlerPosition;
+    const handlerPosition = (relativeCoord / (max - min)) * 100;
 
-    if (relativeCoord < 0) {
-      handlerPosition = 0;
-    } else if (relativeCoord > max - min) {
-      // hardcored handler diameter 16px
-      // handlerPosition = 100 - (16 * 100) / (max - min);
-      handlerPosition = 100;
-    } else {
-      // hardcored handler diameter 16px
-      // handlerPosition = (relativeCoord / (max - min + 16)) * 100;
-      handlerPosition = (relativeCoord / (max - min)) * 100;
-    }
+    const index = +this.grabbedHandler.dataset.id;
 
-    this.model.updateHandler(handlerPosition);
-    // this.grabbedHandler.style = isHorizontal
-    // ? `left: ${handlerPosition}%` : `bottom: ${handlerPosition}%`;
+    this.model.updateHandler(index, handlerPosition);
 
     return handlerPosition;
   }
@@ -89,8 +71,8 @@ export default class RSController implements Controller {
     // save position
   }
 
-  update(str) {
-    console.log(`Controller updating, ${str}`);
-    console.log(this);
-  }
+  // update(str) {
+  //   console.log(`Controller updating, ${str}`);
+  //   console.log(this);
+  // }
 }

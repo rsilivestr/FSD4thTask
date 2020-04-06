@@ -27,13 +27,21 @@ export default class RSView implements View {
 
   options: ViewOptions;
 
+  handlerCount: number;
+
   model;
 
   coord;
 
+  handlers: HTMLElement[] = [];
+
+  // handlers = [];
+
   constructor(model: Subject, container: HTMLElement, options: ViewOptions = {}) {
     this.model = model;
     model.addObserver(this);
+
+    this.handlerCount = this.model.options.handlerCount;
 
     this.container = container;
 
@@ -59,30 +67,43 @@ export default class RSView implements View {
 
       this.trackRect = this.track.getBoundingClientRect();
 
-      this.handler = document.createElement('div');
-      this.handler.className = 'rslider__handler';
-      this.slider.appendChild(this.handler);
+      // this.handler = document.createElement('div');
+      // this.handler.className = 'rslider__handler';
+      // this.slider.appendChild(this.handler);
+
+      let handlersRendered = 0;
+      while (handlersRendered < this.handlerCount) {
+        const handler = document.createElement('div');
+        handler.className = 'rslider__handler';
+        handler.dataset.id = `${handlersRendered}`;
+        this.slider.appendChild(handler);
+
+        this.handlers.push(handler);
+
+        handlersRendered += 1;
+      }
 
       return this.slider;
     }
     throw new Error('There is no element matching provided selector...');
   }
 
-  update(coord) {
-    // this.handler.style = this.options.isHorizontal ? `left: ${coord}%` : `bottom: ${coord}%`;
-    // console.log(`Imma updating, ${str}!`);
-    // const trackLength = this.trackRect.right - this.trackRect.left;
+  update(index, coord) {
+    // should be computed each time to prevent bugs when zoomed
+    const sliderRect = this.slider.getBoundingClientRect();
+    const sliderLength = sliderRect.right - sliderRect.left;
 
-    // hardcoded css
-    const sliderLength = 300;
-    const handlerRadius = 8;
-    const viewCoord = coord * ((sliderLength - handlerRadius * 2) / (sliderLength));
+    const handlerRect = this.handlers[index].getBoundingClientRect();
+    const handlerDiameter = handlerRect.right - handlerRect.left;
 
-    this.handler.style.left = `${viewCoord}%`;
+    const viewCoord = coord * ((sliderLength - handlerDiameter) / (sliderLength));
+
+    this.handlers[index].style.left = `${viewCoord}%`;
   }
 
   returnBorders() {
-    const rect = this.trackRect;
+    // should be computed each time to prevent bugs when zoomed
+    const rect = this.slider.getBoundingClientRect();
 
     if (this.options.isHorizontal) {
       return {
@@ -94,5 +115,9 @@ export default class RSView implements View {
       min: rect.bottom,
       max: rect.top,
     };
+  }
+
+  identifyHandler(handler) {
+    return this.handlers.indexOf(handler);
   }
 }

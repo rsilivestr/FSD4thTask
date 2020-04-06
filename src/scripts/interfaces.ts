@@ -1,9 +1,9 @@
 export interface Subject {
   addObserver(o: Observer);
   removeObserver(o: Observer);
-  notifyObservers(param);
+  notifyObservers(index);
 }
 
 export interface Observer {
-  update(param);
+  update(index, coord);
 }
