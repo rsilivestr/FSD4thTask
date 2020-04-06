@@ -12,9 +12,9 @@ interface ModelOptions {
 export default class RSModel implements Subject {
   observers: Observer[] = [];
 
-  options: ModelOptions = {};
+  public options: ModelOptions = {};
 
-  handlerValues = [];
+  handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
     this.options.minValue = options.minValue || 0;
@@ -22,6 +22,8 @@ export default class RSModel implements Subject {
     this.options.stepSize = options.stepSize || 10;
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
+
+    this.handlerValues = this.setValues();
   }
 
   addObserver(o: Observer) {
@@ -82,5 +84,23 @@ export default class RSModel implements Subject {
 
     this.handlerValues[index] = handlerValue;
     this.notifyObservers(index);
+  }
+
+  // hardcoded starting values
+  setValues() {
+    const arr = [];
+
+    arr.length = this.options.handlerCount;
+
+    let index = 0;
+    let value = 0;
+
+    while (index < arr.length) {
+      arr[index] = value;
+      index += 1;
+      value += this.options.stepSize;
+    }
+
+    return arr;
   }
 }

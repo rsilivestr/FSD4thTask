@@ -2,7 +2,6 @@
 import { Subject, Observer } from './interfaces';
 
 export interface ViewOptions {
-  // orientation?: string;
   isHorizontal?: boolean;
   valuePrefix?: string;
   valuePostfix?: string;
@@ -35,8 +34,6 @@ export default class RSView implements View {
 
   handlers: HTMLElement[] = [];
 
-  // handlers = [];
-
   constructor(model: Subject, container: HTMLElement, options: ViewOptions = {}) {
     this.model = model;
     model.addObserver(this);
@@ -47,7 +44,6 @@ export default class RSView implements View {
 
     this.options = {};
 
-    // this.options.orientation = options.orientation || 'horizontal';
     this.options.isHorizontal = options.isHorizontal || true;
     this.options.valuePrefix = options.valuePrefix || '';
     this.options.valuePostfix = options.valuePostfix || '';
@@ -67,21 +63,21 @@ export default class RSView implements View {
 
       this.trackRect = this.track.getBoundingClientRect();
 
-      // this.handler = document.createElement('div');
-      // this.handler.className = 'rslider__handler';
-      // this.slider.appendChild(this.handler);
-
+      const { handlerValues } = this.model;
       let handlersRendered = 0;
       while (handlersRendered < this.handlerCount) {
         const handler = document.createElement('div');
         handler.className = 'rslider__handler';
         handler.dataset.id = `${handlersRendered}`;
+        // hardcoded horizontal
+        handler.style.left = `${handlerValues[handlersRendered]}%`;
         this.slider.appendChild(handler);
 
         this.handlers.push(handler);
 
         handlersRendered += 1;
       }
+
 
       return this.slider;
     }
