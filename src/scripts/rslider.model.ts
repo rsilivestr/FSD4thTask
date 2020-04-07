@@ -14,6 +14,8 @@ export default class RSModel implements Subject {
 
   public options: ModelOptions = {};
 
+  stepSizePerc;
+
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
@@ -22,6 +24,9 @@ export default class RSModel implements Subject {
     this.options.stepSize = options.stepSize || 10;
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
+
+    const scaleLength = this.options.maxValue - this.options.minValue;
+    this.stepSizePerc = Math.abs((this.options.stepSize / scaleLength) * 100);
 
     this.handlerValues = this.setValues();
   }
@@ -50,11 +55,6 @@ export default class RSModel implements Subject {
   }
 
   setOptions(options: ModelOptions) {
-    // this.options.minValue = options.minValue || this.options.minValue;
-    // this.options.maxValue = options.maxValue || this.options.maxValue;
-    // this.options.stepSize = options.stepSize || this.options.stepSize;
-    // this.options.handlerCount = options.handlerCount || this.options.handlerCount;
-
     // for (const { key, value } of Object.entries(options)) {
     //   this.options[key] = value;
     // }
@@ -71,10 +71,9 @@ export default class RSModel implements Subject {
   }
 
   updateHandler(index, coord) {
-    // hardcoded step size
-    const stepSize = 20;
-    const x = coord + stepSize / 2;
-    let handlerValue = x - (x % stepSize);
+    const x = coord + this.stepSizePerc / 2;
+
+    let handlerValue = x - (x % this.stepSizePerc);
 
     if (handlerValue < 0) {
       handlerValue = 0;
@@ -83,6 +82,7 @@ export default class RSModel implements Subject {
     }
 
     this.handlerValues[index] = handlerValue;
+
     this.notifyObservers(index);
   }
 
@@ -98,7 +98,7 @@ export default class RSModel implements Subject {
     while (index < arr.length) {
       arr[index] = value;
       index += 1;
-      value += this.options.stepSize;
+      value += this.stepSizePerc;
     }
 
     return arr;

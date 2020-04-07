@@ -47,14 +47,15 @@ export default class RSView implements View {
     this.options.isHorizontal = options.isHorizontal || true;
     this.options.valuePrefix = options.valuePrefix || '';
     this.options.valuePostfix = options.valuePostfix || '';
-    this.options.handlerRadius = options.handlerRadius || 16;
+    this.options.handlerRadius = options.handlerRadius || 8;
     this.options.showTooltip = options.showTooltip || false;
   }
 
   render() {
     if (this.container !== null) {
       this.slider = document.createElement('div');
-      this.slider.className = 'rslider rslider--layout_horizontal';
+      const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+      this.slider.className = `rslider rslider--layout_${layout}`;
       this.container.appendChild(this.slider);
 
       this.track = document.createElement('div');
@@ -65,12 +66,22 @@ export default class RSView implements View {
 
       const { handlerValues } = this.model;
       let handlersRendered = 0;
+
       while (handlersRendered < this.handlerCount) {
         const handler = document.createElement('div');
         handler.className = 'rslider__handler';
         handler.dataset.id = `${handlersRendered}`;
-        // hardcoded horizontal
-        handler.style.left = `${handlerValues[handlersRendered]}%`;
+
+        const value = handlerValues[handlersRendered];
+        const { sliderLength } = this.getRect();
+        const coord = value * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
+
+        if (this.options.isHorizontal) {
+          handler.style.left = `${coord}%`;
+        } else {
+          handler.style.bottom = `${coord}%`;
+        }
+
         this.slider.appendChild(handler);
 
         this.handlers.push(handler);
@@ -78,39 +89,44 @@ export default class RSView implements View {
         handlersRendered += 1;
       }
 
-
       return this.slider;
     }
     throw new Error('There is no element matching provided selector...');
   }
 
-  update(index, coord) {
-    // should be computed each time to prevent bugs when zoomed
-    const sliderRect = this.slider.getBoundingClientRect();
-    const sliderLength = sliderRect.right - sliderRect.left;
-
-    const handlerRect = this.handlers[index].getBoundingClientRect();
-    const handlerDiameter = handlerRect.right - handlerRect.left;
-
-    const viewCoord = coord * ((sliderLength - handlerDiameter) / (sliderLength));
-
-    this.handlers[index].style.left = `${viewCoord}%`;
-  }
-
-  returnBorders() {
-    // should be computed each time to prevent bugs when zoomed
+  getRect() {
     const rect = this.slider.getBoundingClientRect();
 
+    let sliderLength;
+    let minCoord;
+    let maxCoord;
+
     if (this.options.isHorizontal) {
-      return {
-        min: rect.left,
-        max: rect.right,
-      };
+      sliderLength = rect.right - rect.left;
+      minCoord = rect.left;
+      maxCoord = rect.right;
+    } else {
+      sliderLength = rect.bottom - rect.top;
+      minCoord = rect.bottom;
+      maxCoord = rect.top;
     }
+
     return {
-      min: rect.bottom,
-      max: rect.top,
+      sliderLength,
+      minCoord,
+      maxCoord,
     };
+  }
+
+  update(index, coord) {
+    const { sliderLength } = this.getRect();
+    const viewCoord = coord * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
+
+    if (this.options.isHorizontal) {
+      this.handlers[index].style.left = `${viewCoord}%`;
+    } else {
+      this.handlers[index].style.bottom = `${viewCoord}%`;
+    }
   }
 
   identifyHandler(handler) {

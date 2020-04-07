@@ -50,10 +50,11 @@ export default class RSController implements Controller {
   drag(e) {
     const { isHorizontal } = this.view.options;
     const coord = isHorizontal ? e.clientX : e.clientY;
-    const { min, max } = this.view.returnBorders();
-    const relativeCoord = coord - min;
+    const { minCoord, maxCoord } = this.view.getRect();
 
-    const handlerPosition = (relativeCoord / (max - min)) * 100;
+    const relativeCoord = coord - minCoord;
+
+    const handlerPosition = (relativeCoord / (maxCoord - minCoord)) * 100;
 
     const index = +this.grabbedHandler.dataset.id;
 
