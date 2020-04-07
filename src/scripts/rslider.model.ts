@@ -44,9 +44,9 @@ export default class RSModel implements Subject {
     });
   }
 
-  notifyObservers(index) {
+  notifyObservers() {
     this.observers.forEach((o) => {
-      o.update(index, this.handlerValues[index]);
+      o.update(this.handlerValues);
     });
   }
 
@@ -70,23 +70,50 @@ export default class RSModel implements Subject {
     });
   }
 
-  updateHandler(index, coord) {
-    const x = coord + this.stepSizePerc / 2;
+  normalizeHandlerValue(index, value) {
+    const x = value + this.stepSizePerc / 2;
+    const stepValue = x - (x % this.stepSizePerc);
 
-    let handlerValue = x - (x % this.stepSizePerc);
+    const stepsToMax = this.handlerValues.length - (index + 1);
+    const maxIndexValue = this.options.maxValue - this.stepSizePerc * stepsToMax;
+    const minIndexValue = this.options.minValue + this.stepSizePerc * index;
 
-    if (handlerValue < 0) {
-      handlerValue = 0;
-    } else if (handlerValue > 100) {
-      handlerValue = 100;
+    if (stepValue > maxIndexValue) {
+      return maxIndexValue;
     }
-
-    this.handlerValues[index] = handlerValue;
-
-    this.notifyObservers(index);
+    if (stepValue < minIndexValue) {
+      return minIndexValue;
+    }
+    return stepValue;
   }
 
-  // hardcoded starting values
+  updateHandlers(index, value) {
+    const normalizedValue = this.normalizeHandlerValue(index, value);
+
+    this.handlerValues[index] = normalizedValue;
+
+    const values = this.handlerValues;
+
+    for (let idx = 0; idx < values.length; idx += 1) {
+      const val = values[idx];
+
+      let newValue = normalizedValue;
+
+      if (idx === index + 1 && val <= normalizedValue) {
+        newValue = normalizedValue + this.stepSizePerc;
+        values[idx] = newValue;
+        this.updateHandlers(idx, newValue);
+      } else if (idx === index - 1 && val >= normalizedValue) {
+        newValue = normalizedValue - this.stepSizePerc;
+        values[idx] = newValue;
+        this.updateHandlers(idx, newValue);
+      }
+    }
+
+    this.notifyObservers();
+  }
+
+  // starting values are hardcoded
   setValues() {
     const arr = [];
 

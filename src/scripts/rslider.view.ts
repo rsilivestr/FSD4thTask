@@ -118,15 +118,22 @@ export default class RSView implements View {
     };
   }
 
-  update(index, coord) {
+  update(values) {
     const { sliderLength } = this.getRect();
-    const viewCoord = coord * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
+    const scaleFactor = (sliderLength - this.options.handlerRadius * 2) / (sliderLength);
 
-    if (this.options.isHorizontal) {
-      this.handlers[index].style.left = `${viewCoord}%`;
-    } else {
-      this.handlers[index].style.bottom = `${viewCoord}%`;
-    }
+    this.handlers.forEach((handler, index) => {
+      const viewCoord = values[index] * scaleFactor;
+      if (this.options.isHorizontal) {
+        // eslint-disable-next-line no-param-reassign
+        handler.style.left = `${viewCoord}%`;
+        // this.handlers[index].style.left = `${viewCoord}%`;
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        handler.style.bottom = `${viewCoord}%`;
+        // this.handlers[index].style.bottom = `${viewCoord}%`;
+      }
+    });
   }
 
   identifyHandler(handler) {

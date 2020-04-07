@@ -1,7 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
-// import RSView from './rslider.view';
-// import RSModel from './rslider.model';
 
 interface Controller {
   grab(e);
@@ -26,7 +24,7 @@ export default class RSController implements Controller {
 
   view;
 
-  constructor(model: Subject, view) {
+  constructor(model: Subject, view: Observer) {
     this.handlers = [];
     this.grabbedHandler = null;
 
@@ -58,7 +56,7 @@ export default class RSController implements Controller {
 
     const index = +this.grabbedHandler.dataset.id;
 
-    this.model.updateHandler(index, handlerPosition);
+    this.model.updateHandlers(index, handlerPosition);
 
     return handlerPosition;
   }

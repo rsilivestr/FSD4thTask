@@ -2,7 +2,7 @@ import RSModel from './rslider.model';
 import RSView from './rslider.view';
 import RSController from './rslider.controller';
 
-const model = new RSModel({ handlerCount: 2 });
+const model = new RSModel({ handlerCount: 3, stepSize: 10 });
 
 // mock container
 const foo = document.getElementById('foo');

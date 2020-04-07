@@ -1,5 +1,5 @@
 $color_border: #cacaca
-$color_main: #fe40da
+$color_primary: #fe40da
 $color_secondary: #fafafa
 
 $horHeihgt: 20px
@@ -28,7 +28,7 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
     left: $handlerBaseOffset
     right: $handlerBaseOffset
     top: $baseOffset
-    height: $baseHeight
+    bottom: $baseOffset
     border: 1px solid $color_border
     border-radius: $baseHeight / 2
     z-index: 90
@@ -39,8 +39,7 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
     width: $handlerSize
     height: $handlerSize
     top: $handlerOffset
-    left: 284px
-    background: $color_main
+    background: $color_primary
     border: 2px solid $color_secondary
-    border-radius: $handlerSize / 2
+    border-radius: 50%
     z-index: 100
