@@ -65,7 +65,6 @@ export default class RSPanel implements Observer {
       }
     });
 
-
     const maxLabel = document.createElement('label');
     maxLabel.innerText = 'Max value';
     maxLabel.className = 'rslider-panel__label';
@@ -85,6 +84,27 @@ export default class RSPanel implements Observer {
         this.model.setOptions({ maxValue: +maxInput.value });
       }
     });
+
+    const stepLabel = document.createElement('label');
+    stepLabel.innerText = 'Step size: ';
+    stepLabel.className = 'rslider-panel__label';
+    panel.appendChild(stepLabel);
+
+    const stepInput = document.createElement('input');
+    stepInput.type = 'number';
+    stepInput.className = 'rslider-panel__input';
+    stepLabel.appendChild(stepInput);
+
+    stepInput.value = this.modelOptions.stepSize;
+
+    stepInput.addEventListener('input', () => {
+      const re = /^\d+$/;
+      const valid = re.test(stepInput.value);
+      if (valid) {
+        this.model.setOptions({ stepSize: +stepInput.value });
+      }
+    });
+
 
     this.container.appendChild(panel);
   }
