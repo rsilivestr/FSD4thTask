@@ -18,9 +18,11 @@ export default class RSModel implements Subject {
 
   handlerValues: number[] = [];
 
+  // handlerCoords: number[] = [];
+
   constructor(options?: ModelOptions) {
-    this.options.minValue = options.minValue || 0;
-    this.options.maxValue = options.minValue || 100;
+    this.options.minValue = options.minValue || -20;
+    this.options.maxValue = options.maxValue || 60;
     this.options.stepSize = options.stepSize || 10;
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
@@ -29,6 +31,8 @@ export default class RSModel implements Subject {
     this.stepSizePerc = Math.abs((this.options.stepSize / scaleLength) * 100);
 
     this.handlerValues = this.setValues();
+
+    // this.handlerCoords = this.setCoords();
   }
 
   addObserver(o: Observer) {
@@ -71,24 +75,35 @@ export default class RSModel implements Subject {
   }
 
   normalizeHandlerValue(index, value) {
+    // value is a coordinate
     const x = value + this.stepSizePerc / 2;
-    const stepValue = x - (x % this.stepSizePerc);
+    // normalized value is coordinate of the closest step value
+    const normalizedCoord = x - (x % this.stepSizePerc);
 
     const stepsToMax = this.handlerValues.length - (index + 1);
-    const maxIndexValue = this.options.maxValue - this.stepSizePerc * stepsToMax;
-    const minIndexValue = this.options.minValue + this.stepSizePerc * index;
+    // theese are percentage coords too
+    const minIndexCoord = this.stepSizePerc * index;
+    const maxIndexCoord = 100 - this.stepSizePerc * stepsToMax;
 
-    if (stepValue > maxIndexValue) {
-      return maxIndexValue;
+    if (normalizedCoord > maxIndexCoord) {
+      return maxIndexCoord;
     }
-    if (stepValue < minIndexValue) {
-      return minIndexValue;
+    if (normalizedCoord < minIndexCoord) {
+      return minIndexCoord;
     }
-    return stepValue;
+    return normalizedCoord;
   }
 
-  updateHandlers(index, value) {
-    const normalizedValue = this.normalizeHandlerValue(index, value);
+  coordToValue(coord) {
+    const { minValue, stepSize } = this.options;
+    const factor = stepSize / this.stepSizePerc;
+    const value = coord * factor + minValue;
+    return value;
+  }
+
+  updateHandlers(index, coord) {
+    const normalizedCoord = this.normalizeHandlerValue(index, coord);
+    const normalizedValue = this.coordToValue(normalizedCoord);
 
     this.handlerValues[index] = normalizedValue;
 
@@ -98,15 +113,18 @@ export default class RSModel implements Subject {
       const val = values[idx];
 
       let newValue = normalizedValue;
+      let newCoord = normalizedCoord;
 
       if (idx === index + 1 && val <= normalizedValue) {
-        newValue = normalizedValue + this.stepSizePerc;
-        values[idx] = newValue;
-        this.updateHandlers(idx, newValue);
+        newValue = normalizedValue + this.options.stepSize;
+        newCoord = normalizedCoord + this.stepSizePerc;
+        this.handlerValues[idx] = newValue;
+        this.updateHandlers(idx, newCoord);
       } else if (idx === index - 1 && val >= normalizedValue) {
-        newValue = normalizedValue - this.stepSizePerc;
-        values[idx] = newValue;
-        this.updateHandlers(idx, newValue);
+        newValue = normalizedValue - this.options.stepSize;
+        newCoord = normalizedCoord - this.stepSizePerc;
+        this.handlerValues[idx] = newValue;
+        this.updateHandlers(idx, newCoord);
       }
     }
 
@@ -120,12 +138,12 @@ export default class RSModel implements Subject {
     arr.length = this.options.handlerCount;
 
     let index = 0;
-    let value = 0;
+    let value = this.options.minValue;
 
     while (index < arr.length) {
       arr[index] = value;
       index += 1;
-      value += this.stepSizePerc;
+      value += this.options.stepSize;
     }
 
     return arr;

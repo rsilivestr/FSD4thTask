@@ -34,11 +34,17 @@ export default class RSView implements View {
 
   handlers: HTMLElement[] = [];
 
+  handlerCoords: number[] = [];
+
+  modelOptions;
+
   constructor(model: Subject, container: HTMLElement, options: ViewOptions = {}) {
     this.model = model;
     model.addObserver(this);
 
-    this.handlerCount = this.model.options.handlerCount;
+    this.modelOptions = this.model.getOptions();
+
+    this.handlerCount = this.model.getOptions().handlerCount;
 
     this.container = container;
 
@@ -51,7 +57,19 @@ export default class RSView implements View {
     this.options.showTooltip = options.showTooltip || false;
   }
 
+  setCoords(values) {
+    const { minValue, maxValue } = this.modelOptions;
+
+    values.forEach((value) => {
+      const factor = 100 / (maxValue - minValue);
+      const coord = (value - minValue) * factor;
+      this.handlerCoords.push(coord);
+    });
+  }
+
   render() {
+    this.setCoords(this.model.handlerValues);
+
     if (this.container !== null) {
       this.slider = document.createElement('div');
       const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
@@ -72,9 +90,16 @@ export default class RSView implements View {
         handler.className = 'rslider__handler';
         handler.dataset.id = `${handlersRendered}`;
 
-        const value = handlerValues[handlersRendered];
+        const value = this.handlerCoords[handlersRendered];
         const { sliderLength } = this.getRect();
         const coord = value * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
+
+        if (!this.options.showTooltip) {
+          const tooltip = document.createElement('div');
+          tooltip.className = 'rslider__tooltip';
+          tooltip.innerText = handlerValues[handlersRendered];
+          handler.appendChild(tooltip);
+        }
 
         if (this.options.isHorizontal) {
           handler.style.left = `${coord}%`;
@@ -120,19 +145,25 @@ export default class RSView implements View {
 
   update(values) {
     const { sliderLength } = this.getRect();
-    const scaleFactor = (sliderLength - this.options.handlerRadius * 2) / (sliderLength);
+    const { minValue, maxValue } = this.model.getOptions();
+    const x = (maxValue - minValue) / 100;
+    const y = (sliderLength - this.options.handlerRadius * 2) / sliderLength;
+    const scaleFactor = y / x;
 
     this.handlers.forEach((handler, index) => {
-      const viewCoord = values[index] * scaleFactor;
+      const coord = values[index] - minValue;
+      const viewCoord = coord * scaleFactor;
       if (this.options.isHorizontal) {
+        // this.handlers[index].style.left = `${viewCoord}%`;
         // eslint-disable-next-line no-param-reassign
         handler.style.left = `${viewCoord}%`;
-        // this.handlers[index].style.left = `${viewCoord}%`;
       } else {
+        // this.handlers[index].style.bottom = `${viewCoord}%`;
         // eslint-disable-next-line no-param-reassign
         handler.style.bottom = `${viewCoord}%`;
-        // this.handlers[index].style.bottom = `${viewCoord}%`;
       }
+      const tooltip: HTMLElement = handler.querySelector('.rslider__tooltip');
+      tooltip.innerText = `${this.model.handlerValues[index]}`;
     });
   }
 
