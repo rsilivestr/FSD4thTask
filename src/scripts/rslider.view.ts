@@ -1,3 +1,5 @@
+// when minValue = maxValue tooltip shows NaN
+
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
 
@@ -54,7 +56,7 @@ export default class RSView implements View {
     this.options.valuePrefix = options.valuePrefix || '';
     this.options.valuePostfix = options.valuePostfix || '';
     this.options.handlerRadius = options.handlerRadius || 8;
-    this.options.showTooltip = options.showTooltip || false;
+    this.options.showTooltip = options.showTooltip || true;
   }
 
   setCoords(values) {
@@ -94,7 +96,7 @@ export default class RSView implements View {
         const { sliderLength } = this.getRect();
         const coord = value * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
 
-        if (!this.options.showTooltip) {
+        if (this.options.showTooltip) {
           const tooltip = document.createElement('div');
           tooltip.className = 'rslider__tooltip';
           tooltip.innerText = handlerValues[handlersRendered];

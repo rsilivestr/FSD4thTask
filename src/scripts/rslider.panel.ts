@@ -62,8 +62,6 @@ export default class RSPanel implements Observer {
       const valid = re.test(minInput.value);
       if (valid) {
         this.model.setOptions({ minValue: +minInput.value });
-        // redraw view somehow
-        this.model.notifyObservers();
       }
     });
 
@@ -81,12 +79,10 @@ export default class RSPanel implements Observer {
     maxInput.value = this.modelOptions.maxValue;
 
     maxInput.addEventListener('input', () => {
-      const re = /^\d+$/;
+      const re = /^-?\d+$/;
       const valid = re.test(maxInput.value);
       if (valid) {
         this.model.setOptions({ maxValue: +maxInput.value });
-        // redraw view somehow
-        this.model.notifyObservers();
       }
     });
 

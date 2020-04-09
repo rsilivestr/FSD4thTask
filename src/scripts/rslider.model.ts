@@ -72,6 +72,14 @@ export default class RSModel implements Subject {
     Object.keys(options).forEach((key) => {
       this.options[key] = options[key];
     });
+
+    // check if handlers will fit into
+    this.handlerValues.forEach((value, index) => {
+      const coord = this.valueToCoord(value);
+      this.updateHandlers(index, coord);
+    });
+
+    this.notifyObservers();
   }
 
   updatePercentStep() {
@@ -107,6 +115,13 @@ export default class RSModel implements Subject {
     const factor = stepSize / this.stepSizePerc;
     const value = coord * factor + minValue;
     return Math.round(value);
+  }
+
+  valueToCoord(value) {
+    const { minValue, stepSize } = this.options;
+    const steps = (value - minValue) / stepSize;
+    const coord = steps * this.stepSizePerc;
+    return coord;
   }
 
   updateHandlers(index, coord) {
