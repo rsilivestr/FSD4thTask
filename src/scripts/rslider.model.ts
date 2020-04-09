@@ -74,16 +74,24 @@ export default class RSModel implements Subject {
     });
   }
 
+  updatePercentStep() {
+    const scaleLength = this.options.maxValue - this.options.minValue;
+    const stepPerc = Math.abs((this.options.stepSize / scaleLength) * 100);
+    this.stepSizePerc = stepPerc;
+    return stepPerc;
+  }
+
   normalizeHandlerValue(index, value) {
+    const step = this.updatePercentStep();
     // value is a coordinate
-    const x = value + this.stepSizePerc / 2;
+    const x = value + step / 2;
     // normalized value is coordinate of the closest step value
-    const normalizedCoord = x - (x % this.stepSizePerc);
+    const normalizedCoord = x - (x % step);
 
     const stepsToMax = this.handlerValues.length - (index + 1);
     // theese are percentage coords too
-    const minIndexCoord = this.stepSizePerc * index;
-    const maxIndexCoord = 100 - this.stepSizePerc * stepsToMax;
+    const minIndexCoord = step * index;
+    const maxIndexCoord = 100 - step * stepsToMax;
 
     if (normalizedCoord > maxIndexCoord) {
       return maxIndexCoord;
@@ -98,7 +106,7 @@ export default class RSModel implements Subject {
     const { minValue, stepSize } = this.options;
     const factor = stepSize / this.stepSizePerc;
     const value = coord * factor + minValue;
-    return value;
+    return Math.round(value);
   }
 
   updateHandlers(index, coord) {

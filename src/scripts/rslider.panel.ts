@@ -4,13 +4,21 @@ import { Subject, Observer } from './interfaces';
 export default class RSPanel implements Observer {
   model;
 
+  modelOptions;
+
+  container: HTMLElement;
+
   values: [];
 
   handlerInputs: HTMLInputElement[] = [];
 
-  constructor(model) {
+  constructor(model, container) {
     this.model = model;
     model.addObserver(this);
+
+    this.modelOptions = this.model.getOptions();
+
+    this.container = container;
 
     this.values = this.model.handlerValues.slice();
   }
@@ -37,36 +45,52 @@ export default class RSPanel implements Observer {
       this.handlerInputs.push(input);
     }
 
+    const minLabel = document.createElement('label');
+    minLabel.innerText = 'Min value';
+    minLabel.className = 'rslider-panel__label';
+    panel.appendChild(minLabel);
+
     const minInput = document.createElement('input');
     minInput.type = 'number';
     minInput.className = 'rslider-panel__input';
-    panel.appendChild(minInput);
+    minLabel.appendChild(minInput);
+
+    minInput.value = this.modelOptions.minValue;
+
     minInput.addEventListener('input', () => {
-      const re = /^\d+$/;
+      const re = /^-?\d+$/;
       const valid = re.test(minInput.value);
       if (valid) {
         this.model.setOptions({ minValue: +minInput.value });
         // redraw view somehow
-        this.model.updateHandlers(0, 0);
+        this.model.notifyObservers();
       }
     });
+
+
+    const maxLabel = document.createElement('label');
+    maxLabel.innerText = 'Max value';
+    maxLabel.className = 'rslider-panel__label';
+    panel.appendChild(maxLabel);
 
     const maxInput = document.createElement('input');
     maxInput.type = 'number';
     maxInput.className = 'rslider-panel__input';
-    panel.appendChild(maxInput);
+    maxLabel.appendChild(maxInput);
+
+    maxInput.value = this.modelOptions.maxValue;
+
     maxInput.addEventListener('input', () => {
       const re = /^\d+$/;
       const valid = re.test(maxInput.value);
       if (valid) {
         this.model.setOptions({ maxValue: +maxInput.value });
         // redraw view somehow
-        this.model.updateHandlers(0, 0);
+        this.model.notifyObservers();
       }
     });
-    // minInput.addEventListener('keydown', this.model.setOptions({ maxValue: maxInput.value }));
 
-    document.body.appendChild(panel);
+    this.container.appendChild(panel);
   }
 
   update() {

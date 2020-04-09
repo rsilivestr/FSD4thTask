@@ -20,5 +20,5 @@ const ctrl = new RSController(model, view);
 document.body.addEventListener('mousedown', ctrl.grab.bind(ctrl));
 document.body.addEventListener('dragstart', (e) => e.preventDefault());
 
-const panel = new RSPanel(model);
+const panel = new RSPanel(model, foo);
 panel.render();
