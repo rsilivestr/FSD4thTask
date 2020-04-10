@@ -30,7 +30,7 @@ export default class RSModel implements Subject {
     const scaleLength = this.options.maxValue - this.options.minValue;
     this.stepSizePerc = Math.abs((this.options.stepSize / scaleLength) * 100);
 
-    this.handlerValues = this.setValues();
+    this.handlerValues = this.presetValues();
 
     // this.handlerCoords = this.setCoords();
   }
@@ -73,13 +73,7 @@ export default class RSModel implements Subject {
       this.options[key] = options[key];
     });
 
-    // check if handlers will fit into
-    this.handlerValues.forEach((value, index) => {
-      const coord = this.valueToCoord(value);
-      this.updateHandlers(index, coord);
-    });
-
-    this.notifyObservers();
+    this.postUpdate();
   }
 
   updatePercentStep() {
@@ -89,10 +83,10 @@ export default class RSModel implements Subject {
     return stepPerc;
   }
 
-  normalizeHandlerValue(index, value) {
+  normalizeHandlerCoord(index, coord) {
     const step = this.updatePercentStep();
     // value is a coordinate
-    const x = value + step / 2;
+    const x = coord + step / 2;
     // normalized value is coordinate of the closest step value
     const normalizedCoord = x - (x % step);
 
@@ -125,7 +119,7 @@ export default class RSModel implements Subject {
   }
 
   updateHandlers(index, coord) {
-    const normalizedCoord = this.normalizeHandlerValue(index, coord);
+    const normalizedCoord = this.normalizeHandlerCoord(index, coord);
     const normalizedValue = this.coordToValue(normalizedCoord);
 
     this.handlerValues[index] = normalizedValue;
@@ -155,7 +149,7 @@ export default class RSModel implements Subject {
   }
 
   // starting values are hardcoded
-  setValues() {
+  presetValues() {
     const arr = [];
 
     arr.length = this.options.handlerCount;
@@ -170,5 +164,23 @@ export default class RSModel implements Subject {
     }
 
     return arr;
+  }
+
+  updateValue(index, value) {
+    const step = this.options.stepSize;
+    const x = value > 0 ? value + step / 2 : value - step / 2;
+    const normalizedValue = x - (x % step);
+    this.handlerValues[index] = normalizedValue;
+
+    this.postUpdate();
+  }
+
+  postUpdate() {
+    this.handlerValues.forEach((value, index) => {
+      const coord = this.valueToCoord(value);
+      this.updateHandlers(index, coord);
+    });
+
+    this.notifyObservers();
   }
 }

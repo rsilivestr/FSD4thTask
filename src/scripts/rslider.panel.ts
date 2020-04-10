@@ -42,6 +42,16 @@ export default class RSPanel implements Observer {
       label.appendChild(input);
       panel.appendChild(label);
 
+      input.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          const re = /^-?\d+$/;
+          const valid = re.test(input.value);
+          if (valid) {
+            this.model.updateValue(i, +input.value);
+          }
+        }
+      });
+
       this.handlerInputs.push(input);
     }
 
@@ -104,7 +114,6 @@ export default class RSPanel implements Observer {
         this.model.setOptions({ stepSize: +stepInput.value });
       }
     });
-
 
     this.container.appendChild(panel);
   }
