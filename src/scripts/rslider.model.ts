@@ -150,12 +150,12 @@ export default class RSModel implements Subject {
 
   // starting values are hardcoded
   presetValues() {
-    const arr = [];
+    const arr: number[] = [];
 
     arr.length = this.options.handlerCount;
 
-    let index = 0;
-    let value = this.options.minValue;
+    let index: number = 0;
+    let value: number = this.options.minValue;
 
     while (index < arr.length) {
       arr[index] = value;
@@ -167,19 +167,25 @@ export default class RSModel implements Subject {
   }
 
   updateValue(index, value) {
-    const step = this.options.stepSize;
-    const x = value > 0 ? value + step / 2 : value - step / 2;
-    const normalizedValue = x - (x % step);
+    const step: number = this.options.stepSize;
+    const x: number = value > 0 ? value + step / 2 : value - step / 2;
+    const normalizedValue: number = x - (x % step);
     this.handlerValues[index] = normalizedValue;
 
-    this.postUpdate();
+    this.postUpdate(index);
   }
 
-  postUpdate() {
-    this.handlerValues.forEach((value, index) => {
-      const coord = this.valueToCoord(value);
-      this.updateHandlers(index, coord);
-    });
+  postUpdate(idx?: number) {
+    if (idx) {
+      const value: number = this.handlerValues[idx];
+      const coord: number = this.valueToCoord(value);
+      this.updateHandlers(idx, coord);
+    } else {
+      this.handlerValues.forEach((value, index) => {
+        const coord: number = this.valueToCoord(value);
+        this.updateHandlers(index, coord);
+      });
+    }
 
     this.notifyObservers();
   }

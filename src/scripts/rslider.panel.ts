@@ -23,6 +23,48 @@ export default class RSPanel implements Observer {
     this.values = this.model.handlerValues.slice();
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  createInput(parent: HTMLElement, labelText: string) {
+    const label = document.createElement('label');
+    label.className = 'rslider-panel__label';
+    label.innerText = labelText;
+    parent.appendChild(label);
+
+    const input = document.createElement('input');
+    input.className = 'rslider-panel__input';
+    input.type = 'number';
+    label.appendChild(input);
+
+    return input;
+  }
+
+  setHandlerValue(e: KeyboardEvent, index: number) {
+    if (e.key === 'Enter') {
+      const input: HTMLInputElement = <HTMLInputElement>e.target;
+      const inputValue: string = input.value;
+
+      const re = /^-?\d+$/;
+      const valid = re.test(inputValue);
+
+      if (valid) {
+        this.model.updateValue(index, +inputValue);
+      }
+    }
+  }
+
+  setModelOption(e: Event, key: string) {
+    const input: HTMLInputElement = <HTMLInputElement>e.target;
+    const options: Object = {};
+
+    if (key === 'stepSize') {
+      options[key] = Math.abs(+input.value);
+    } else {
+      options[key] = +input.value;
+    }
+
+    this.model.setOptions(options);
+  }
+
   render() {
     const panel = document.createElement('div');
     panel.className = 'rslider-panel';
@@ -30,90 +72,35 @@ export default class RSPanel implements Observer {
     const { handlerCount } = this.model.options;
 
     for (let i = 0; i < handlerCount; i += 1) {
-      const label = document.createElement('label');
-      label.className = 'rslider-panel__label';
-      label.innerText = `Handler #${i + 1} `;
+      const name = `Handler #${i + 1}`;
+      const input = this.createInput(panel, name);
 
-      const input = document.createElement('input');
-      input.className = 'rslider-panel__input';
-      input.type = 'number';
       input.value = this.values[i];
 
-      label.appendChild(input);
-      panel.appendChild(label);
-
-      input.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-          const re = /^-?\d+$/;
-          const valid = re.test(input.value);
-          if (valid) {
-            this.model.updateValue(i, +input.value);
-          }
-        }
-      });
+      input.addEventListener('keyup', (e) => { this.setHandlerValue(e, i); });
 
       this.handlerInputs.push(input);
     }
 
-    const minLabel = document.createElement('label');
-    minLabel.innerText = 'Min value';
-    minLabel.className = 'rslider-panel__label';
-    panel.appendChild(minLabel);
-
-    const minInput = document.createElement('input');
-    minInput.type = 'number';
-    minInput.className = 'rslider-panel__input';
-    minLabel.appendChild(minInput);
-
+    const minInput = this.createInput(panel, 'Min value');
     minInput.value = this.modelOptions.minValue;
+    minInput.addEventListener('input', (e) => { this.setModelOption(e, 'minValue'); });
 
-    minInput.addEventListener('input', () => {
-      const re = /^-?\d+$/;
-      const valid = re.test(minInput.value);
-      if (valid) {
-        this.model.setOptions({ minValue: +minInput.value });
-      }
-    });
-
-    const maxLabel = document.createElement('label');
-    maxLabel.innerText = 'Max value';
-    maxLabel.className = 'rslider-panel__label';
-    panel.appendChild(maxLabel);
-
-    const maxInput = document.createElement('input');
-    maxInput.type = 'number';
-    maxInput.className = 'rslider-panel__input';
-    maxLabel.appendChild(maxInput);
-
+    const maxInput = this.createInput(panel, 'Max value');
     maxInput.value = this.modelOptions.maxValue;
+    maxInput.addEventListener('input', (e) => { this.setModelOption(e, 'maxValue'); });
 
-    maxInput.addEventListener('input', () => {
-      const re = /^-?\d+$/;
-      const valid = re.test(maxInput.value);
-      if (valid) {
-        this.model.setOptions({ maxValue: +maxInput.value });
-      }
-    });
-
-    const stepLabel = document.createElement('label');
-    stepLabel.innerText = 'Step size: ';
-    stepLabel.className = 'rslider-panel__label';
-    panel.appendChild(stepLabel);
-
-    const stepInput = document.createElement('input');
-    stepInput.type = 'number';
-    stepInput.className = 'rslider-panel__input';
-    stepLabel.appendChild(stepInput);
-
+    const stepInput = this.createInput(panel, 'Step size');
     stepInput.value = this.modelOptions.stepSize;
+    stepInput.addEventListener('input', (e) => { this.setModelOption(e, 'stepSize'); });
 
-    stepInput.addEventListener('input', () => {
-      const re = /^\d+$/;
-      const valid = re.test(stepInput.value);
-      if (valid) {
-        this.model.setOptions({ stepSize: +stepInput.value });
-      }
-    });
+    // stepInput.addEventListener('input', () => {
+    //   const re = /^\d+$/;
+    //   const valid = re.test(stepInput.value);
+    //   if (valid) {
+    //     this.model.setOptions({ stepSize: +stepInput.value });
+    //   }
+    // });
 
     this.container.appendChild(panel);
   }
