@@ -54,24 +54,50 @@ export default class RSModel implements Subject {
     });
   }
 
+  postUpdate(idx?: number) {
+    if (idx) {
+      const value: number = this.handlerValues[idx];
+      const coord: number = this.valueToCoord(value);
+      this.updateHandlers(idx, coord);
+    } else {
+      this.handlerValues.forEach((value, index) => {
+        const coord: number = this.valueToCoord(value);
+        this.updateHandlers(index, coord);
+      });
+    }
+
+    this.notifyObservers();
+  }
+
   getOptions() {
     return this.options;
   }
 
   setOptions(options: ModelOptions) {
-    // for (const { key, value } of Object.entries(options)) {
-    //   this.options[key] = value;
-    // }
+    const count = +options.handlerCount;
+    if (count && typeof count === 'number') {
+      this.options.handlerCount = count;
+    }
 
-    // for (const key in options) {
-    //   if ({}.hasOwnProperty.call(options, key)) {
-    //     this.options[key] = options[key];
-    //   }
-    // }
+    const min = +options.minValue;
+    if (min && typeof min === 'number') {
+      this.options.minValue = min;
+    }
 
-    Object.keys(options).forEach((key) => {
-      this.options[key] = options[key];
-    });
+    const max = +options.maxValue;
+    if (max && typeof max === 'number') {
+      this.options.maxValue = max;
+    }
+
+    const step = +options.stepSize;
+    if (step && typeof step === 'number') {
+      this.options.stepSize = step;
+    }
+
+    const { range } = options;
+    if (range && typeof range === 'boolean') {
+      this.options.range = range;
+    }
 
     this.postUpdate();
   }
@@ -173,20 +199,5 @@ export default class RSModel implements Subject {
     this.handlerValues[index] = normalizedValue;
 
     this.postUpdate(index);
-  }
-
-  postUpdate(idx?: number) {
-    if (idx) {
-      const value: number = this.handlerValues[idx];
-      const coord: number = this.valueToCoord(value);
-      this.updateHandlers(idx, coord);
-    } else {
-      this.handlerValues.forEach((value, index) => {
-        const coord: number = this.valueToCoord(value);
-        this.updateHandlers(index, coord);
-      });
-    }
-
-    this.notifyObservers();
   }
 }
