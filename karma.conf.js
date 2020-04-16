@@ -7,8 +7,6 @@ module.exports = (config) => {
         type: 'dom',
       },
       './dist/scripts/rslider.js',
-      './dist/scripts/demo.js',
-      './test.foo.js',
       './test/*.test.js',
     ],
     reporters: ['progress'],

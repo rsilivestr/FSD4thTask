@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.prod.js --watch",
+    "watch": "webpack --config webpack.prod.js --watch",
     "test": "karma start karma.conf.js"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
@@ -40,7 +41,6 @@
     "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^7.1.1",
     "node-sass": "^4.13.1",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "path": "^0.12.7",
     "postcss-loader": "^3.0.0",
     "pug": "^2.0.4",

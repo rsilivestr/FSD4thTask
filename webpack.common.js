@@ -3,49 +3,46 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    rslider: [
-      './src/scripts/rslider.ts',
-    ],
-    demo: [
-      './src/scripts/demo.js',
-      './src/styles/demo.sass',
-    ],
+    rslider: './src/scripts/rslider.ts',
   },
   output: {
     filename: 'scripts/[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: 'RSlider',
     libraryTarget: 'umd',
-    // library: ['RSlider', '[name]'],
-    // jsonpScriptType: 'text/javascript',
-    // globalObject: 'this',
   },
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/demo.pug',
+      template: './src/demo/demo.pug',
       filename: 'demo.html',
+      inject: false,
     }),
     new MiniCssExtractPlugin({
       filename: 'styles/[name].css',
       ignoreOrder: false,
     }),
+    new CopyWebpackPlugin([
+      { from: 'src/demo/demo.js', to: path.resolve(__dirname, 'dist/scripts') },
+      { from: 'src/demo/demo.css', to: path.resolve(__dirname, 'dist/styles') },
+    ]),
   ],
   module: {
     rules: [
       {
         test: /\.ts$/,
-        include: path.resolve(__dirname, 'src'),
+        include: path.resolve(__dirname, 'src/scripts'),
         use: {
           loader: 'ts-loader',
         },
       },
       {
-        test: /\.s[ac]ss$/i,
-        include: path.resolve(__dirname, 'src'),
+        test: /\.sass$/i,
+        include: path.resolve(__dirname, 'src/styles'),
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

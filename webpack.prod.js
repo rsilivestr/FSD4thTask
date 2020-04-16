@@ -1,25 +1,25 @@
 /* eslint-disable */
 const merge = require('webpack-merge');
-const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const common = require('./webpack.common.js');
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = merge(common, {
+  mode: 'production',
+  devtool: 'source-map',
   optimization: {
-    runtimeChunk: true,
-    minimize: false,
+    // runtimeChunk: true,
+    minimize: true,
     removeAvailableModules: true,
     minimizer: [
       new TerserJSPlugin({
         cache: true,
         parallel: true,
-        sourceMap: false,
+        sourceMap: true,
         terserOptions: {
           keep_classnames: true,
           keep_fnames: true,
         },
       }),
-      new OptimizeCSSAssetsPlugin(),
     ],
     splitChunks: {
       cacheGroups: {
@@ -34,6 +34,4 @@ module.exports = merge(common, {
       },
     },
   },
-  mode: 'production',
-  // devtool: 'source-map',
 });

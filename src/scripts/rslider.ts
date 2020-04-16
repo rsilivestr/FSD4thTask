@@ -29,4 +29,6 @@ export function create(selector, options) {
 export function addPanel({ model, container }) {
   const panel = new RSPanel(model, container);
   panel.render();
+
+  return panel;
 }
