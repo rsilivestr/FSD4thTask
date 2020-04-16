@@ -1,5 +1,4 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable */
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -9,16 +8,20 @@ module.exports = {
   entry: {
     rslider: [
       './src/scripts/rslider.ts',
-      './src/styles/rslider.sass',
     ],
     demo: [
-      './src/scripts/demo.ts',
+      './src/scripts/demo.js',
       './src/styles/demo.sass',
     ],
   },
   output: {
     filename: 'scripts/[name].js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'RSlider',
+    libraryTarget: 'umd',
+    // library: ['RSlider', '[name]'],
+    // jsonpScriptType: 'text/javascript',
+    // globalObject: 'this',
   },
   plugins: [
     new CleanWebpackPlugin(),

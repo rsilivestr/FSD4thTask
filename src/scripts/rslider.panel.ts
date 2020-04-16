@@ -8,11 +8,11 @@ export default class RSPanel implements Observer {
 
   container: HTMLElement;
 
-  values: [];
+  values: number[];
 
   handlerInputs: HTMLInputElement[] = [];
 
-  constructor(model, container) {
+  constructor(model, container: HTMLElement) {
     this.model = model;
     model.addObserver(this);
 
@@ -41,7 +41,7 @@ export default class RSPanel implements Observer {
   setHandlerValue(e: KeyboardEvent, index: number) {
     if (e.key === 'Enter') {
       const input: HTMLInputElement = <HTMLInputElement>e.target;
-      const inputValue: string = input.value;
+      const inputValue = input.value;
 
       const re = /^-?\d+$/;
       const valid = re.test(inputValue);
@@ -66,7 +66,7 @@ export default class RSPanel implements Observer {
   }
 
   render() {
-    const panel = document.createElement('div');
+    const panel: HTMLElement = document.createElement('div');
     panel.className = 'rslider-panel';
 
     const { handlerCount } = this.model.options;
@@ -75,7 +75,7 @@ export default class RSPanel implements Observer {
       const name = `Handler #${i + 1}`;
       const input = this.createInput(panel, name);
 
-      input.value = this.values[i];
+      input.value = this.values[i].toString(10);
 
       input.addEventListener('keyup', (e) => { this.setHandlerValue(e, i); });
 
@@ -94,14 +94,6 @@ export default class RSPanel implements Observer {
     stepInput.value = this.modelOptions.stepSize;
     stepInput.addEventListener('input', (e) => { this.setModelOption(e, 'stepSize'); });
 
-    // stepInput.addEventListener('input', () => {
-    //   const re = /^\d+$/;
-    //   const valid = re.test(stepInput.value);
-    //   if (valid) {
-    //     this.model.setOptions({ stepSize: +stepInput.value });
-    //   }
-    // });
-
     this.container.appendChild(panel);
   }
 
@@ -109,7 +101,7 @@ export default class RSPanel implements Observer {
     this.values = this.model.handlerValues;
     this.handlerInputs.forEach((input, index) => {
       // eslint-disable-next-line no-param-reassign
-      input.value = this.values[index];
+      input.value = this.values[index].toString(10);
     });
   }
 }

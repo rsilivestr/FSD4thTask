@@ -1,26 +1,34 @@
-const merge = require('webpack-merge'),
-      common = require('./webpack.common.js'),
-      TerserJSPlugin = require('terser-webpack-plugin'),
-      OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+/* eslint-disable */
+const merge = require('webpack-merge');
+const TerserJSPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const common = require('./webpack.common.js');
 
-module.exports = merge(common, {  
+module.exports = merge(common, {
   optimization: {
-    // minimizer: [
-    //   // new TerserJSPlugin({
-    //   //   cache: true,
-    //   //   parallel: true,
-    //   //   sourceMap: false,
-    //   // }), 
-    //   // new OptimizeCSSAssetsPlugin(),
-    // ],
+    runtimeChunk: true,
+    minimize: false,
+    removeAvailableModules: true,
+    minimizer: [
+      new TerserJSPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: false,
+        terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true,
+        },
+      }),
+      new OptimizeCSSAssetsPlugin(),
+    ],
     splitChunks: {
       cacheGroups: {
         commons: {
           enforce: true,
           test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              return `vendors/${module.identifier().split('/').reduceRight(item => item).split('.')[0]}`;
-            },
+          name(module) {
+            return `vendors/${module.identifier().split('/').reduceRight((item) => item).split('.')[0]}`;
+          },
           chunks: 'all',
         },
       },

@@ -1,24 +1,32 @@
+import '../styles/rslider.sass';
+
 import RSModel from './rslider.model';
 import RSView from './rslider.view';
 import RSController from './rslider.controller';
 import RSPanel from './rslider.panel';
 
-const model = new RSModel({ handlerCount: 2 });
+export function create(selector, options) {
+  const container = document.querySelector(selector);
 
-model.setOptions({ handlerCount: 2 });
+  const model = new RSModel(options);
 
-// mock container
-const foo = document.getElementById('foo');
+  const view = new RSView(model, container);
+  view.render();
 
-// const opt = { isHorizontal: false };
+  const ctrl = new RSController(model, view);
 
-const view = new RSView(model, foo);
+  document.body.addEventListener('mousedown', ctrl.grab.bind(ctrl));
+  document.body.addEventListener('dragstart', (e) => e.preventDefault());
 
-view.render();
+  return {
+    container,
+    model,
+    view,
+    controller: ctrl,
+  };
+}
 
-const ctrl = new RSController(model, view);
-document.body.addEventListener('mousedown', ctrl.grab.bind(ctrl));
-document.body.addEventListener('dragstart', (e) => e.preventDefault());
-
-const panel = new RSPanel(model, foo);
-panel.render();
+export function addPanel({ model, container }) {
+  const panel = new RSPanel(model, container);
+  panel.render();
+}
