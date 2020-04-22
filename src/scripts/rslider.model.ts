@@ -95,22 +95,22 @@ export default class RSModel implements Model {
   }
 
   setOptions(options: ModelOptions) {
-    const count = +options.handlerCount;
+    const count = options.handlerCount;
     if (count && typeof count === 'number') {
       this.options.handlerCount = count;
     }
 
-    const min = +options.minValue;
-    if (min && typeof min === 'number') {
+    const min = options.minValue;
+    if (typeof min === 'number') {
       this.options.minValue = min;
     }
 
-    const max = +options.maxValue;
-    if (max && typeof max === 'number') {
+    const max = options.maxValue;
+    if (typeof max === 'number') {
       this.options.maxValue = max;
     }
 
-    const step = +options.stepSize;
+    const step = options.stepSize;
     if (step && typeof step === 'number') {
       this.options.stepSize = step;
     }

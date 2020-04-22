@@ -54,17 +54,20 @@ export default class RSPanel implements Observer {
     }
   }
 
-  setModelOption(e: Event, key: keyof ModelOptions) {
-    const input: HTMLInputElement = <HTMLInputElement>e.target;
-    const options: ModelOptions = {};
+  setModelOption(e: KeyboardEvent, key: keyof ModelOptions) {
+    if (e.key === 'Enter') {
+      const input: HTMLInputElement = <HTMLInputElement>e.target;
+      const options: ModelOptions = {};
+      const value: number = +input.value;
 
-    if (key === 'stepSize') {
-      options[key] = Math.abs(+input.value);
-    } else if (key !== 'range') {
-      options[key] = +input.value;
+      if (key === 'stepSize') {
+        options[key] = Math.abs(value);
+      } else if (key !== 'range') {
+        options[key] = value;
+      }
+
+      this.model.setOptions(options);
     }
-
-    this.model.setOptions(options);
   }
 
   render() {
@@ -86,15 +89,15 @@ export default class RSPanel implements Observer {
 
     const minInput = this.createInput(panel, 'Min value');
     minInput.value = this.modelOptions.minValue.toString();
-    minInput.addEventListener('input', (e) => { this.setModelOption(e, 'minValue'); });
+    minInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'minValue'); });
 
     const maxInput = this.createInput(panel, 'Max value');
     maxInput.value = this.modelOptions.maxValue.toString();
-    maxInput.addEventListener('input', (e) => { this.setModelOption(e, 'maxValue'); });
+    maxInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'maxValue'); });
 
     const stepInput = this.createInput(panel, 'Step size');
     stepInput.value = this.modelOptions.stepSize.toString();
-    stepInput.addEventListener('input', (e) => { this.setModelOption(e, 'stepSize'); });
+    stepInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'stepSize'); });
 
     this.container.appendChild(panel);
 

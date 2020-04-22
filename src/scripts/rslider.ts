@@ -33,6 +33,7 @@ export function create(selector: string, options: ModelOptions) {
     view,
     controller: ctrl,
   };
+
   return slider;
 }
 
