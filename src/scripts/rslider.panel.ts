@@ -1,10 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
+// eslint-disable-next-line no-unused-vars
+import { Model, ModelOptions } from './rslider.model';
 
 export default class RSPanel implements Observer {
-  model;
+  model: Model;
 
-  modelOptions;
+  modelOptions: ModelOptions;
 
   container: HTMLElement;
 
@@ -12,7 +14,7 @@ export default class RSPanel implements Observer {
 
   handlerInputs: HTMLInputElement[] = [];
 
-  constructor(model, container: HTMLElement) {
+  constructor(model: Model, container: HTMLElement) {
     this.model = model;
     model.addObserver(this);
 
@@ -52,13 +54,13 @@ export default class RSPanel implements Observer {
     }
   }
 
-  setModelOption(e: Event, key: string) {
+  setModelOption(e: Event, key: keyof ModelOptions) {
     const input: HTMLInputElement = <HTMLInputElement>e.target;
-    const options: Object = {};
+    const options: ModelOptions = {};
 
     if (key === 'stepSize') {
       options[key] = Math.abs(+input.value);
-    } else {
+    } else if (key !== 'range') {
       options[key] = +input.value;
     }
 
@@ -83,18 +85,20 @@ export default class RSPanel implements Observer {
     }
 
     const minInput = this.createInput(panel, 'Min value');
-    minInput.value = this.modelOptions.minValue;
+    minInput.value = this.modelOptions.minValue.toString();
     minInput.addEventListener('input', (e) => { this.setModelOption(e, 'minValue'); });
 
     const maxInput = this.createInput(panel, 'Max value');
-    maxInput.value = this.modelOptions.maxValue;
+    maxInput.value = this.modelOptions.maxValue.toString();
     maxInput.addEventListener('input', (e) => { this.setModelOption(e, 'maxValue'); });
 
     const stepInput = this.createInput(panel, 'Step size');
-    stepInput.value = this.modelOptions.stepSize;
+    stepInput.value = this.modelOptions.stepSize.toString();
     stepInput.addEventListener('input', (e) => { this.setModelOption(e, 'stepSize'); });
 
     this.container.appendChild(panel);
+
+    return panel;
   }
 
   update() {

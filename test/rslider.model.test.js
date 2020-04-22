@@ -9,6 +9,7 @@ describe('RSModel', () => {
   });
 
   it('setOpions should convert string to number', () => {
+    sl1.model.setOptions({ handlerCount: 2 });
     sl1.model.setOptions({ handlerCount: '4' });
 
     const result = sl1.model.getOptions();

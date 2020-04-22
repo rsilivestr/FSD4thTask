@@ -1,30 +1,34 @@
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
+// eslint-disable-next-line no-unused-vars
+import { Model } from './rslider.model';
+// eslint-disable-next-line no-unused-vars
+import { View } from './rslider.view';
 
 interface Controller {
-  grab(e);
-  drag(handler): any;
-  release(handler): any;
+  grab(e: any): any;
+  drag(e: any): number;
+  release(): any;
 }
 
 export default class RSController implements Controller {
   handlers: Array<HTMLElement>;
 
-  grabbedHandler;
+  grabbedHandler: HTMLElement | null;
 
-  grabListener;
+  grabListener: any;
 
-  boundGrab;
+  boundGrab: any;
 
-  boundDrag;
+  boundDrag: any;
 
-  boundRelease;
+  boundRelease: any;
 
-  model;
+  model: Model;
 
-  view;
+  view: View;
 
-  constructor(model: Subject, view: Observer) {
+  constructor(model: Model, view: View) {
     this.handlers = [];
     this.grabbedHandler = null;
 
@@ -36,7 +40,7 @@ export default class RSController implements Controller {
     this.view = view;
   }
 
-  grab(e) {
+  grab(e: any) {
     if (e.target.classList.contains('rslider__handler')) {
       this.grabbedHandler = e.target;
 
@@ -45,7 +49,7 @@ export default class RSController implements Controller {
     }
   }
 
-  drag(e) {
+  drag(e: MouseEvent) {
     const { isHorizontal } = this.view.options;
     const coord = isHorizontal ? e.clientX : e.clientY;
     const { minCoord, maxCoord } = this.view.getRect();

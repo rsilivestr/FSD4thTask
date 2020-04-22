@@ -2,6 +2,8 @@
 
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
+// eslint-disable-next-line no-unused-vars
+import { Model } from './rslider.model';
 
 export interface ViewOptions {
   isHorizontal?: boolean;
@@ -11,8 +13,30 @@ export interface ViewOptions {
   showTooltip?: boolean;
 }
 
-interface View extends Observer {
-  render();
+export interface Rect {
+  sliderLength: number;
+  minCoord: number;
+  maxCoord: number;
+}
+
+export interface View extends Observer {
+  container: HTMLElement;
+  slider: HTMLElement;
+  track: HTMLElement;
+  trackRect: ClientRect;
+  handler: HTMLElement;
+  options: ViewOptions;
+  handlerCount: number;
+  model: Model;
+  coord: any;
+  handlers: HTMLElement[];
+  handlerCoords: number[];
+  modelOptions: any;
+  setCoords(values: number[]): any;
+  render(): any;
+  getRect(): Rect;
+  update(values: number[]): any;
+  identifyHandler(handler: HTMLElement): number;
 }
 
 export default class RSView implements View {
@@ -30,17 +54,17 @@ export default class RSView implements View {
 
   handlerCount: number;
 
-  model;
+  model: any;
 
-  coord;
+  coord: any;
 
   handlers: HTMLElement[] = [];
 
   handlerCoords: number[] = [];
 
-  modelOptions;
+  modelOptions: any;
 
-  constructor(model: Subject, container: HTMLElement, options: ViewOptions = {}) {
+  constructor(model: Model, container: HTMLElement, options: ViewOptions = {}) {
     this.model = model;
     model.addObserver(this);
 
@@ -59,7 +83,7 @@ export default class RSView implements View {
     this.options.showTooltip = options.showTooltip || true;
   }
 
-  setCoords(values) {
+  setCoords(values: number[]) {
     const { minValue, maxValue } = this.modelOptions;
 
     values.forEach((value) => {
@@ -145,7 +169,7 @@ export default class RSView implements View {
     };
   }
 
-  update(values) {
+  update(values: number[]) {
     const { sliderLength } = this.getRect();
     const { minValue, maxValue } = this.model.getOptions();
     const x = (maxValue - minValue) / 100;
@@ -169,7 +193,7 @@ export default class RSView implements View {
     });
   }
 
-  identifyHandler(handler) {
+  identifyHandler(handler: HTMLElement) {
     return this.handlers.indexOf(handler);
   }
 }

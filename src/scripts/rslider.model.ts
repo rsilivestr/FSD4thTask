@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
 
-interface ModelOptions {
+export interface ModelOptions {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -9,16 +9,31 @@ interface ModelOptions {
   range?: boolean;
 }
 
-export default class RSModel implements Subject {
+export interface Model extends Subject {
+  observers: Observer[];
+  options: ModelOptions;
+  stepSizePerc: number;
+  handlerValues: number[];
+  postUpdate(): number[];
+  getOptions(): ModelOptions;
+  setOptions(options: ModelOptions): ModelOptions;
+  updatePercentStep(): number;
+  normalizeHandlerCoord(index: number, coord: number): number;
+  coordToValue(coord: number): number;
+  valueToCoord(value: number): number;
+  updateHandlers(index: number, coord: number): number[];
+  presetValues(): number[];
+  updateValue(index: number, value: number): number;
+}
+
+export default class RSModel implements Model {
   observers: Observer[] = [];
 
   public options: ModelOptions = {};
 
-  stepSizePerc;
+  stepSizePerc: number;
 
   handlerValues: number[] = [];
-
-  // handlerCoords: number[] = [];
 
   constructor(options?: ModelOptions) {
     this.options.minValue = options.minValue || -20;
@@ -37,6 +52,8 @@ export default class RSModel implements Subject {
 
   addObserver(o: Observer) {
     this.observers.push(o);
+
+    return this.observers;
   }
 
   removeObserver(o: Observer) {
@@ -46,6 +63,8 @@ export default class RSModel implements Subject {
       }
       return null;
     });
+
+    return this.observers;
   }
 
   notifyObservers() {
@@ -67,6 +86,8 @@ export default class RSModel implements Subject {
     }
 
     this.notifyObservers();
+
+    return this.handlerValues;
   }
 
   getOptions() {
@@ -100,16 +121,19 @@ export default class RSModel implements Subject {
     }
 
     this.postUpdate();
+
+    return this.options;
   }
 
   updatePercentStep() {
     const scaleLength = this.options.maxValue - this.options.minValue;
     const stepPerc = Math.abs((this.options.stepSize / scaleLength) * 100);
     this.stepSizePerc = stepPerc;
+
     return stepPerc;
   }
 
-  normalizeHandlerCoord(index, coord) {
+  normalizeHandlerCoord(index: number, coord: number) {
     const step = this.updatePercentStep();
     // value is a coordinate
     const x = coord + step / 2;
@@ -130,21 +154,21 @@ export default class RSModel implements Subject {
     return normalizedCoord;
   }
 
-  coordToValue(coord) {
+  coordToValue(coord: number) {
     const { minValue, stepSize } = this.options;
     const factor = stepSize / this.stepSizePerc;
     const value = coord * factor + minValue;
     return Math.round(value);
   }
 
-  valueToCoord(value) {
+  valueToCoord(value: number) {
     const { minValue, stepSize } = this.options;
     const steps = (value - minValue) / stepSize;
     const coord = steps * this.stepSizePerc;
     return coord;
   }
 
-  updateHandlers(index, coord) {
+  updateHandlers(index: number, coord: number) {
     const normalizedCoord = this.normalizeHandlerCoord(index, coord);
     const normalizedValue = this.coordToValue(normalizedCoord);
 
@@ -172,6 +196,8 @@ export default class RSModel implements Subject {
     }
 
     this.notifyObservers();
+
+    return this.handlerValues;
   }
 
   // starting values are hardcoded
@@ -192,12 +218,14 @@ export default class RSModel implements Subject {
     return arr;
   }
 
-  updateValue(index, value) {
+  updateValue(index: number, value: number) {
     const step: number = this.options.stepSize;
     const x: number = value > 0 ? value + step / 2 : value - step / 2;
     const normalizedValue: number = x - (x % step);
     this.handlerValues[index] = normalizedValue;
 
     this.postUpdate(index);
+
+    return normalizedValue;
   }
 }

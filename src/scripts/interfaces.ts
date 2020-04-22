@@ -1,9 +1,9 @@
 export interface Subject {
-  addObserver(o: Observer);
-  removeObserver(o: Observer);
-  notifyObservers();
+  addObserver(o: Observer): Observer[];
+  removeObserver(o: Observer): Observer[];
+  notifyObservers(): any;
 }
 
 export interface Observer {
-  update(handlerValuesArray);
+  update(handlerValuesArray: number[]): any;
 }
