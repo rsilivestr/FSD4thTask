@@ -14,6 +14,7 @@ export interface Model extends Subject {
   options: ModelOptions;
   stepSizePerc: number;
   handlerValues: number[];
+
   postUpdate(): number[];
   getOptions(): ModelOptions;
   setOptions(options: ModelOptions): ModelOptions;
@@ -42,12 +43,9 @@ export default class RSModel implements Model {
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
 
-    const scaleLength = this.options.maxValue - this.options.minValue;
-    this.stepSizePerc = Math.abs((this.options.stepSize / scaleLength) * 100);
+    this.stepSizePerc = this.updatePercentStep();
 
     this.handlerValues = this.presetValues();
-
-    // this.handlerCoords = this.setCoords();
   }
 
   addObserver(o: Observer) {
@@ -73,56 +71,37 @@ export default class RSModel implements Model {
     });
   }
 
-  postUpdate(idx?: number) {
-    if (idx) {
-      const value: number = this.handlerValues[idx];
-      const coord: number = this.valueToCoord(value);
-      this.updateHandlers(idx, coord);
-    } else {
-      this.handlerValues.forEach((value, index) => {
-        const coord: number = this.valueToCoord(value);
-        this.updateHandlers(index, coord);
-      });
+  coordToValue(coord: number) {
+    const { minValue, maxValue, stepSize } = this.options;
+
+    if (coord < 0) {
+      return minValue;
     }
 
-    this.notifyObservers();
+    if (coord > 100) {
+      return maxValue;
+    }
 
-    return this.handlerValues;
+    const factor = stepSize / this.stepSizePerc;
+    const value = coord * factor + minValue;
+
+    return Math.round(value);
   }
 
-  getOptions() {
-    return this.options;
-  }
+  valueToCoord(value: number) {
+    const { minValue, maxValue, stepSize } = this.options;
 
-  setOptions(options: ModelOptions) {
-    const count = options.handlerCount;
-    if (count && typeof count === 'number') {
-      this.options.handlerCount = count;
+    if (value < minValue) {
+      return 0;
     }
 
-    const min = options.minValue;
-    if (typeof min === 'number') {
-      this.options.minValue = min;
+    if (value > maxValue) {
+      return 100;
     }
 
-    const max = options.maxValue;
-    if (typeof max === 'number') {
-      this.options.maxValue = max;
-    }
-
-    const step = options.stepSize;
-    if (step && typeof step === 'number') {
-      this.options.stepSize = step;
-    }
-
-    const { range } = options;
-    if (range && typeof range === 'boolean') {
-      this.options.range = range;
-    }
-
-    this.postUpdate();
-
-    return this.options;
+    const steps = (value - minValue) / stepSize;
+    const coord = steps * this.stepSizePerc;
+    return coord;
   }
 
   updatePercentStep() {
@@ -134,14 +113,15 @@ export default class RSModel implements Model {
   }
 
   normalizeHandlerCoord(index: number, coord: number) {
+    if (typeof index !== 'number' || typeof coord !== 'number') {
+      throw new Error('RSModel.normalizeHandlerCoord: wrong params');
+    }
+
     const step = this.updatePercentStep();
-    // value is a coordinate
     const x = coord + step / 2;
-    // normalized value is coordinate of the closest step value
     const normalizedCoord = x - (x % step);
 
     const stepsToMax = this.handlerValues.length - (index + 1);
-    // theese are percentage coords too
     const minIndexCoord = step * index;
     const maxIndexCoord = 100 - step * stepsToMax;
 
@@ -151,21 +131,8 @@ export default class RSModel implements Model {
     if (normalizedCoord < minIndexCoord) {
       return minIndexCoord;
     }
+
     return normalizedCoord;
-  }
-
-  coordToValue(coord: number) {
-    const { minValue, stepSize } = this.options;
-    const factor = stepSize / this.stepSizePerc;
-    const value = coord * factor + minValue;
-    return Math.round(value);
-  }
-
-  valueToCoord(value: number) {
-    const { minValue, stepSize } = this.options;
-    const steps = (value - minValue) / stepSize;
-    const coord = steps * this.stepSizePerc;
-    return coord;
   }
 
   updateHandlers(index: number, coord: number) {
@@ -197,7 +164,39 @@ export default class RSModel implements Model {
 
     this.notifyObservers();
 
+    // this.postUpdate(); throws 'Too much recursion'
+
     return this.handlerValues;
+  }
+
+  postUpdate(idx?: number) {
+    this.stepSizePerc = this.updatePercentStep();
+
+    if (idx) {
+      const value: number = this.handlerValues[idx];
+      const coord: number = this.valueToCoord(value);
+      this.updateHandlers(idx, coord);
+    } else {
+      this.handlerValues.forEach((value, index) => {
+        const coord: number = this.valueToCoord(value);
+        this.updateHandlers(index, coord);
+      });
+    }
+
+    this.notifyObservers();
+
+    return this.handlerValues;
+  }
+
+  updateValue(index: number, value: number) {
+    const step: number = this.options.stepSize;
+    const x: number = value > 0 ? value + step / 2 : value - step / 2;
+    const normalizedValue: number = x - (x % step);
+    this.handlerValues[index] = normalizedValue;
+
+    this.postUpdate(index);
+
+    return normalizedValue;
   }
 
   // starting values are hardcoded
@@ -218,14 +217,41 @@ export default class RSModel implements Model {
     return arr;
   }
 
-  updateValue(index: number, value: number) {
-    const step: number = this.options.stepSize;
-    const x: number = value > 0 ? value + step / 2 : value - step / 2;
-    const normalizedValue: number = x - (x % step);
-    this.handlerValues[index] = normalizedValue;
+  getOptions() {
+    return this.options;
+  }
 
-    this.postUpdate(index);
+  setOptions(options: ModelOptions) {
+    const {
+      handlerCount,
+      minValue,
+      maxValue,
+      stepSize,
+      range,
+    } = options;
 
-    return normalizedValue;
+    if (typeof handlerCount === 'number' && handlerCount !== 0) {
+      this.options.handlerCount = handlerCount;
+    }
+
+    if (typeof minValue === 'number') {
+      this.options.minValue = minValue;
+    }
+
+    if (typeof maxValue === 'number') {
+      this.options.maxValue = maxValue;
+    }
+
+    if (stepSize && typeof stepSize === 'number') {
+      this.options.stepSize = stepSize;
+    }
+
+    if (range && typeof range === 'boolean') {
+      this.options.range = range;
+    }
+
+    this.postUpdate();
+
+    return this.options;
   }
 }

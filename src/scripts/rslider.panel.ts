@@ -3,6 +3,20 @@ import { Subject, Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
 
+export interface Panel extends Observer {
+  model: Model;
+  modelOptions: ModelOptions;
+  container: HTMLElement;
+  values: number[];
+  handlerInputs: HTMLInputElement[];
+
+  createInput(parent: HTMLElement, labelText: string): HTMLElement;
+  setHandlerValue(e: KeyboardEvent, index: number): void;
+  setModelOption(e: KeyboardEvent, key: keyof ModelOptions): ModelOptions;
+  render(): HTMLElement;
+  update(): number[];
+}
+
 export default class RSPanel implements Observer {
   model: Model;
 
@@ -68,6 +82,7 @@ export default class RSPanel implements Observer {
 
       this.model.setOptions(options);
     }
+    return this.modelOptions;
   }
 
   render() {
@@ -110,5 +125,6 @@ export default class RSPanel implements Observer {
       // eslint-disable-next-line no-param-reassign
       input.value = this.values[index].toString(10);
     });
+    return this.values;
   }
 }
