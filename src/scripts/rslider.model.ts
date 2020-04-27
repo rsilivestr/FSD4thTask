@@ -37,9 +37,9 @@ export default class RSModel implements Model {
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
-    this.options.minValue = options.minValue || -20;
-    this.options.maxValue = options.maxValue || 60;
-    this.options.stepSize = options.stepSize || 10;
+    this.options.minValue = options.minValue || -50;
+    this.options.maxValue = options.maxValue || 50;
+    this.options.stepSize = options.stepSize || 20;
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
 
@@ -189,9 +189,10 @@ export default class RSModel implements Model {
   }
 
   updateValue(index: number, value: number) {
-    const step: number = this.options.stepSize;
-    const x: number = value > 0 ? value + step / 2 : value - step / 2;
-    const normalizedValue: number = x - (x % step);
+    const { minValue, stepSize } = this.options;
+    const val = value - minValue;
+    const x = val + stepSize / 2;
+    const normalizedValue = x - (x % stepSize) + minValue;
     this.handlerValues[index] = normalizedValue;
 
     this.postUpdate(index);
