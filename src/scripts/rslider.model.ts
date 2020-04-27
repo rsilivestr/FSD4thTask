@@ -125,12 +125,9 @@ export default class RSModel implements Model {
     const minIndexCoord = step * index;
     const maxIndexCoord = 100 - step * stepsToMax;
 
-    if (normalizedCoord > maxIndexCoord) {
-      return maxIndexCoord;
-    }
-    if (normalizedCoord < minIndexCoord) {
-      return minIndexCoord;
-    }
+    if (normalizedCoord > maxIndexCoord) return maxIndexCoord;
+
+    if (normalizedCoord < minIndexCoord) return minIndexCoord;
 
     return normalizedCoord;
   }
@@ -189,7 +186,12 @@ export default class RSModel implements Model {
   }
 
   updateValue(index: number, value: number) {
-    const { minValue, stepSize } = this.options;
+    const { minValue, maxValue, stepSize } = this.options;
+
+    if (value < minValue) return minValue;
+
+    if (value > maxValue) return maxValue;
+
     const val = value - minValue;
     const x = val + stepSize / 2;
     const normalizedValue = x - (x % stepSize) + minValue;

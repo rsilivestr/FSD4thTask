@@ -1,97 +1,91 @@
 /* eslint-disable no-undef */
+const m = sl1.model;
+
+const options = {
+  minValue: 0,
+  maxValue: 100,
+  stepSize: 20,
+  handlerCount: 2,
+};
+
+m.setOptions(options);
+
+const { minValue, maxValue, stepSize } = m.getOptions();
+
 describe('RSModel', () => {
   describe('coordToValue', () => {
+    const fn = m.coordToValue.bind(m);
+
     it('should return number', () => {
-      const result = sl1.model.coordToValue(0);
+      const result = fn(0);
       assert.isNumber(result);
     });
 
     it('should return minValue on 0 coord', () => {
-      const { minValue } = sl1.model.getOptions();
-      const result = sl1.model.coordToValue(0);
+      const result = fn(0);
       assert.equal(result, minValue);
     });
 
     it('should return minValue on negative coord', () => {
-      const { minValue } = sl1.model.getOptions();
-      const result = sl1.model.coordToValue(-1);
+      const result = fn(-1);
       assert.equal(result, minValue);
     });
 
     it('should return maxValue on 100 coord', () => {
-      const { maxValue } = sl1.model.getOptions();
-      const result = sl1.model.coordToValue(100);
+      const result = fn(100);
       assert.equal(result, maxValue);
     });
 
     it('should return maxValue on coord > 100', () => {
-      const { maxValue } = sl1.model.getOptions();
-      const result = sl1.model.coordToValue(101);
+      const result = fn(101);
       assert.equal(result, maxValue);
     });
   });
 
   describe('valueToCoord', () => {
+    const fn = m.valueToCoord.bind(m);
+
     it('should return number', () => {
-      const result = sl1.model.valueToCoord(0);
+      const result = fn(0);
       assert.isNumber(result);
     });
 
     it('should return 0 on minValue', () => {
-      const { minValue } = sl1.model.getOptions();
-      const result = sl1.model.valueToCoord(minValue);
+      const result = fn(minValue);
       assert.equal(result, 0);
     });
 
     it('should return 0 on negative value', () => {
-      const { minValue } = sl1.model.getOptions();
       const value = minValue - 1;
-      const result = sl1.model.valueToCoord(value);
+      const result = fn(value);
 
       assert.equal(result, 0);
     });
 
     it('should return 100 on maxValue', () => {
-      const { maxValue } = sl1.model.getOptions();
-      const result = sl1.model.valueToCoord(maxValue);
+      const result = fn(maxValue);
 
       assert.equal(result, 100);
     });
 
 
     it('', () => {
-      const { maxValue } = sl1.model.getOptions();
       const value = maxValue + 1;
-      const result = sl1.model.valueToCoord(value);
+      const result = fn(value);
 
       assert.equal(result, 100);
     });
   });
 
   describe('updatePercentStep', () => {
-    const options = {
-      minValue: 0,
-      maxValue: 100,
-      stepSize: 20,
-    };
-
-    sl1.model.setOptions(options);
-
-    const result = sl1.model.updatePercentStep();
-
-    it('should return number', () => {
-      assert.isNumber(result);
-    });
-
     it('should return 20 with foreset options', () => {
+      const result = m.updatePercentStep();
       assert.equal(result, 20);
     });
   });
 
   describe('normalizeHandlerCoord', () => {
-    const fn = sl1.model.normalizeHandlerCoord.bind(sl1.model);
-    const { minValue, maxValue, stepSize } = sl1.model.getOptions();
-
+    const fn = m.normalizeHandlerCoord.bind(m);
 
     it('should throw error on bad params', () => {
       assert.throws(() => {
@@ -130,7 +124,7 @@ describe('RSModel', () => {
   });
 
   describe('updateHandlers', () => {
-    const fn = sl1.model.updateHandlers.bind(sl1.model);
+    const fn = m.updateHandlers.bind(m);
     it('', () => {
       const result = fn(0, 0);
       assert.isArray(result);
@@ -139,32 +133,104 @@ describe('RSModel', () => {
     // it('', () => {});
   });
 
-  describe('postUpdate', () => {});
-  describe('updateValue', () => {});
-  describe('presetValues', () => {});
-  describe('getOptions', () => {});
+  describe('postUpdate', () => {
+    const fn = m.postUpdate.bind(m);
+
+    it('should return an array', () => {
+      const result = fn();
+      assert.isArray(result);
+    });
+
+    it('should return an array of numbers', () => {
+      const result = fn();
+      result.forEach((value) => assert.isNumber(value));
+    });
+  });
+
+  describe('updateValue', () => {
+    const fn = m.updateValue.bind(m);
+
+    it('should return a value', () => {
+      const result = fn(0, 0);
+      assert.isNumber(result);
+    });
+
+    it('should return 0 on minValue', () => {
+      const result = fn(0, minValue);
+      assert.equal(result, 0);
+    });
+
+    it('should return 0 on value below minValue', () => {
+      const result = fn(0, minValue - 999);
+      assert.equal(result, 0);
+    });
+
+    it('should return 0 on values below minValue', () => {
+      const result = fn(0, maxValue);
+      assert.equal(result, 100);
+    });
+
+    it('should return 100 on values above maxValue', () => {
+      const result = fn(0, maxValue + 999);
+      assert.equal(result, 100);
+    });
+
+    it('should be divisible by stepSize', () => {
+      const value = Math.round(Math.random(), 2) * 100;
+      const result = fn(0, value) % stepSize;
+      assert.equal(result, 0);
+    });
+
+    // it('', () => {});
+  });
+
+  describe('presetValues', () => {
+    it('should return an array', () => {
+      const result = m.presetValues();
+      assert.isArray(result);
+    });
+
+    it('should return an array of numbers', () => {
+      const result = m.presetValues();
+      result.forEach((value) => assert.isNumber(value));
+    });
+  });
+
+  describe('getOptions', () => {
+    it('should return an object', () => {
+      const result = m.getOptions();
+      assert.isObject(result);
+    });
+
+    it('should contain proper keys', () => {
+      const result = m.getOptions();
+      const keys = ['minValue', 'maxValue', 'stepSize', 'handlerCount', 'range'];
+
+      assert.hasAllKeys(result, keys);
+    });
+  });
 
   describe('setOptions', () => {
     it('should not accept invalid options', () => {
-      sl1.model.setOptions({ foo: 'bar' });
+      m.setOptions({ foo: 'bar' });
 
-      const result = sl1.model.getOptions();
+      const result = m.getOptions();
       assert.isUndefined(result.foo);
     });
 
     // it('setOpions should convert string to number', () => {
-    //   sl1.model.setOptions({ handlerCount: 2 });
-    //   sl1.model.setOptions({ handlerCount: '4' });
+    //   m.setOptions({ handlerCount: 2 });
+    //   m.setOptions({ handlerCount: '4' });
 
-    //   const result = sl1.model.getOptions();
+    //   const result = m.getOptions();
     //   assert.equal(result.handlerCount, 4);
     // });
 
     // it('setOpions should reject strings which are not convertable to number', () => {
-    //   sl1.model.setOptions({ handlerCount: 2 });
-    //   sl1.model.setOptions({ handlerCount: 'four' });
+    //   m.setOptions({ handlerCount: 2 });
+    //   m.setOptions({ handlerCount: 'four' });
 
-    //   const result = sl1.model.getOptions();
+    //   const result = m.getOptions();
     //   assert.equal(result.handlerCount, 2);
     // });
   });
