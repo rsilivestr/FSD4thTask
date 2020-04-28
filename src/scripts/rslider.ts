@@ -1,7 +1,7 @@
 import '../styles/rslider.sass';
 
 // eslint-disable-next-line no-unused-vars
-import RSModel, { Model, ModelOptions } from './rslider.model';
+import RSModel, { Model } from './rslider.model';
 // eslint-disable-next-line no-unused-vars
 import RSView, { View } from './rslider.view';
 import RSController from './rslider.controller';
@@ -15,16 +15,30 @@ interface Slider {
   setTooltip(value: boolean): void;
 }
 
+interface SliderOptions {
+  minValue?: number;
+  maxValue?: number;
+  stepSize?: number;
+  handlerCount?: number;
+  range?: boolean;
+  isHorizontal?: boolean;
+  // valuePrefix?: string;
+  // valuePostfix?: string;
+  handlerRadius?: number;
+  showTooltip?: boolean;
+}
+
 function setTooltip(this: Slider, value: boolean) {
   this.view.setTooltip(value);
 }
 
-export function create(selector: string, options: ModelOptions) {
+export function create(selector: string, options: SliderOptions) {
   const container: HTMLElement = document.querySelector(selector);
 
-  const model: Model = new RSModel(options);
+  const model = new RSModel(options);
 
   const view = new RSView(model, container);
+  view.setOptions(options);
   view.render();
 
   const ctrl = new RSController(model, view);

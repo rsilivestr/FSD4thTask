@@ -7,8 +7,8 @@ import { Model, ModelOptions } from './rslider.model';
 
 export interface ViewOptions {
   isHorizontal?: boolean;
-  valuePrefix?: string;
-  valuePostfix?: string;
+  // valuePrefix?: string;
+  // valuePostfix?: string;
   handlerRadius?: number;
   showTooltip?: boolean;
 }
@@ -76,8 +76,8 @@ export default class RSView implements View {
     this.options = {};
 
     this.options.isHorizontal = options.isHorizontal || true;
-    this.options.valuePrefix = options.valuePrefix || '';
-    this.options.valuePostfix = options.valuePostfix || '';
+    // this.options.valuePrefix = options.valuePrefix || '';
+    // this.options.valuePostfix = options.valuePostfix || '';
     this.options.handlerRadius = options.handlerRadius || 8;
     this.options.showTooltip = options.showTooltip || true;
   }
@@ -194,8 +194,11 @@ export default class RSView implements View {
 
   private addTooltip(handler: HTMLElement, index: number) {
     const tooltip = document.createElement('div');
-    tooltip.className = 'rslider__tooltip';
+    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+
+    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
     tooltip.innerText = this.model.handlerValues[index].toString(10);
+
     handler.appendChild(tooltip);
 
     return this.options;
@@ -217,13 +220,33 @@ export default class RSView implements View {
     if (this.options.showTooltip === false) {
       const tooltips = this.container.getElementsByClassName('rslider__tooltip');
 
-      for (let i = 1; i >= 0; i -= 1) {
+      for (let i = tooltips.length - 1; i >= 0; i -= 1) {
         tooltips[i].remove();
       }
     }
   }
 
   getOptions() {
+    return this.options;
+  }
+
+  setOptions(options: ViewOptions) {
+    const { isHorizontal, handlerRadius, showTooltip } = options;
+
+    if (isHorizontal !== undefined && typeof isHorizontal === 'boolean') {
+      this.options.isHorizontal = isHorizontal;
+    }
+
+    if (handlerRadius !== undefined && typeof handlerRadius === 'number') {
+      this.options.handlerRadius = handlerRadius;
+    }
+
+    if (showTooltip !== undefined && typeof showTooltip === 'boolean') {
+      this.options.showTooltip = showTooltip;
+    }
+
+    // postUpdate
+
     return this.options;
   }
 }

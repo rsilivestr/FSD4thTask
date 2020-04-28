@@ -37,8 +37,14 @@ export default class RSModel implements Model {
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
-    this.options.minValue = options.minValue || -50;
-    this.options.maxValue = options.maxValue || 50;
+    if (options.minValue !== undefined && typeof options.minValue === 'number') {
+      this.options.minValue = options.minValue;
+    } else this.options.minValue = -50;
+
+    if (options.maxValue !== undefined && typeof options.maxValue === 'number') {
+      this.options.maxValue = options.maxValue;
+    } else this.options.maxValue = 50;
+
     this.options.stepSize = options.stepSize || 20;
     this.options.handlerCount = options.handlerCount || 1;
     this.options.range = options.range || false;
@@ -233,23 +239,23 @@ export default class RSModel implements Model {
       range,
     } = options;
 
-    if (typeof handlerCount === 'number' && handlerCount !== 0) {
+    if (handlerCount !== undefined && typeof handlerCount === 'number') {
       this.options.handlerCount = handlerCount;
     }
 
-    if (typeof minValue === 'number') {
+    if (minValue !== undefined && typeof minValue === 'number') {
       this.options.minValue = minValue;
     }
 
-    if (typeof maxValue === 'number') {
+    if (maxValue !== undefined && typeof maxValue === 'number') {
       this.options.maxValue = maxValue;
     }
 
-    if (stepSize && typeof stepSize === 'number') {
+    if (stepSize !== undefined && typeof stepSize === 'number') {
       this.options.stepSize = stepSize;
     }
 
-    if (range && typeof range === 'boolean') {
+    if (range !== undefined && typeof range === 'boolean') {
       this.options.range = range;
     }
 

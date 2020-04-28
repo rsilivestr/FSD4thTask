@@ -2,7 +2,7 @@ $color_border: #cacaca
 $color_primary: #fe40da
 $color_secondary: #fafafa
 
-$horHeihgt: 20px
+$horHeihgt: 16px
 $horWidth: 300px
 $baseHeight: 6px
 $baseOffset: ( $horHeihgt - $baseHeight ) / 2
@@ -38,14 +38,19 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
     box-sizing: border-box
     width: $handlerSize
     height: $handlerSize
-    top: $handlerOffset
+    // top: $handlerOffset
     background: $color_primary
     border: 2px solid $color_secondary
     border-radius: 50%
     z-index: 100
 
   &__tooltip
-    margin-top: -20px
+    &--horizontal
+      margin-top: -20px
+
+    &--vertical
+      margin: -5px 0 0 20px
+      
 
 .rslider-panel
   margin-top: 20px
