@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
-import { Model } from './rslider.model';
+import { Model, ModelOptions } from './rslider.model';
 
 export interface ViewOptions {
   isHorizontal?: boolean;
@@ -20,6 +20,8 @@ export interface Rect {
 }
 
 export interface View extends Observer {
+  model: Model;
+  modelOptions: ModelOptions;
   container: HTMLElement;
   slider: HTMLElement;
   track: HTMLElement;
@@ -27,19 +29,20 @@ export interface View extends Observer {
   handler: HTMLElement;
   options: ViewOptions;
   handlerCount: number;
-  model: Model;
-  coord: any;
   handlers: HTMLElement[];
   handlerCoords: number[];
-  modelOptions: any;
-  setCoords(values: number[]): any;
+  setCoords(values: number[]): void;
   render(): any;
   getRect(): Rect;
   update(values: number[]): any;
   identifyHandler(handler: HTMLElement): number;
+  setTooltip(value: boolean): void;
+  getOptions(): ViewOptions;
 }
 
 export default class RSView implements View {
+  model: Model;
+
   container: HTMLElement;
 
   slider: HTMLElement;
@@ -53,16 +56,12 @@ export default class RSView implements View {
   options: ViewOptions;
 
   handlerCount: number;
-
-  model: any;
-
-  coord: any;
 
   handlers: HTMLElement[] = [];
 
   handlerCoords: number[] = [];
 
-  modelOptions: any;
+  modelOptions: ModelOptions;
 
   constructor(model: Model, container: HTMLElement, options: ViewOptions = {}) {
     this.model = model;
@@ -108,7 +107,6 @@ export default class RSView implements View {
 
       this.trackRect = this.track.getBoundingClientRect();
 
-      const { handlerValues } = this.model;
       let handlersRendered = 0;
 
       while (handlersRendered < this.handlerCount) {
@@ -121,10 +119,7 @@ export default class RSView implements View {
         const coord = value * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
 
         if (this.options.showTooltip) {
-          const tooltip = document.createElement('div');
-          tooltip.className = 'rslider__tooltip';
-          tooltip.innerText = handlerValues[handlersRendered];
-          handler.appendChild(tooltip);
+          this.addTooltip(handler, handlersRendered);
         }
 
         if (this.options.isHorizontal) {
@@ -189,11 +184,46 @@ export default class RSView implements View {
         handler.style.bottom = `${viewCoord}%`;
       }
       const tooltip: HTMLElement = handler.querySelector('.rslider__tooltip');
-      tooltip.innerText = `${this.model.handlerValues[index]}`;
+      if (tooltip) tooltip.innerText = `${this.model.handlerValues[index]}`;
     });
   }
 
   identifyHandler(handler: HTMLElement) {
     return this.handlers.indexOf(handler);
+  }
+
+  private addTooltip(handler: HTMLElement, index: number) {
+    const tooltip = document.createElement('div');
+    tooltip.className = 'rslider__tooltip';
+    tooltip.innerText = this.model.handlerValues[index].toString(10);
+    handler.appendChild(tooltip);
+
+    return this.options;
+  }
+
+  setTooltip(value: boolean) {
+    if (this.options.showTooltip === value) return;
+
+    this.options.showTooltip = value;
+
+    if (this.options.showTooltip === true) {
+      this.handlers.forEach((handler, index) => {
+        this.addTooltip(handler, index);
+      });
+
+      return;
+    }
+
+    if (this.options.showTooltip === false) {
+      const tooltips = this.container.getElementsByClassName('rslider__tooltip');
+
+      for (let i = 1; i >= 0; i -= 1) {
+        tooltips[i].remove();
+      }
+    }
+  }
+
+  getOptions() {
+    return this.options;
   }
 }

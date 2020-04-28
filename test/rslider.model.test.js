@@ -180,8 +180,6 @@ describe('RSModel', () => {
       const result = fn(0, value) % stepSize;
       assert.equal(result, 0);
     });
-
-    // it('', () => {});
   });
 
   describe('presetValues', () => {
@@ -216,6 +214,8 @@ describe('RSModel', () => {
 
       const result = m.getOptions();
       assert.isUndefined(result.foo);
+
+      // it('', () => {});
     });
 
     // it('setOpions should convert string to number', () => {

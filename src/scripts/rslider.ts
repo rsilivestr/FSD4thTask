@@ -12,6 +12,11 @@ interface Slider {
   model: RSModel;
   view: RSView;
   controller: RSController;
+  setTooltip(value: boolean): void;
+}
+
+function setTooltip(this: Slider, value: boolean) {
+  this.view.setTooltip(value);
 }
 
 export function create(selector: string, options: ModelOptions) {
@@ -24,21 +29,23 @@ export function create(selector: string, options: ModelOptions) {
 
   const ctrl = new RSController(model, view);
 
-  document.body.addEventListener('mousedown', ctrl.grab.bind(ctrl));
-  document.body.addEventListener('dragstart', (e) => e.preventDefault());
+  container.addEventListener('mousedown', ctrl.grab.bind(ctrl));
+  container.addEventListener('dragstart', (e) => e.preventDefault());
 
   const slider: Slider = {
     container,
     model,
     view,
     controller: ctrl,
+    setTooltip,
   };
 
   return slider;
 }
 
+
 export function addPanel(slider: Slider) {
-  const panel = new RSPanel(slider.model, slider.container);
+  const panel = new RSPanel(slider.model, slider.view, slider.container);
   panel.render();
 
   return panel;

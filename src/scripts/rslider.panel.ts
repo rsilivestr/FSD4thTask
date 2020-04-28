@@ -1,11 +1,15 @@
 // eslint-disable-next-line no-unused-vars
-import { Subject, Observer } from './interfaces';
+import { Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
+// eslint-disable-next-line no-unused-vars
+import { View, ViewOptions } from './rslider.view';
 
 export interface Panel extends Observer {
   model: Model;
   modelOptions: ModelOptions;
+  view: View;
+  viewOptions: ViewOptions;
   container: HTMLElement;
   values: number[];
   handlerInputs: HTMLInputElement[];
@@ -17,10 +21,14 @@ export interface Panel extends Observer {
   update(): number[];
 }
 
-export default class RSPanel implements Observer {
+export default class RSPanel implements Panel {
   model: Model;
 
   modelOptions: ModelOptions;
+
+  view: View;
+
+  viewOptions: ViewOptions;
 
   container: HTMLElement;
 
@@ -28,11 +36,13 @@ export default class RSPanel implements Observer {
 
   handlerInputs: HTMLInputElement[] = [];
 
-  constructor(model: Model, container: HTMLElement) {
+  constructor(model: Model, view: View, container: HTMLElement) {
     this.model = model;
     model.addObserver(this);
-
     this.modelOptions = this.model.getOptions();
+
+    this.view = view;
+    this.viewOptions = view.getOptions();
 
     this.container = container;
 
@@ -48,7 +58,7 @@ export default class RSPanel implements Observer {
 
     const input = document.createElement('input');
     input.className = 'rslider-panel__input';
-    input.type = 'number';
+    // input.type = 'number';
     label.appendChild(input);
 
     return input;
@@ -103,16 +113,21 @@ export default class RSPanel implements Observer {
     }
 
     const minInput = this.createInput(panel, 'Min value');
-    minInput.value = this.modelOptions.minValue.toString();
+    minInput.value = this.modelOptions.minValue.toString(10);
     minInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'minValue'); });
 
     const maxInput = this.createInput(panel, 'Max value');
-    maxInput.value = this.modelOptions.maxValue.toString();
+    maxInput.value = this.modelOptions.maxValue.toString(10);
     maxInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'maxValue'); });
 
     const stepInput = this.createInput(panel, 'Step size');
-    stepInput.value = this.modelOptions.stepSize.toString();
+    stepInput.value = this.modelOptions.stepSize.toString(10);
     stepInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'stepSize'); });
+
+    const tooltipInput = this.createInput(panel, 'Tooltip');
+    tooltipInput.type = 'checkbox';
+    tooltipInput.checked = this.viewOptions.showTooltip;
+    tooltipInput.addEventListener('change', () => { this.view.setTooltip(tooltipInput.checked); });
 
     this.container.appendChild(panel);
 

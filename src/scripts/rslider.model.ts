@@ -220,11 +220,11 @@ export default class RSModel implements Model {
     return arr;
   }
 
-  getOptions() {
+  public getOptions() {
     return this.options;
   }
 
-  setOptions(options: ModelOptions) {
+  public setOptions(options: ModelOptions) {
     const {
       handlerCount,
       minValue,
