@@ -1,4 +1,4 @@
-* {
+*, *:before, *:after {
   box-model: border-box;
 }
 
@@ -10,25 +10,33 @@ body {
 
 main {
   display: grid;
-  grid-template: "foo bar" auto "b b" auto/1fr 1fr;
+  grid-template: "foo bar" auto "fizz buzz" auto/1fr 1fr;
   grid-gap: 10px;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 40px auto;
 }
 
 h1 {
-  margin-bottom: 100px;
   text-align: center;
 }
 
 h2 {
-  margin: 0 0 20px;
+  margin: 0 0 40px;
 }
 
 .demo-container {
   padding: 20px;
   background: white;
   border-radius: 6px;
+}
+
+#buzz {
+  display: flex;
+  flex-flow: row nowrap;
+}
+#buzz .rslider-panel {
+  flex: 1;
+  margin: 0 0 0 40px;
 }
 
 /*# sourceMappingURL=demo.css.map */

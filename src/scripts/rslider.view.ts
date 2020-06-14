@@ -1,7 +1,5 @@
-// when minValue = maxValue tooltip shows NaN
-
 // eslint-disable-next-line no-unused-vars
-import { Subject, Observer } from './interfaces';
+import { Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
 

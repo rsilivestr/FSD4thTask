@@ -1,9 +1,9 @@
 import '../styles/rslider.sass';
 
 // eslint-disable-next-line no-unused-vars
-import RSModel, { Model } from './rslider.model';
+import RSModel from './rslider.model';
 // eslint-disable-next-line no-unused-vars
-import RSView, { View } from './rslider.view';
+import RSView from './rslider.view';
 import RSController from './rslider.controller';
 import RSPanel from './rslider.panel';
 
@@ -22,8 +22,6 @@ interface SliderOptions {
   handlerCount?: number;
   range?: boolean;
   isHorizontal?: boolean;
-  // valuePrefix?: string;
-  // valuePostfix?: string;
   handlerRadius?: number;
   showTooltip?: boolean;
 }

@@ -15,12 +15,14 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
   box-sizing: border-box
 
   &--layout_horizontal
-    width: $horWidth
+    width: 100%
+    max-width: $horWidth
     height: $horHeihgt
 
   &--layout_vertical
     width: $horHeihgt
     height: $horWidth
+    max-height: $horWidth
 
   &__track
     position: absolute
@@ -63,4 +65,6 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
 
   &__input
     position: absolute
-    left: 150px
+    left: 120px
+    max-width: 100px
+    // float: right

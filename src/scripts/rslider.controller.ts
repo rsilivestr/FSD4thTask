@@ -1,14 +1,14 @@
 // eslint-disable-next-line no-unused-vars
-import { Subject, Observer } from './interfaces';
+// import { Subject, Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
 import { Model } from './rslider.model';
 // eslint-disable-next-line no-unused-vars
 import { View } from './rslider.view';
 
 interface Controller {
-  grab(e: any): any;
-  drag(e: any): number;
-  release(): any;
+  grab(e: MouseEvent): HTMLElement;
+  drag(e: MouseEvent): number;
+  release(): void;
 }
 
 export default class RSController implements Controller {
@@ -16,13 +16,11 @@ export default class RSController implements Controller {
 
   grabbedHandler: HTMLElement | null;
 
-  grabListener: any;
+  boundGrab: (e: MouseEvent) => HTMLElement;
 
-  boundGrab: any;
+  boundDrag: (e: MouseEvent) => number;
 
-  boundDrag: any;
-
-  boundRelease: any;
+  boundRelease: () => void;
 
   model: Model;
 
@@ -40,13 +38,20 @@ export default class RSController implements Controller {
     this.view = view;
   }
 
-  grab(e: any) {
-    if (e.target.classList.contains('rslider__handler')) {
-      this.grabbedHandler = e.target;
+  grab(e: MouseEvent) {
+    // remove selection on drag
+    e.preventDefault();
+
+    const target = <HTMLElement>e.target;
+
+    if (target.classList.contains('rslider__handler')) {
+      this.grabbedHandler = target;
 
       window.addEventListener('mousemove', this.boundDrag);
       window.addEventListener('mouseup', this.boundRelease);
     }
+
+    return target;
   }
 
   drag(e: MouseEvent) {
@@ -72,6 +77,8 @@ export default class RSController implements Controller {
     window.removeEventListener('mouseup', this.boundRelease);
 
     // save position
+
+    // return something?
   }
 
   // update(str) {

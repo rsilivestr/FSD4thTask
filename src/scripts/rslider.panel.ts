@@ -49,7 +49,6 @@ export default class RSPanel implements Panel {
     this.values = this.model.handlerValues.slice();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   createInput(parent: HTMLElement, labelText: string) {
     const label = document.createElement('label');
     label.className = 'rslider-panel__label';
@@ -58,8 +57,9 @@ export default class RSPanel implements Panel {
 
     const input = document.createElement('input');
     input.className = 'rslider-panel__input';
-    // input.type = 'number';
     label.appendChild(input);
+
+    this.handlerInputs.push(input);
 
     return input;
   }
@@ -109,7 +109,7 @@ export default class RSPanel implements Panel {
 
       input.addEventListener('keyup', (e) => { this.setHandlerValue(e, i); });
 
-      this.handlerInputs.push(input);
+      // this.handlerInputs.push(input);
     }
 
     const minInput = this.createInput(panel, 'Min value');
