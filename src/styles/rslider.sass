@@ -68,3 +68,32 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
     position: absolute
     left: 120px
     max-width: 50px
+
+.rslider-scale
+  display: flex
+  list-style-type: none
+  justify-content: space-between
+  margin: 0
+  padding: 0
+
+  &--layout_horizontal
+    width: 100%
+    max-width: $horWidth
+    flex-flow: row nowrap
+
+  &--layout_vertical
+    max-width: 32px
+    height: $horWidth
+    flex-flow: column nowrap
+
+  &__mark
+    flex: 1
+    padding: 4px
+    text-align: center
+    font-size: 12px
+    border: 1px solid #ccc
+    cursor: default
+
+    &:first-child,
+    &:last-child
+      flex: .75

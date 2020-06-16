@@ -6,6 +6,7 @@ import RSModel from './rslider.model';
 import RSView from './rslider.view';
 import RSController from './rslider.controller';
 import RSPanel from './rslider.panel';
+import RScale from './rslider.scale';
 
 interface Slider {
   container: HTMLElement;
@@ -55,6 +56,12 @@ export function create(selector: string, options: SliderOptions) {
   return slider;
 }
 
+export function addScale(slider: Slider) {
+  const scale = new RScale(slider.model, slider.view, slider.container);
+  scale.render();
+
+  return scale;
+}
 
 export function addPanel(slider: Slider) {
   const panel = new RSPanel(slider.model, slider.view, slider.container);

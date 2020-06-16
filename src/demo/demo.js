@@ -7,9 +7,10 @@ const sl2 = RSlider.create('#bar', {});
 const pan2 = RSlider.addPanel(sl2);
 
 const sl3 = RSlider.create('#fizz', {});
+const sc3 = RSlider.addScale(sl3);
 const pan3 = RSlider.addPanel(sl3);
 
-const opt4 = { 
+const opt4 = {
   minValue: 0,
   maxValue: 100,
   stepSize: 10,
