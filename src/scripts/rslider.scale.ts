@@ -82,10 +82,17 @@ export default class RScale implements Scale {
     this.container.appendChild(scale);
   }
 
+  updateScale() {
+    return this.markValues;
+  }
+
   update() {
-    this.values = this.model.handlerValues;
+    // this.values = this.model.handlerValues;
+    this.values = this.model.getValues();
 
     // do something, sync values
+
+    // this.render();
 
     return this.values;
   }

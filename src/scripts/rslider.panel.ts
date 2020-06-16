@@ -134,7 +134,7 @@ export default class RSPanel implements Panel {
   }
 
   update() {
-    this.values = this.model.handlerValues;
+    this.values = this.model.getValues();
     this.handlerInputs.forEach((input, index) => {
       // eslint-disable-next-line no-param-reassign
       input.value = this.values[index].toString(10);

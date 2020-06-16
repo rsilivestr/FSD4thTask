@@ -15,16 +15,17 @@ export interface Model extends Subject {
   stepSizePerc: number;
   handlerValues: number[];
 
-  postUpdate(): number[];
+  // coordToValue(coord: number): number;
+  // valueToCoord(value: number): number;
+  // updatePercentStep(): number;
+  // normalizeHandlerCoord(index: number, coord: number): number;
+  updateHandlers(index: number, coord: number): number[];
+  // postUpdate(): number[];
+  updateValue(index: number, value: number): number;
+  presetValues(): number[];
+  getValues(): number[];
   getOptions(): ModelOptions;
   setOptions(options: ModelOptions): ModelOptions;
-  updatePercentStep(): number;
-  normalizeHandlerCoord(index: number, coord: number): number;
-  coordToValue(coord: number): number;
-  valueToCoord(value: number): number;
-  updateHandlers(index: number, coord: number): number[];
-  presetValues(): number[];
-  updateValue(index: number, value: number): number;
 }
 
 export default class RSModel implements Model {
@@ -77,7 +78,7 @@ export default class RSModel implements Model {
     });
   }
 
-  coordToValue(coord: number) {
+  private coordToValue(coord: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
     if (coord < 0) {
@@ -94,7 +95,7 @@ export default class RSModel implements Model {
     return Math.round(value);
   }
 
-  valueToCoord(value: number) {
+  private valueToCoord(value: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
     if (value < minValue) {
@@ -110,15 +111,15 @@ export default class RSModel implements Model {
     return coord;
   }
 
-  updatePercentStep() {
-    const scaleLength = this.options.maxValue - this.options.minValue;
-    const stepPerc = Math.abs((this.options.stepSize / scaleLength) * 100);
+  private updatePercentStep() {
+    const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
+    const stepPerc = (this.options.stepSize / scaleLength) * 100;
     this.stepSizePerc = stepPerc;
 
     return stepPerc;
   }
 
-  normalizeHandlerCoord(index: number, coord: number) {
+  private normalizeHandlerCoord(index: number, coord: number) {
     if (typeof index !== 'number' || typeof coord !== 'number') {
       throw new Error('RSModel.normalizeHandlerCoord: wrong params');
     }
@@ -129,7 +130,10 @@ export default class RSModel implements Model {
 
     const stepsToMax = this.handlerValues.length - (index + 1);
     const minIndexCoord = step * index;
-    const maxIndexCoord = 100 - step * stepsToMax;
+    // if last step is smaller scaleLength (percent) is extended to be multiple of stepSize
+    const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
+    const correctedLength = 100 + ((scaleLength % this.options.stepSize) / scaleLength) * 100;
+    const maxIndexCoord = correctedLength - step * stepsToMax;
 
     if (normalizedCoord > maxIndexCoord) return maxIndexCoord;
 
@@ -138,7 +142,8 @@ export default class RSModel implements Model {
     return normalizedCoord;
   }
 
-  updateHandlers(index: number, coord: number) {
+  // used by RSController
+  public updateHandlers(index: number, coord: number) {
     const normalizedCoord = this.normalizeHandlerCoord(index, coord);
     const normalizedValue = this.coordToValue(normalizedCoord);
 
@@ -172,7 +177,7 @@ export default class RSModel implements Model {
     return this.handlerValues;
   }
 
-  postUpdate(idx?: number) {
+  private postUpdate(idx?: number) {
     this.stepSizePerc = this.updatePercentStep();
 
     if (idx) {
@@ -191,16 +196,22 @@ export default class RSModel implements Model {
     return this.handlerValues;
   }
 
-  updateValue(index: number, value: number) {
+  // used by RSPanel
+  public updateValue(index: number, value: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
-    if (value < minValue) return minValue;
+    let normalizedValue;
 
-    if (value > maxValue) return maxValue;
+    if (value < minValue) {
+      normalizedValue = minValue;
+    } else if (value > maxValue) {
+      normalizedValue = maxValue;
+    } else {
+      const val = value - minValue;
+      const x = val + stepSize / 2;
+      normalizedValue = x - (x % stepSize) + minValue;
+    }
 
-    const val = value - minValue;
-    const x = val + stepSize / 2;
-    const normalizedValue = x - (x % stepSize) + minValue;
     this.handlerValues[index] = normalizedValue;
 
     this.postUpdate(index);
@@ -224,6 +235,10 @@ export default class RSModel implements Model {
     }
 
     return arr;
+  }
+
+  public getValues() {
+    return this.handlerValues;
   }
 
   public getOptions() {
