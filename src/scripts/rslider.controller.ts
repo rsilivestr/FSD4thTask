@@ -39,10 +39,12 @@ export default class RSController implements Controller {
   }
 
   grab(e: MouseEvent) {
-    // remove selection on drag
-    e.preventDefault();
-
     const target = <HTMLElement>e.target;
+
+    if (target.closest('.rslider')) {
+      // remove selection on drag
+      e.preventDefault();
+    }
 
     if (target.classList.contains('rslider__handler')) {
       this.grabbedHandler = target;
