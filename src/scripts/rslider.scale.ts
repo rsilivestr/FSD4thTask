@@ -1,35 +1,28 @@
 // eslint-disable-next-line no-unused-vars
 import { Observer } from './interfaces';
 // eslint-disable-next-line no-unused-vars
-import { Model, ModelOptions } from './rslider.model';
+import { Model } from './rslider.model';
 // eslint-disable-next-line no-unused-vars
-import { View, ViewOptions } from './rslider.view';
+import { View } from './rslider.view';
 
 export interface Scale extends Observer {
   model: Model;
-  modelOptions: ModelOptions;
   view: View;
-  viewOptions: ViewOptions;
   container: HTMLElement;
-  values: number[];
   scaleMarks: HTMLElement[];
   markValues: number[];
 
-  update(): number[];
+  update(): void;
 }
 
 export default class RScale implements Scale {
   model: Model;
 
-  modelOptions: ModelOptions;
-
   view: View;
-
-  viewOptions: ViewOptions;
 
   container: HTMLElement;
 
-  values: number[];
+  scale: HTMLElement = document.createElement('ul');
 
   scaleMarks: HTMLElement[] = [];
 
@@ -38,23 +31,12 @@ export default class RScale implements Scale {
   constructor(model: Model, view: View, container: HTMLElement) {
     this.model = model;
     model.addObserver(this);
-    this.modelOptions = this.model.getOptions();
-
     this.view = view;
-    this.viewOptions = view.getOptions();
-
     this.container = container;
-
-    this.values = this.model.handlerValues.slice();
   }
 
-  render() {
-    const scale: HTMLElement = document.createElement('ul');
-    const { isHorizontal } = this.viewOptions;
-    const layout = isHorizontal ? 'horizontal' : 'vertical';
-    scale.className = `rslider-scale rslider-scale--layout_${layout}`;
-
-    const { minValue, maxValue, stepSize } = this.modelOptions;
+  private populateScale(scale: HTMLElement) {
+    const { minValue, maxValue, stepSize } = this.model.getOptions();
 
     for (let i = minValue; i < maxValue + stepSize; i += stepSize) {
       // when last step is smaller (scale length isn't multiple of step size)
@@ -68,32 +50,36 @@ export default class RScale implements Scale {
       this.scaleMarks.push(mark);
       this.markValues.push(i);
     }
+  }
 
-    scale.addEventListener('click', (e) => {
+  // used by RSlider
+  public render() {
+    // const scale: HTMLElement = document.createElement('ul');
+    const { isHorizontal } = this.view.getOptions();
+    const layout = isHorizontal ? 'horizontal' : 'vertical';
+    this.scale.className = `rslider-scale rslider-scale--layout_${layout}`;
+
+    this.populateScale(this.scale);
+
+    this.scale.addEventListener('click', (e) => {
       this.scaleMarks.forEach((el, index) => {
         if (e.target === el) {
           const val = this.markValues[index];
           this.model.updateValue(0, val);
-          // console.log(this.markValues[index]);
         }
       });
     });
 
-    this.container.appendChild(scale);
+    this.container.appendChild(this.scale);
   }
 
-  updateScale() {
-    return this.markValues;
+  private updateScale() {
+    this.scale.textContent = '';
+
+    this.populateScale(this.scale);
   }
 
   update() {
-    // this.values = this.model.handlerValues;
-    this.values = this.model.getValues();
-
-    // do something, sync values
-
-    // this.render();
-
-    return this.values;
+    this.updateScale();
   }
 }
