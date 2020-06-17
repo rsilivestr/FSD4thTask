@@ -7,6 +7,7 @@ export interface ModelOptions {
   stepSize?: number;
   handlerCount?: number;
   range?: boolean;
+  changed?: boolean;
 }
 
 export interface Model extends Subject {
@@ -76,6 +77,8 @@ export default class RSModel implements Model {
     this.observers.forEach((o) => {
       o.update(this.handlerValues);
     });
+
+    this.options.changed = false;
   }
 
   private coordToValue(coord: number) {
@@ -191,7 +194,7 @@ export default class RSModel implements Model {
       });
     }
 
-    this.notifyObservers();
+    // this.notifyObservers();
 
     return this.handlerValues;
   }
@@ -254,27 +257,37 @@ export default class RSModel implements Model {
       range,
     } = options;
 
-    if (handlerCount !== undefined && typeof handlerCount === 'number') {
+    let changed: boolean = false;
+
+    if (typeof handlerCount === 'number' && handlerCount !== this.options.handlerCount) {
       this.options.handlerCount = handlerCount;
+      changed = true;
     }
 
-    if (minValue !== undefined && typeof minValue === 'number') {
+    if (typeof minValue === 'number' && minValue !== this.options.minValue) {
       this.options.minValue = minValue;
+      changed = true;
     }
 
-    if (maxValue !== undefined && typeof maxValue === 'number') {
+    if (typeof maxValue === 'number' && maxValue !== this.options.maxValue) {
       this.options.maxValue = maxValue;
+      changed = true;
     }
 
-    if (stepSize !== undefined && typeof stepSize === 'number') {
+    if (typeof stepSize === 'number' && stepSize !== this.options.stepSize) {
       this.options.stepSize = stepSize;
+      changed = true;
     }
 
-    if (range !== undefined && typeof range === 'boolean') {
+    if (typeof range === 'boolean' && range !== this.options.range) {
       this.options.range = range;
+      changed = true;
     }
 
-    this.postUpdate();
+    if (changed) {
+      this.options.changed = true;
+      this.postUpdate();
+    }
 
     return this.options;
   }

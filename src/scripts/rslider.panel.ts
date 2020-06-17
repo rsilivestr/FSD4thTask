@@ -85,7 +85,7 @@ export default class RSPanel implements Panel {
 
       if (key === 'stepSize') {
         options[key] = Math.abs(value);
-      } else if (key !== 'range') {
+      } else if (key !== 'range' && key !== 'changed') {
         options[key] = value;
       }
 

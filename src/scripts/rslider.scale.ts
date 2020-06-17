@@ -36,6 +36,10 @@ export default class RScale implements Scale {
   }
 
   private populateScale(scale: HTMLElement) {
+    this.scale.textContent = '';
+    this.scaleMarks = [];
+    this.markValues = [];
+
     const { minValue, maxValue, stepSize } = this.model.getOptions();
 
     for (let i = minValue; i < maxValue + stepSize; i += stepSize) {
@@ -54,7 +58,6 @@ export default class RScale implements Scale {
 
   // used by RSlider
   public render() {
-    // const scale: HTMLElement = document.createElement('ul');
     const { isHorizontal } = this.view.getOptions();
     const layout = isHorizontal ? 'horizontal' : 'vertical';
     this.scale.className = `rslider-scale rslider-scale--layout_${layout}`;
@@ -73,13 +76,7 @@ export default class RScale implements Scale {
     this.container.appendChild(this.scale);
   }
 
-  private updateScale() {
-    this.scale.textContent = '';
-
-    this.populateScale(this.scale);
-  }
-
   update() {
-    this.updateScale();
+    if (this.model.getOptions().changed) this.populateScale(this.scale);
   }
 }
