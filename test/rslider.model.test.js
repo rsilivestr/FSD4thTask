@@ -68,7 +68,6 @@ describe('RSModel', () => {
       assert.equal(result, 100);
     });
 
-
     it('', () => {
       const value = maxValue + 1;
       const result = fn(value);
@@ -202,7 +201,7 @@ describe('RSModel', () => {
 
     it('should contain proper keys', () => {
       const result = m.getOptions();
-      const keys = ['minValue', 'maxValue', 'stepSize', 'handlerCount', 'range'];
+      const keys = ['minValue', 'maxValue', 'stepSize', 'handlerCount', 'range', 'changed'];
 
       assert.hasAllKeys(result, keys);
     });
@@ -217,21 +216,5 @@ describe('RSModel', () => {
 
       // it('', () => {});
     });
-
-    // it('setOpions should convert string to number', () => {
-    //   m.setOptions({ handlerCount: 2 });
-    //   m.setOptions({ handlerCount: '4' });
-
-    //   const result = m.getOptions();
-    //   assert.equal(result.handlerCount, 4);
-    // });
-
-    // it('setOpions should reject strings which are not convertable to number', () => {
-    //   m.setOptions({ handlerCount: 2 });
-    //   m.setOptions({ handlerCount: 'four' });
-
-    //   const result = m.getOptions();
-    //   assert.equal(result.handlerCount, 2);
-    // });
   });
 });
