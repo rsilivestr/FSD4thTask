@@ -16,7 +16,7 @@ module.exports = {
     libraryTarget: 'umd',
   },
   plugins: [
-    // new CleanWebpackPlugin(),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/demo/demo.pug',
       filename: 'demo.html',

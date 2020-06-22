@@ -1,15 +1,16 @@
 module.exports = (config) => {
   config.set({
-    frameworks: ['mocha', 'chai', 'requirejs'],
+    frameworks: ['mocha', 'chai'],
     files: [
-      { pattern: './src/demo/demo.html', type: 'dom' },
-      { pattern: './src/scripts/*.ts', included: 'false' },
-      { pattern: './src/scripts/*.test1.ts', included: 'false' },
-      // './dist/scripts/rslider.js',
+      // { pattern: './src/demo/demo.html', type: 'dom' },
+      // { pattern: './src/scripts/*.ts', included: 'false' },
+      // { pattern: './src/scripts/*.test1.ts', included: 'false' },
+      './dist/scripts/rslider.js',
+      './test/rslider.test1.js',
       // './dist/scripts/demo.js',
 
       // './test/*.test.js',
-      './test/test-main.js',
+      // './test/test-main.js',
     ],
     reporters: ['progress', 'coverage'],
     preprocessors: {
