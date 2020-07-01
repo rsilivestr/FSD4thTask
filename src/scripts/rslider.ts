@@ -40,16 +40,16 @@ export function create(selector: string, options: SliderOptions) {
   view.setOptions(options);
   view.render();
 
-  const ctrl = new RSController(model, view);
+  const controller = new RSController(model, view);
 
-  container.addEventListener('mousedown', ctrl.grab.bind(ctrl));
+  container.addEventListener('mousedown', controller.grab.bind(controller));
   container.addEventListener('dragstart', (e) => e.preventDefault());
 
   const slider: Slider = {
     container,
     model,
     view,
-    controller: ctrl,
+    controller,
     setTooltip,
   };
 
