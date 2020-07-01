@@ -74,7 +74,9 @@ export default class RSPanel implements Panel {
       if (valid) {
         this.model.updateValue(index, +inputValue);
       }
+      return inputValue;
     }
+    return null;
   }
 
   setModelOption(e: KeyboardEvent, key: keyof ModelOptions) {
