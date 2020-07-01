@@ -22,7 +22,7 @@ module.exports = (config) => {
     logLevel: config.LOG_INFO,
     browsers: ['FirefoxHeadless'],
     autoWatch: true,
-    singleRun: true,
+    singleRun: false,
     concurrency: Infinity,
   });
 };

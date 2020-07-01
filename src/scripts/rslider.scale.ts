@@ -54,6 +54,7 @@ export default class RScale implements Scale {
       this.scaleMarks.push(mark);
       this.markValues.push(i);
     }
+    return this.scale;
   }
 
   // used by RSlider
@@ -74,6 +75,8 @@ export default class RScale implements Scale {
     });
 
     this.container.appendChild(this.scale);
+
+    return this.scale;
   }
 
   update() {
