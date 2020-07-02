@@ -16,7 +16,7 @@ const opt4 = {
   stepSize: 10,
   handlerCount: 4,
   isHorizontal: false,
-  showTooltip: false
+  showTooltip: false,
 }
 const sl4 = RSlider.create('#buzz', opt4);
 const pan4 = RSlider.addPanel(sl4);

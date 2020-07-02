@@ -186,11 +186,14 @@ export default class RSView implements View {
     });
   }
 
+  // check if necessary, delete otherwise
   identifyHandler(handler: HTMLElement) {
     return this.handlers.indexOf(handler);
   }
 
   private addTooltip(handler: HTMLElement, index: number) {
+    // if (!(handler instanceof HTMLElement)) throw new Error('Handler is not an element');
+
     const tooltip = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
