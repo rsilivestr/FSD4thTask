@@ -16,11 +16,13 @@ Run tests `npm run build && npm test`
 
 ## Plugin usage
 
-Create new slider: `const mySlider = RSlider.create(DOM selector, options object);`
+Create new slider
+```typescript
+const mySlider = RSlider.create(selector: String, options: Object);
+```
 
 Default options
-
-```javascript
+```typescript
 { 
   minValue: -50, // number
   maxValue: 50, // number
@@ -31,6 +33,12 @@ Default options
 }
 ```
 
-Add control panel: `const myPanel = RSlider.addPanel(mySlider);`
+Add a control panel to `mySlider`
+```typescript
+const myPanel = RSlider.addPanel(mySlider: Object);
+```
 
-Add scale: `const myScale = RSlider.addScale(mySlider);`
+Add a scale to `mySlider`
+```typescript
+const myScale = RSlider.addScale(mySlider: Object);
+```
