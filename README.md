@@ -2,17 +2,36 @@
 
 ## CLI usage
 
-Get files `git clone https://github.com/rsilivestr/FSD4thTask.git`
+Get files
+```
+git clone https://github.com/rsilivestr/FSD4thTask.git\
+&& cd FSD4thTask
+```
 
-Install project dependencies: `npm i`
+Install project dependencies
+```
+npm i
+```
 
-Run webpack-dev-server: `npm start`
+Run webpack-dev-server
+```
+npm start
+```
 
-Build project: `npm run build`
+Build project
+```
+npm run build
+```
 
-Build project with `--watch` option: `npm run watch`
+Build project with `--watch` option
+```
+npm run watch
+```
 
-Run tests `npm run build && npm test`
+Run tests
+```
+npm run build && npm test
+```
 
 ## Plugin usage
 
