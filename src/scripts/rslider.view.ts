@@ -5,8 +5,6 @@ import { Model, ModelOptions } from './rslider.model';
 
 export interface ViewOptions {
   isHorizontal?: boolean;
-  // valuePrefix?: string;
-  // valuePostfix?: string;
   handlerRadius?: number;
   showTooltip?: boolean;
 }
@@ -74,8 +72,6 @@ export default class RSView implements View {
     this.options = {};
 
     this.options.isHorizontal = options.isHorizontal || true;
-    // this.options.valuePrefix = options.valuePrefix || '';
-    // this.options.valuePostfix = options.valuePostfix || '';
     this.options.handlerRadius = options.handlerRadius || 8;
     this.options.showTooltip = options.showTooltip || true;
   }
@@ -114,7 +110,9 @@ export default class RSView implements View {
 
         const value = this.handlerCoords[handlersRendered];
         const { sliderLength } = this.getRect();
-        const coord = value * ((sliderLength - this.options.handlerRadius * 2) / (sliderLength));
+        const coord =
+          value *
+          ((sliderLength - this.options.handlerRadius * 2) / sliderLength);
 
         if (this.options.showTooltip) {
           this.addTooltip(handler, handlersRendered);
@@ -173,13 +171,9 @@ export default class RSView implements View {
       const coord = values[index] - minValue;
       const viewCoord = coord * scaleFactor;
       if (this.options.isHorizontal) {
-        // this.handlers[index].style.left = `${viewCoord}%`;
-        // eslint-disable-next-line no-param-reassign
-        handler.style.left = `${viewCoord}%`;
+        this.handlers[index].style.left = `${viewCoord}%`;
       } else {
-        // this.handlers[index].style.bottom = `${viewCoord}%`;
-        // eslint-disable-next-line no-param-reassign
-        handler.style.bottom = `${viewCoord}%`;
+        this.handlers[index].style.bottom = `${viewCoord}%`;
       }
       const tooltip: HTMLElement = handler.querySelector('.rslider__tooltip');
       if (tooltip) tooltip.innerText = `${this.model.handlerValues[index]}`;
@@ -192,8 +186,6 @@ export default class RSView implements View {
   }
 
   private addTooltip(handler: HTMLElement, index: number) {
-    // if (!(handler instanceof HTMLElement)) throw new Error('Handler is not an element');
-
     const tooltip = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
@@ -219,7 +211,9 @@ export default class RSView implements View {
     }
 
     if (this.options.showTooltip === false) {
-      const tooltips = this.container.getElementsByClassName('rslider__tooltip');
+      const tooltips = this.container.getElementsByClassName(
+        'rslider__tooltip'
+      );
 
       for (let i = tooltips.length - 1; i >= 0; i -= 1) {
         tooltips[i].remove();
@@ -245,8 +239,6 @@ export default class RSView implements View {
     if (showTooltip !== undefined && typeof showTooltip === 'boolean') {
       this.options.showTooltip = showTooltip;
     }
-
-    // postUpdate
 
     return this.options;
   }

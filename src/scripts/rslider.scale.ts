@@ -28,6 +28,11 @@ export default class RScale implements Scale {
 
   markValues: number[] = [];
 
+  scaleStep: number;
+
+  // 10 steps = 11 marks
+  maxScaleSteps: number = 10;
+
   constructor(model: Model, view: View, container: HTMLElement) {
     this.model = model;
     model.addObserver(this);
@@ -35,14 +40,27 @@ export default class RScale implements Scale {
     this.container = container;
   }
 
-  private populateScale(scale: HTMLElement) {
+  private calcScaleStep(): number {
+    const { minValue, maxValue, stepSize } = this.model.getOptions();
+    const stepNumber: number = (maxValue - minValue) / stepSize;
+
+    if (stepNumber > this.maxScaleSteps) {
+      // More steps than scale can hold
+      return stepSize * Math.ceil(stepNumber / this.maxScaleSteps);
+    }
+
+    return stepSize;
+  }
+
+  private populateScale(scale: HTMLElement): HTMLElement {
     this.scale.textContent = '';
     this.scaleMarks = [];
     this.markValues = [];
 
-    const { minValue, maxValue, stepSize } = this.model.getOptions();
+    const { minValue, maxValue } = this.model.getOptions();
+    const scaleStepSize: number = this.calcScaleStep();
 
-    for (let i = minValue; i < maxValue + stepSize; i += stepSize) {
+    for (let i = minValue; i < maxValue + scaleStepSize; i += scaleStepSize) {
       // when last step is smaller (scale length isn't multiple of step size)
       if (i > maxValue) i = maxValue;
 
@@ -68,6 +86,7 @@ export default class RScale implements Scale {
     this.scale.addEventListener('click', (e) => {
       this.scaleMarks.forEach((el, index) => {
         if (e.target === el) {
+          // jump to value on click
           const val = this.markValues[index];
           this.model.updateValue(0, val);
         }

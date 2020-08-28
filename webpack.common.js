@@ -1,6 +1,5 @@
 /* eslint-disable */
 const path = require('path');
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -16,7 +15,6 @@ module.exports = {
     libraryTarget: 'umd',
   },
   plugins: [
-    // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: './src/demo/demo.pug',
       filename: 'demo.html',
@@ -26,10 +24,18 @@ module.exports = {
       filename: 'styles/[name].css',
       ignoreOrder: false,
     }),
-    new CopyWebpackPlugin([
-      { from: 'src/demo/demo.js', to: path.resolve(__dirname, 'dist/scripts') },
-      { from: 'src/demo/demo.css', to: path.resolve(__dirname, 'dist/styles') },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/demo/demo.js',
+          to: path.resolve(__dirname, 'dist/scripts'),
+        },
+        {
+          from: 'src/demo/demo.css',
+          to: path.resolve(__dirname, 'dist/styles'),
+        },
+      ],
+    }),
   ],
   module: {
     rules: [
@@ -58,9 +64,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               ident: 'postcss',
-              plugins: [
-                require('autoprefixer'),
-              ],
+              plugins: [require('autoprefixer')],
             },
           },
           'sass-loader',

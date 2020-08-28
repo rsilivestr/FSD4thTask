@@ -6,7 +6,7 @@ const pan1 = RSlider.addPanel(sl1);
 const sl2 = RSlider.create('#bar', {});
 const pan2 = RSlider.addPanel(sl2);
 
-const sl3 = RSlider.create('#fizz', {});
+const sl3 = RSlider.create('#fizz', { stepSize: 1 });
 const sc3 = RSlider.addScale(sl3);
 const pan3 = RSlider.addPanel(sl3);
 
@@ -17,6 +17,6 @@ const opt4 = {
   handlerCount: 4,
   isHorizontal: false,
   showTooltip: false,
-}
+};
 const sl4 = RSlider.create('#buzz', opt4);
 const pan4 = RSlider.addPanel(sl4);
