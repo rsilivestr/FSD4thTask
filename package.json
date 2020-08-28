@@ -1,20 +1,21 @@
 {
   "name": "fsd4thtask",
   "version": "1.0.0",
-  "description": "Full stack development 4th task: range slider jquery plugin",
+  "description": "Full stack development 4th task: range slider plugin",
   "main": "index.ts",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "watch": "webpack --config webpack.prod.js --watch",
-    "demo": "sass ./src/demo/demo.sass ./src/demo/demo.css",
+    "clean": "rm -rf ./dist/",
+    "rollup:build": "rollup -c",
+    "rollup:watch": "rollup -c -w",
+    "build": "npm run clean && npm run rollup:build",
+    "start": "npm run clean && npm run rollup:watch",
     "test": "karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rsilivestr/FSD4hTask.git"
+    "url": "https://github.com/rsilivestr/FSD4hTask.git"
   },
-  "author": "Roman",
+  "author": "Roman Silivestrov",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/rsilivestr/FSD4hTask/issues"
@@ -23,43 +24,28 @@
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@rollup/plugin-typescript": "^5.0.2",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "autoprefixer": "^9.8.0",
-    "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.3",
-    "css-loader": "^3.5.3",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "html-webpack-plugin": "^3.2.0",
     "karma": "^5.0.9",
     "karma-chai": "^0.1.0",
     "karma-coverage": "^2.0.2",
     "karma-firefox-launcher": "^1.3.0",
     "karma-mocha": "^2.0.1",
-    "mini-css-extract-plugin": "^0.9.0",
     "mocha": "^7.2.0",
     "node-sass": "^4.14.1",
-    "path": "^0.12.7",
-    "postcss-loader": "^3.0.0",
-    "pug": "^2.0.4",
-    "pug-loader": "^2.4.0",
-    "pug-module": "^1.2.0",
-    "requirejs": "^2.3.6",
-    "sass-loader": "^8.0.2",
-    "terser-webpack-plugin": "^2.3.6",
-    "ts-loader": "^6.2.2",
+    "rollup": "^2.26.6",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-sass": "^1.2.2",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.3",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
+    "typescript": "^3.9.3"
   },
   "dependencies": {}
 }
