@@ -1,14 +1,23 @@
 import copy from 'rollup-plugin-copy';
 import sass from 'rollup-plugin-sass';
+import { terser } from 'rollup-plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 
 export default {
   input: './src/scripts/rslider.ts',
-  output: {
-    file: './dist/js/rslider.js',
-    format: 'iife',
-    name: 'RSlider',
-  },
+  output: [
+    {
+      file: './dist/js/rslider.js',
+      format: 'iife',
+      name: 'RSlider',
+    },
+    {
+      file: './dist/js/rslider.min.js',
+      format: 'iife',
+      name: 'RSlider',
+      plugins: [terser()],
+    },
+  ],
   plugins: [
     copy({
       targets: [
