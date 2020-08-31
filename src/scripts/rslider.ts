@@ -31,7 +31,7 @@ function setTooltip(this: Slider, value: boolean) {
   this.view.setTooltip(value);
 }
 
-export function create(selector: string, options: SliderOptions) {
+export function create(selector: string, options: SliderOptions = {}) {
   const container: HTMLElement = document.querySelector(selector);
 
   const model = new RSModel(options);

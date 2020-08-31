@@ -39,11 +39,17 @@ export default class RSModel implements Model {
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
-    if (options.minValue !== undefined && typeof options.minValue === 'number') {
+    if (
+      options.minValue !== undefined &&
+      typeof options.minValue === 'number'
+    ) {
       this.options.minValue = options.minValue;
     } else this.options.minValue = -50;
 
-    if (options.maxValue !== undefined && typeof options.maxValue === 'number') {
+    if (
+      options.maxValue !== undefined &&
+      typeof options.maxValue === 'number'
+    ) {
       this.options.maxValue = options.maxValue;
     } else this.options.maxValue = 50;
 
@@ -135,7 +141,8 @@ export default class RSModel implements Model {
     const minIndexCoord = step * index;
     // if last step is smaller scaleLength (percent) is extended to be multiple of stepSize
     const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
-    const correctedLength = 100 + ((scaleLength % this.options.stepSize) / scaleLength) * 100;
+    const correctedLength =
+      100 + ((scaleLength % this.options.stepSize) / scaleLength) * 100;
     const maxIndexCoord = correctedLength - step * stepsToMax;
 
     if (normalizedCoord > maxIndexCoord) return maxIndexCoord;
@@ -249,17 +256,14 @@ export default class RSModel implements Model {
   }
 
   public setOptions(options: ModelOptions) {
-    const {
-      handlerCount,
-      minValue,
-      maxValue,
-      stepSize,
-      range,
-    } = options;
+    const { handlerCount, minValue, maxValue, stepSize, range } = options;
 
     let changed: boolean = false;
 
-    if (typeof handlerCount === 'number' && handlerCount !== this.options.handlerCount) {
+    if (
+      typeof handlerCount === 'number' &&
+      handlerCount !== this.options.handlerCount
+    ) {
       this.options.handlerCount = handlerCount;
       changed = true;
     }

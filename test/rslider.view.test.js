@@ -6,9 +6,9 @@ const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];
 
 describe('RSView', () => {
   // void function
-  describe('setCoords', () => {
-    // it('', () => {});
-  });
+  // describe('setCoords', () => {
+  //   // it('', () => {});
+  // });
 
   describe('render', () => {
     const renderRes = viewInstance.render();

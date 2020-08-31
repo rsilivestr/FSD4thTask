@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "clean": "rm -rf ./dist/",
+    "jest": "jest",
     "rollup:build": "rollup -c",
     "rollup:watch": "rollup -c -w",
     "build": "npm run clean && npm run rollup:build",
@@ -46,7 +47,7 @@
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-terser": "^7.0.1",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.7"
   },
   "dependencies": {}
 }

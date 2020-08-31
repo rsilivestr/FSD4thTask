@@ -89,51 +89,52 @@ export default class RSView implements View {
   render() {
     this.setCoords(this.model.handlerValues);
 
-    if (this.container !== null) {
-      this.slider = document.createElement('div');
-      const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-      this.slider.className = `rslider rslider--layout_${layout}`;
-      this.container.appendChild(this.slider);
+    if (this.container == null) {
+      throw new Error('There is no element matching provided selector...');
+    }
 
-      this.track = document.createElement('div');
-      this.track.className = 'rslider__track';
-      this.slider.appendChild(this.track);
+    this.slider = document.createElement('div');
+    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+    this.slider.className = `rslider rslider--layout_${layout}`;
+    this.container.appendChild(this.slider);
 
-      this.trackRect = this.track.getBoundingClientRect();
+    this.track = document.createElement('div');
+    this.track.className = 'rslider__track';
+    this.slider.appendChild(this.track);
 
-      let handlersRendered = 0;
+    this.trackRect = this.track.getBoundingClientRect();
 
-      while (handlersRendered < this.handlerCount) {
-        const handler = document.createElement('div');
-        handler.className = 'rslider__handler';
-        handler.dataset.id = `${handlersRendered}`;
+    let handlersRendered = 0;
 
-        const value = this.handlerCoords[handlersRendered];
-        const { sliderLength } = this.getRect();
-        const coord =
-          value *
-          ((sliderLength - this.options.handlerRadius * 2) / sliderLength);
+    while (handlersRendered < this.handlerCount) {
+      const handler = document.createElement('div');
+      handler.className = 'rslider__handler';
+      handler.dataset.id = `${handlersRendered}`;
 
-        if (this.options.showTooltip) {
-          this.addTooltip(handler, handlersRendered);
-        }
+      const value = this.handlerCoords[handlersRendered];
+      const { sliderLength } = this.getRect();
+      const coord =
+        value *
+        ((sliderLength - this.options.handlerRadius * 2) / sliderLength);
 
-        if (this.options.isHorizontal) {
-          handler.style.left = `${coord}%`;
-        } else {
-          handler.style.bottom = `${coord}%`;
-        }
-
-        this.slider.appendChild(handler);
-
-        this.handlers.push(handler);
-
-        handlersRendered += 1;
+      if (this.options.showTooltip) {
+        this.addTooltip(handler, handlersRendered);
       }
 
-      return this.slider;
+      if (this.options.isHorizontal) {
+        handler.style.left = `${coord}%`;
+      } else {
+        handler.style.bottom = `${coord}%`;
+      }
+
+      this.slider.appendChild(handler);
+
+      this.handlers.push(handler);
+
+      handlersRendered += 1;
     }
-    throw new Error('There is no element matching provided selector...');
+
+    return this.slider;
   }
 
   getRect() {

@@ -3,16 +3,13 @@ module.exports = (config) => {
     frameworks: ['mocha', 'chai'],
     files: [
       { pattern: './dist/demo.html', type: 'dom' },
-      './dist/scripts/rslider.js',
-      './dist/scripts/demo.js',
+      './dist/js/rslider.js',
+      './dist/js/demo.js',
       './test/*.test.js',
     ],
     reporters: ['progress', 'coverage'],
     preprocessors: {
-      // source files, that you wanna generate coverage for
-      // do not include tests or libraries
-      // (these files will be instrumented by Istanbul)
-      './dist/scripts/rslider.js': ['coverage'],
+      './dist/js/rslider.js': ['coverage'],
     },
     coverageReporter: {
       type: 'text',
