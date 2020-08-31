@@ -61,7 +61,6 @@ describe('RSPanel', () => {
 
   describe('update', () => {
     // it('', () => {});
-
     // it('', () => {});
   });
 });

@@ -201,7 +201,14 @@ describe('RSModel', () => {
 
     it('should contain proper keys', () => {
       const result = m.getOptions();
-      const keys = ['minValue', 'maxValue', 'stepSize', 'handlerCount', 'range', 'changed'];
+      const keys = [
+        'minValue',
+        'maxValue',
+        'stepSize',
+        'handlerCount',
+        'range',
+        'changed',
+      ];
 
       assert.hasAllKeys(result, keys);
     });

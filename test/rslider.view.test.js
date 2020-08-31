@@ -2,11 +2,7 @@
 
 const viewInstance = testSlider.view;
 
-const viewOptionsKeys = [
-  'isHorizontal',
-  'handlerRadius',
-  'showTooltip',
-];
+const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];
 
 describe('RSView', () => {
   // void function
@@ -42,11 +38,7 @@ describe('RSView', () => {
 
   describe('getRect', () => {
     it('should return an object', () => {
-      const rektKeys = [
-        'sliderLength',
-        'minCoord',
-        'maxCoord',
-      ];
+      const rektKeys = ['sliderLength', 'minCoord', 'maxCoord'];
 
       const result = viewInstance.getRect();
 
