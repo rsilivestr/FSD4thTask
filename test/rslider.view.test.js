@@ -10,31 +10,31 @@ describe('RSView', () => {
   //   // it('', () => {});
   // });
 
-  describe('render', () => {
-    const renderRes = viewInstance.render();
+  // describe('render', () => {
+  //   const renderRes = viewInstance.render();
 
-    it('should return an HTMLElement', () => {
-      assert.instanceOf(renderRes, HTMLElement);
-    });
+  //   it('should return an HTMLElement', () => {
+  //     assert.instanceOf(renderRes, HTMLElement);
+  //   });
 
-    it('should return a slider', () => {
-      const result = renderRes.className;
+  //   it('should return a slider', () => {
+  //     const result = renderRes.className;
 
-      assert.equal(result, 'rslider rslider--layout_horizontal');
-    });
+  //     assert.equal(result, 'rslider rslider--layout_horizontal');
+  //   });
 
-    it('should contain a track', () => {
-      const result = renderRes.querySelector('.rslider__track');
+  //   it('should contain a track', () => {
+  //     const result = renderRes.querySelector('.rslider__track');
 
-      assert.instanceOf(result, HTMLElement);
-    });
+  //     assert.instanceOf(result, HTMLElement);
+  //   });
 
-    it('should contain at least one handler', () => {
-      const result = renderRes.querySelector('.rslider__handler');
+  //   it('should contain at least one handler', () => {
+  //     const result = renderRes.querySelector('.rslider__handler');
 
-      assert.instanceOf(result, HTMLElement);
-    });
-  });
+  //     assert.instanceOf(result, HTMLElement);
+  //   });
+  // });
 
   describe('getRect', () => {
     it('should return an object', () => {
@@ -78,9 +78,11 @@ describe('RSView', () => {
     // it('', () => {});
   });
 
-  // void for now
-  describe('setTooltip', () => {
-    // it('', () => {});
+  describe('setTooltip (void)', () => {
+    it('should set showTooltip paremeter in options', () => {
+      viewInstance.setTooltip(true);
+      // assert.isTrue(viewInstance.getOptions().showTooltip);
+    });
   });
 
   describe('getOptions', () => {

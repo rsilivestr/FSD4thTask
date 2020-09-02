@@ -1,8 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 import { Observer } from './interfaces';
-// eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
-// eslint-disable-next-line no-unused-vars
 import { View, ViewOptions } from './rslider.view';
 
 export interface Panel extends Observer {
@@ -108,27 +105,37 @@ export default class RSPanel implements Panel {
 
       input.value = this.values[i].toString(10);
 
-      input.addEventListener('keyup', (e) => { this.setHandlerValue(e, i); });
+      input.addEventListener('keyup', (e) => {
+        this.setHandlerValue(e, i);
+      });
 
       this.handlerInputs.push(input);
     }
 
     const minInput = this.createInput(panel, 'Min value');
     minInput.value = this.modelOptions.minValue.toString(10);
-    minInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'minValue'); });
+    minInput.addEventListener('keydown', (e) => {
+      this.setModelOption(e, 'minValue');
+    });
 
     const maxInput = this.createInput(panel, 'Max value');
     maxInput.value = this.modelOptions.maxValue.toString(10);
-    maxInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'maxValue'); });
+    maxInput.addEventListener('keydown', (e) => {
+      this.setModelOption(e, 'maxValue');
+    });
 
     const stepInput = this.createInput(panel, 'Step size');
     stepInput.value = this.modelOptions.stepSize.toString(10);
-    stepInput.addEventListener('keydown', (e) => { this.setModelOption(e, 'stepSize'); });
+    stepInput.addEventListener('keydown', (e) => {
+      this.setModelOption(e, 'stepSize');
+    });
 
     const tooltipInput = this.createInput(panel, 'Tooltip');
     tooltipInput.type = 'checkbox';
     tooltipInput.checked = this.viewOptions.showTooltip;
-    tooltipInput.addEventListener('change', () => { this.view.setTooltip(tooltipInput.checked); });
+    tooltipInput.addEventListener('change', () => {
+      this.view.setTooltip(tooltipInput.checked);
+    });
 
     this.container.appendChild(panel);
 
@@ -138,7 +145,6 @@ export default class RSPanel implements Panel {
   update() {
     this.values = this.model.getValues();
     this.handlerInputs.forEach((input, index) => {
-      // eslint-disable-next-line no-param-reassign
       input.value = this.values[index].toString(10);
     });
     return this.values;

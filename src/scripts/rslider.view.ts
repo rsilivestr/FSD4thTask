@@ -31,7 +31,6 @@ export interface View extends Observer {
   render(): any;
   getRect(): Rect;
   update(values: number[]): any;
-  identifyHandler(handler: HTMLElement): number;
   setTooltip(value: boolean): void;
   getOptions(): ViewOptions;
 }
@@ -49,11 +48,13 @@ export default class RSView implements View {
 
   handler: HTMLElement;
 
-  options: ViewOptions;
+  options: ViewOptions = {};
 
   handlerCount: number;
 
   handlers: HTMLElement[] = [];
+
+  handlerValues: number[];
 
   handlerCoords: number[] = [];
 
@@ -69,11 +70,11 @@ export default class RSView implements View {
 
     this.container = container;
 
-    this.options = {};
-
     this.options.isHorizontal = options.isHorizontal || true;
     this.options.handlerRadius = options.handlerRadius || 8;
     this.options.showTooltip = options.showTooltip || true;
+
+    this.handlerValues = this.model.getValues();
   }
 
   setCoords(values: number[]) {
@@ -87,7 +88,7 @@ export default class RSView implements View {
   }
 
   render() {
-    this.setCoords(this.model.handlerValues);
+    this.setCoords(this.handlerValues);
 
     if (this.container == null) {
       throw new Error('There is no element matching provided selector...');
@@ -177,21 +178,17 @@ export default class RSView implements View {
         this.handlers[index].style.bottom = `${viewCoord}%`;
       }
       const tooltip: HTMLElement = handler.querySelector('.rslider__tooltip');
-      if (tooltip) tooltip.innerText = `${this.model.handlerValues[index]}`;
+      if (tooltip) tooltip.innerText = `${this.handlerValues[index]}`;
     });
   }
 
-  // check if necessary, delete otherwise
-  identifyHandler(handler: HTMLElement) {
-    return this.handlers.indexOf(handler);
-  }
-
   private addTooltip(handler: HTMLElement, index: number) {
+    console.log(index, this.handlerValues[index]);
     const tooltip = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
     tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.model.handlerValues[index].toString(10);
+    tooltip.innerText = this.handlerValues[0].toString(10);
 
     handler.appendChild(tooltip);
 
@@ -199,26 +196,24 @@ export default class RSView implements View {
   }
 
   setTooltip(value: boolean) {
+    // return if nothing changes
     if (this.options.showTooltip === value) return;
 
+    // update options
     this.options.showTooltip = value;
 
-    if (this.options.showTooltip === true) {
+    if (this.options.showTooltip) {
+      // add tooltips if showTooltip is true
       this.handlers.forEach((handler, index) => {
         this.addTooltip(handler, index);
       });
-
       return;
     }
 
-    if (this.options.showTooltip === false) {
-      const tooltips = this.container.getElementsByClassName(
-        'rslider__tooltip'
-      );
-
-      for (let i = tooltips.length - 1; i >= 0; i -= 1) {
-        tooltips[i].remove();
-      }
+    // remove tooltips if showTooltip is false
+    const tooltips = this.container.getElementsByClassName('rslider__tooltip');
+    for (let i = tooltips.length - 1; i >= 0; i -= 1) {
+      tooltips[i].remove();
     }
   }
 

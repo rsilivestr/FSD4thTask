@@ -1,8 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-// import { Subject, Observer } from './interfaces';
-// eslint-disable-next-line no-unused-vars
 import { Model } from './rslider.model';
-// eslint-disable-next-line no-unused-vars
 import { View } from './rslider.view';
 
 interface Controller {
@@ -77,14 +73,5 @@ export default class RSController implements Controller {
 
     window.removeEventListener('mousemove', this.boundDrag);
     window.removeEventListener('mouseup', this.boundRelease);
-
-    // save position
-
-    // return something?
   }
-
-  // update(str) {
-  //   console.log(`Controller updating, ${str}`);
-  //   console.log(this);
-  // }
 }

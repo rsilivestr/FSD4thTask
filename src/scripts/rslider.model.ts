@@ -16,12 +16,7 @@ export interface Model extends Subject {
   stepSizePerc: number;
   handlerValues: number[];
 
-  // coordToValue(coord: number): number;
-  // valueToCoord(value: number): number;
-  // updatePercentStep(): number;
-  // normalizeHandlerCoord(index: number, coord: number): number;
   updateHandlers(index: number, coord: number): number[];
-  // postUpdate(): number[];
   updateValue(index: number, value: number): number;
   presetValues(): number[];
   getValues(): number[];

@@ -13,16 +13,14 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "eslint-plugin-jest"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "import/extensions": [
       "error",
       "ignorePackages",
       {
         "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
+        "ts": "never"
       }
     ]
   },
