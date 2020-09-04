@@ -24,6 +24,7 @@ export interface View extends Observer {
   trackRect: ClientRect;
   handler: HTMLElement;
   options: ViewOptions;
+  showProgress: boolean;
   handlerCount: number;
   handlers: HTMLElement[];
   handlerCoords: number[];
@@ -48,9 +49,13 @@ export default class RSView implements View {
 
   trackRect: ClientRect;
 
+  progress: HTMLElement | null;
+
   handler: HTMLElement;
 
   options: ViewOptions = {};
+
+  showProgress: boolean;
 
   handlerCount: number;
 
@@ -76,10 +81,15 @@ export default class RSView implements View {
     this.options.handlerRadius = options.handlerRadius || 8;
     this.options.showTooltip = options.showTooltip || true;
 
+    // show progress bar for less than 3 handlers
+    this.showProgress = this.handlerCount < 3;
+
     this.handlerValues = this.model.getValues();
   }
 
-  private setCoords(values: number[]) {
+  private setCoords(values: number[]): void {
+    this.handlerCoords = [];
+
     const { minValue, maxValue } = this.modelOptions;
 
     values.forEach((value) => {
@@ -89,6 +99,85 @@ export default class RSView implements View {
     });
   }
 
+  private getScaleFactor(): number {
+    const { sliderLength } = this.getRect();
+    const r = this.options.handlerRadius;
+
+    return (sliderLength - 2 * r) / sliderLength;
+  }
+
+  private elCreateSlider(): void {
+    this.slider = document.createElement('div');
+    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+    this.slider.className = `rslider rslider--layout_${layout}`;
+    this.container.appendChild(this.slider);
+  }
+
+  private elCreateTrack(): void {
+    this.track = document.createElement('div');
+    this.track.className = 'rslider__track';
+    this.slider.appendChild(this.track);
+
+    this.trackRect = this.track.getBoundingClientRect();
+  }
+
+  private setProgress(): void {
+    // if this.handlerCount === 1fff
+    let min = 0;
+    let max = 100 - this.handlerCoords[0];
+
+    if (this.handlerCount === 2) {
+      min = this.handlerCoords[0];
+      max = 100 - this.handlerCoords[1];
+    }
+
+    if (this.options.isHorizontal) {
+      this.progress.style.left = `${min.toString()}%`;
+      this.progress.style.right = `${max.toString()}%`;
+    } else {
+      this.progress.style.bottom = `${min.toString()}%`;
+      this.progress.style.top = `${max.toString()}%`;
+    }
+  }
+
+  private elCreateProgress(): void {
+    this.progress = document.createElement('div');
+    this.progress.className = 'rslider__progress';
+    this.track.appendChild(this.progress);
+
+    this.setProgress();
+  }
+
+  private elCreateHandler(id: number): void {
+    const handler = document.createElement('div');
+    handler.className = 'rslider__handler';
+    handler.dataset.id = `${id}`;
+
+    const value = this.handlerCoords[id];
+    const coord = value * this.getScaleFactor();
+
+    // add tooltip if set in options
+    if (this.options.showTooltip) this.addTooltip(handler, id);
+
+    // position handler according to slider layout
+    if (this.options.isHorizontal) handler.style.left = `${coord}%`;
+    else handler.style.bottom = `${coord}%`;
+
+    this.slider.appendChild(handler);
+
+    this.handlers.push(handler);
+  }
+
+  private addTooltip(handler: HTMLElement, index: number): void {
+    const tooltip = document.createElement('div');
+    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+
+    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
+    tooltip.innerText = this.handlerValues[index].toString(10);
+
+    handler.appendChild(tooltip);
+  }
+
   public render() {
     this.setCoords(this.handlerValues);
 
@@ -96,43 +185,16 @@ export default class RSView implements View {
       throw new Error('There is no element matching provided selector...');
     }
 
-    this.slider = document.createElement('div');
-    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-    this.slider.className = `rslider rslider--layout_${layout}`;
-    this.container.appendChild(this.slider);
+    this.elCreateSlider();
 
-    this.track = document.createElement('div');
-    this.track.className = 'rslider__track';
-    this.slider.appendChild(this.track);
+    this.elCreateTrack();
 
-    this.trackRect = this.track.getBoundingClientRect();
+    if (this.showProgress) this.elCreateProgress();
 
     let handlersRendered = 0;
 
     while (handlersRendered < this.handlerCount) {
-      const handler = document.createElement('div');
-      handler.className = 'rslider__handler';
-      handler.dataset.id = `${handlersRendered}`;
-
-      const value = this.handlerCoords[handlersRendered];
-      const { sliderLength } = this.getRect();
-      const coord =
-        value *
-        ((sliderLength - this.options.handlerRadius * 2) / sliderLength);
-
-      if (this.options.showTooltip) {
-        this.addTooltip(handler, handlersRendered);
-      }
-
-      if (this.options.isHorizontal) {
-        handler.style.left = `${coord}%`;
-      } else {
-        handler.style.bottom = `${coord}%`;
-      }
-
-      this.slider.appendChild(handler);
-
-      this.handlers.push(handler);
+      this.elCreateHandler(handlersRendered);
 
       handlersRendered += 1;
     }
@@ -166,36 +228,26 @@ export default class RSView implements View {
   }
 
   public update(values: number[]) {
-    const { sliderLength } = this.getRect();
-    const { minValue, maxValue } = this.model.getOptions();
-    const x = (maxValue - minValue) / 100;
-    const y = (sliderLength - this.options.handlerRadius * 2) / sliderLength;
-    const scaleFactor = y / x;
+    // update handler values and coordinates
+    this.handlerValues = values;
+    this.setCoords(values);
+
+    const scaleFactor = this.getScaleFactor();
 
     this.handlers.forEach((handler, index) => {
-      const coord = values[index] - minValue;
-      const viewCoord = coord * scaleFactor;
+      const viewCoord = this.handlerCoords[index] * scaleFactor;
+
       if (this.options.isHorizontal) {
         this.handlers[index].style.left = `${viewCoord}%`;
       } else {
         this.handlers[index].style.bottom = `${viewCoord}%`;
       }
+
       const tooltip: HTMLElement = handler.querySelector('.rslider__tooltip');
       if (tooltip) tooltip.innerText = `${this.handlerValues[index]}`;
     });
-  }
 
-  private addTooltip(handler: HTMLElement, index: number) {
-    console.log(index, this.handlerValues[index]);
-    const tooltip = document.createElement('div');
-    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-
-    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.handlerValues[index].toString(10);
-
-    handler.appendChild(tooltip);
-
-    return this.options;
+    if (this.showProgress) this.setProgress();
   }
 
   // used in rslider.ts

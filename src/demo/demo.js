@@ -3,7 +3,7 @@ const opt1 = { handlerCount: 2, minValue: 0 };
 const sl1 = RSlider.create('#foo', opt1);
 const pan1 = RSlider.addPanel(sl1);
 
-const sl2 = RSlider.create('#bar', {});
+const sl2 = RSlider.create('#bar', { isHorizontal: false });
 const pan2 = RSlider.addPanel(sl2);
 
 const sl3 = RSlider.create('#fizz', { stepSize: 1 });

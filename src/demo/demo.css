@@ -32,10 +32,12 @@ h2 {
   border-radius: 6px;
 }
 
+#bar,
 #buzz {
   display: flex;
   flex-flow: row nowrap;
 }
+#bar .rslider-panel,
 #buzz .rslider-panel {
   flex: 1;
   margin: 0 0 0 40px;

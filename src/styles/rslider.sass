@@ -10,9 +10,11 @@ $handlerSize: 16px
 $handlerOffset: ( $horHeihgt - $handlerSize ) / 2
 $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
 
+.rslider *
+  box-sizing: border-box
+
 .rslider
   position: relative
-  box-sizing: border-box
 
   &--layout_horizontal
     width: 100%
@@ -26,25 +28,31 @@ $handlerBaseOffset: ( $handlerSize - $baseHeight ) / 2
 
   &__track
     position: absolute
-    box-sizing: border-box
-    left: $handlerBaseOffset
-    right: $handlerBaseOffset
     top: $baseOffset
+    right: $handlerBaseOffset
     bottom: $baseOffset
+    left: $handlerBaseOffset
     border: 1px solid $color_border
     border-radius: $baseHeight / 2
-    z-index: 90
+    z-index: 2
+
+  &__progress
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    background-color: lighten($color_primary, 25 )
+    z-index: 4
 
   &__handler
     position: absolute
-    box-sizing: border-box
     width: $handlerSize
     height: $handlerSize
-    // top: $handlerOffset
     background: $color_primary
     border: 2px solid $color_secondary
     border-radius: 50%
-    z-index: 100
+    z-index: 6
 
   &__tooltip
     &--horizontal
