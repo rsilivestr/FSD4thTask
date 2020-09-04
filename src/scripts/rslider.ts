@@ -42,8 +42,8 @@ export function create(selector: string, options: SliderOptions = {}) {
 
   const controller = new RSController(model, view);
 
-  container.addEventListener('mousedown', controller.grab.bind(controller));
-  container.addEventListener('dragstart', (e) => e.preventDefault());
+  // container.addEventListener('mousedown', controller.grab.bind(controller));
+  // container.addEventListener('dragstart', (e) => e.preventDefault());
 
   const slider: Slider = {
     container,

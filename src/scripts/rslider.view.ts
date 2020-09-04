@@ -27,12 +27,14 @@ export interface View extends Observer {
   handlerCount: number;
   handlers: HTMLElement[];
   handlerCoords: number[];
-  setCoords(values: number[]): void;
-  render(): any;
+  // setCoords(values: number[]): void;
+  render(): HTMLElement;
   getRect(): Rect;
-  update(values: number[]): any;
+  update(values: number[]): void;
   setTooltip(value: boolean): void;
   getOptions(): ViewOptions;
+  setOptions(options: ViewOptions): ViewOptions;
+  getContainer(): HTMLElement;
 }
 
 export default class RSView implements View {
@@ -77,7 +79,7 @@ export default class RSView implements View {
     this.handlerValues = this.model.getValues();
   }
 
-  setCoords(values: number[]) {
+  private setCoords(values: number[]) {
     const { minValue, maxValue } = this.modelOptions;
 
     values.forEach((value) => {
@@ -87,7 +89,7 @@ export default class RSView implements View {
     });
   }
 
-  render() {
+  public render() {
     this.setCoords(this.handlerValues);
 
     if (this.container == null) {
@@ -138,7 +140,8 @@ export default class RSView implements View {
     return this.slider;
   }
 
-  getRect() {
+  // used in rslider.ts
+  public getRect() {
     const rect = this.slider.getBoundingClientRect();
 
     let sliderLength;
@@ -162,7 +165,7 @@ export default class RSView implements View {
     };
   }
 
-  update(values: number[]) {
+  public update(values: number[]) {
     const { sliderLength } = this.getRect();
     const { minValue, maxValue } = this.model.getOptions();
     const x = (maxValue - minValue) / 100;
@@ -188,14 +191,15 @@ export default class RSView implements View {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
     tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.handlerValues[0].toString(10);
+    tooltip.innerText = this.handlerValues[index].toString(10);
 
     handler.appendChild(tooltip);
 
     return this.options;
   }
 
-  setTooltip(value: boolean) {
+  // used in rslider.ts
+  public setTooltip(value: boolean) {
     // return if nothing changes
     if (this.options.showTooltip === value) return;
 
@@ -217,11 +221,11 @@ export default class RSView implements View {
     }
   }
 
-  getOptions() {
+  public getOptions() {
     return this.options;
   }
 
-  setOptions(options: ViewOptions) {
+  public setOptions(options: ViewOptions) {
     const { isHorizontal, handlerRadius, showTooltip } = options;
 
     if (isHorizontal !== undefined && typeof isHorizontal === 'boolean') {
@@ -237,5 +241,9 @@ export default class RSView implements View {
     }
 
     return this.options;
+  }
+
+  public getContainer() {
+    return this.container;
   }
 }

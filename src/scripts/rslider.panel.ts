@@ -11,11 +11,11 @@ export interface Panel extends Observer {
   values: number[];
   handlerInputs: HTMLInputElement[];
 
-  createInput(parent: HTMLElement, labelText: string): HTMLElement;
-  setHandlerValue(e: KeyboardEvent, index: number): void;
-  setModelOption(e: KeyboardEvent, key: keyof ModelOptions): ModelOptions;
-  render(): HTMLElement;
-  update(): number[];
+  // createInput(parent: HTMLElement, labelText: string): HTMLElement;
+  // setHandlerValue(e: KeyboardEvent, index: number): void;
+  // setModelOption(e: KeyboardEvent, key: keyof ModelOptions): ModelOptions;
+  // render(): HTMLElement;
+  // update(): number[];
 }
 
 export default class RSPanel implements Panel {
@@ -47,7 +47,7 @@ export default class RSPanel implements Panel {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  createInput(parent: HTMLElement, labelText: string) {
+  private createInput(parent: HTMLElement, labelText: string) {
     const label = document.createElement('label');
     label.className = 'rslider-panel__label';
     label.innerText = labelText;
@@ -60,7 +60,7 @@ export default class RSPanel implements Panel {
     return input;
   }
 
-  setHandlerValue(e: KeyboardEvent, index: number) {
+  private setHandlerValue(e: KeyboardEvent, index: number) {
     if (e.key === 'Enter') {
       const input: HTMLInputElement = <HTMLInputElement>e.target;
       const inputValue = input.value;
@@ -76,7 +76,7 @@ export default class RSPanel implements Panel {
     return null;
   }
 
-  setModelOption(e: KeyboardEvent, key: keyof ModelOptions) {
+  private setModelOption(e: KeyboardEvent, key: keyof ModelOptions) {
     if (e.key === 'Enter') {
       const input: HTMLInputElement = <HTMLInputElement>e.target;
       const options: ModelOptions = {};
@@ -93,7 +93,8 @@ export default class RSPanel implements Panel {
     return this.modelOptions;
   }
 
-  render() {
+  // used in rslider.ts
+  public render() {
     const panel: HTMLElement = document.createElement('div');
     panel.className = 'rslider-panel';
 
@@ -142,7 +143,7 @@ export default class RSPanel implements Panel {
     return panel;
   }
 
-  update() {
+  public update() {
     this.values = this.model.getValues();
     this.handlerInputs.forEach((input, index) => {
       input.value = this.values[index].toString(10);

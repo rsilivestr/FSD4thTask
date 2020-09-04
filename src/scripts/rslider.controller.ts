@@ -3,8 +3,6 @@ import { View } from './rslider.view';
 
 interface Controller {
   grab(e: MouseEvent): HTMLElement;
-  drag(e: MouseEvent): number;
-  release(): void;
 }
 
 export default class RSController implements Controller {
@@ -32,9 +30,17 @@ export default class RSController implements Controller {
 
     this.model = model;
     this.view = view;
+
+    // Add event listener for handlers
+    this.view.getContainer().addEventListener('mousedown', this.boundGrab);
+
+    // prevent tooltip text selection
+    this.view
+      .getContainer()
+      .addEventListener('dragstart', (e) => e.preventDefault());
   }
 
-  grab(e: MouseEvent) {
+  public grab(e: MouseEvent) {
     const target = <HTMLElement>e.target;
 
     if (target.closest('.rslider')) {
@@ -52,7 +58,7 @@ export default class RSController implements Controller {
     return target;
   }
 
-  drag(e: MouseEvent) {
+  private drag(e: MouseEvent) {
     const { isHorizontal } = this.view.options;
     const coord = isHorizontal ? e.clientX : e.clientY;
     const { minCoord, maxCoord } = this.view.getRect();
@@ -68,7 +74,7 @@ export default class RSController implements Controller {
     return handlerPosition;
   }
 
-  release() {
+  private release() {
     this.grabbedHandler = null;
 
     window.removeEventListener('mousemove', this.boundDrag);
