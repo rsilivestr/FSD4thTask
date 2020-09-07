@@ -4,6 +4,7 @@ module.exports = (config) => {
     files: [
       // { pattern: './dist/demo.html', type: 'dom' },
       './dist/js/rslider.js',
+      './test/testSlider.js',
       './test/*.test.js',
     ],
     reporters: ['progress', 'coverage'],

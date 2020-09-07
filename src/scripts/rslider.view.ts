@@ -277,18 +277,18 @@ export default class RSView implements View {
     return this.options;
   }
 
-  public setOptions(options: ViewOptions) {
+  public setOptions(options: ViewOptions = {}) {
     const { isHorizontal, handlerRadius, showTooltip } = options;
 
-    if (isHorizontal !== undefined && typeof isHorizontal === 'boolean') {
+    if (typeof isHorizontal === 'boolean') {
       this.options.isHorizontal = isHorizontal;
     }
 
-    if (handlerRadius !== undefined && typeof handlerRadius === 'number') {
+    if (typeof handlerRadius === 'number' && !isNaN(handlerRadius)) {
       this.options.handlerRadius = handlerRadius;
     }
 
-    if (showTooltip !== undefined && typeof showTooltip === 'boolean') {
+    if (typeof showTooltip === 'boolean') {
       this.options.showTooltip = showTooltip;
     }
 
