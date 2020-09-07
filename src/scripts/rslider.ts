@@ -1,8 +1,6 @@
 import '../styles/rslider.sass';
 
-// eslint-disable-next-line no-unused-vars
 import RSModel from './rslider.model';
-// eslint-disable-next-line no-unused-vars
 import RSView from './rslider.view';
 import RSController from './rslider.controller';
 import RSPanel from './rslider.panel';
@@ -13,7 +11,7 @@ interface Slider {
   model: RSModel;
   view: RSView;
   controller: RSController;
-  setTooltip(value: boolean): void;
+  setOptions(options: SliderOptions): SliderOptions;
 }
 
 interface SliderOptions {
@@ -27,10 +25,6 @@ interface SliderOptions {
   showTooltip?: boolean;
 }
 
-function setTooltip(this: Slider, value: boolean) {
-  this.view.setTooltip(value);
-}
-
 export function create(selector: string, options: SliderOptions = {}) {
   const container: HTMLElement = document.querySelector(selector);
 
@@ -42,15 +36,18 @@ export function create(selector: string, options: SliderOptions = {}) {
 
   const controller = new RSController(model, view);
 
-  // container.addEventListener('mousedown', controller.grab.bind(controller));
-  // container.addEventListener('dragstart', (e) => e.preventDefault());
-
   const slider: Slider = {
     container,
     model,
     view,
     controller,
-    setTooltip,
+    setOptions(options: SliderOptions): SliderOptions {
+      const modelOptions = this.model.setOptions(options);
+
+      const viewOptions = this.view.setOptions(options);
+
+      return { ...modelOptions, ...viewOptions };
+    },
   };
 
   return slider;

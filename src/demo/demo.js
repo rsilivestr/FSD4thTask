@@ -2,6 +2,7 @@
 const opt1 = { handlerCount: 2, minValue: 0 };
 const sl1 = RSlider.create('#foo', opt1);
 const pan1 = RSlider.addPanel(sl1);
+// sl1.setOptions({ minValue: -10 });
 
 const sl2 = RSlider.create('#bar', { isHorizontal: false });
 const pan2 = RSlider.addPanel(sl2);
