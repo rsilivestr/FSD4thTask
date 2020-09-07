@@ -15,7 +15,6 @@ const testSlider = RSlider.create('#test-container', testOptions);
 const testModel = testSlider.model;
 
 describe('RSModel', () => {
-  // describe('hooks', () => {
   beforeEach(() => {
     testModel.setOptions(testOptions);
   });
@@ -23,7 +22,6 @@ describe('RSModel', () => {
   afterEach(() => {
     testModel.setOptions(testOptions);
   });
-  // });
 
   describe('updateHandlers(index, value)', () => {
     const fn = testModel.updateHandlers.bind(testModel);
@@ -33,14 +31,10 @@ describe('RSModel', () => {
     });
 
     it('should return an array of a single value of 0', () => {
-      testModel.setOptions({ handlerCount: 1 });
-
       assert.deepEqual(fn(0, 0), [0]);
     });
 
     it('should return an array of a single value of 10', () => {
-      testModel.setOptions({ handlerCount: 1 });
-
       assert.deepEqual(fn(0, 10), [10]);
     });
 
@@ -89,8 +83,6 @@ describe('RSModel', () => {
     });
 
     it('should return min/maxValue when value is out of range', () => {
-      // testModel.setOptions({ handlerCount: 1 });
-
       assert.deepEqual(fn(0, 999), [100]);
     });
   });
@@ -102,15 +94,18 @@ describe('RSModel', () => {
       assert.isFunction(fn);
     });
 
-    it('should return normalized value', () => {
-      assert.equal(fn(0, 90), 90);
+    it('should normalize value according to step size', () => {
+      assert.equal(fn(0, 94.999), 90);
+      assert.equal(fn(0, 85), 90);
     });
 
     it('should set handler value', () => {
       testModel.setOptions({ handlerCount: 1 });
-      fn(0, 100);
 
-      assert.deepEqual(testModel.getValues(), [100]);
+      fn(0, 30);
+
+      // direct model access
+      assert.deepEqual(testModel.handlerValues, [30]);
     });
   });
 
@@ -139,7 +134,7 @@ describe('RSModel', () => {
       assert.isFunction(fn);
     });
 
-    it('should return options object', () => {
+    it('should return ModelOptions object', () => {
       const modelOptionsKeys = [
         'minValue',
         'maxValue',
