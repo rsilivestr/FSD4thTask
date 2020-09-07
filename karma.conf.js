@@ -2,9 +2,8 @@ module.exports = (config) => {
   config.set({
     frameworks: ['mocha', 'chai'],
     files: [
-      { pattern: './dist/demo.html', type: 'dom' },
+      // { pattern: './dist/demo.html', type: 'dom' },
       './dist/js/rslider.js',
-      './dist/js/demo.js',
       './test/*.test.js',
     ],
     reporters: ['progress', 'coverage'],

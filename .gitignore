@@ -1,5 +1,6 @@
 .cmessage
 .vscode
+_test
 dist
 node_modules
 TODO
