@@ -15,6 +15,16 @@ const testSlider = RSlider.create('#test-container', testOptions);
 const testModel = testSlider.model;
 
 describe('RSModel', () => {
+  // describe('hooks', () => {
+  beforeEach(() => {
+    testModel.setOptions(testOptions);
+  });
+
+  afterEach(() => {
+    testModel.setOptions(testOptions);
+  });
+  // });
+
   describe('updateHandlers(index, value)', () => {
     const fn = testModel.updateHandlers.bind(testModel);
 
@@ -38,11 +48,12 @@ describe('RSModel', () => {
       // add one more handler
       testModel.setOptions({ handlerCount: 2 });
 
-      assert.deepEqual(fn(1, 40), [10, 40]);
+      assert.deepEqual(fn(1, 40), [0, 40]);
     });
 
     it('should push handler with lesser index left', () => {
       testModel.setOptions({ handlerCount: 2 });
+      fn(0, 10);
 
       assert.deepEqual(fn(1, 10), [0, 10]);
     });
@@ -61,6 +72,7 @@ describe('RSModel', () => {
 
     it('should push handler with lesser index further left', () => {
       testModel.setOptions({ handlerCount: 2 });
+      fn(0, 30);
 
       assert.deepEqual(fn(1, 30), [20, 30]);
     });
@@ -77,7 +89,7 @@ describe('RSModel', () => {
     });
 
     it('should return min/maxValue when value is out of range', () => {
-      testModel.setOptions({ handlerCount: 1 });
+      // testModel.setOptions({ handlerCount: 1 });
 
       assert.deepEqual(fn(0, 999), [100]);
     });
@@ -89,6 +101,17 @@ describe('RSModel', () => {
     it('should be a function', () => {
       assert.isFunction(fn);
     });
+
+    it('should return normalized value', () => {
+      assert.equal(fn(0, 90), 90);
+    });
+
+    it('should set handler value', () => {
+      testModel.setOptions({ handlerCount: 1 });
+      fn(0, 100);
+
+      assert.deepEqual(testModel.getValues(), [100]);
+    });
   });
 
   describe('getValues()', () => {
@@ -98,8 +121,14 @@ describe('RSModel', () => {
       assert.isFunction(fn);
     });
 
-    it('should return something', () => {
-      assert.deepEqual(fn(), [100]);
+    it('should return handler values array', () => {
+      testModel.setOptions({ handlerCount: 4 });
+      testModel.updateValue(0, 0);
+      testModel.updateValue(1, 30);
+      testModel.updateValue(2, 80);
+      testModel.updateValue(3, 100);
+
+      assert.deepEqual(fn(), [0, 30, 80, 100]);
     });
   });
 

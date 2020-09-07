@@ -280,6 +280,9 @@ export default class RSModel implements Model {
     ) {
       this.options.handlerCount = handlerCount;
       changed = true;
+
+      // reset handler values
+      this.handlerValues = this.presetValues();
     }
 
     if (typeof minValue === 'number' && minValue !== this.options.minValue) {
