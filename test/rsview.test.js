@@ -4,7 +4,24 @@ describe('RSView', () => {
   // can be run only once for now
   describe('render(): HTMLElement', () => {});
 
-  describe('getRect(): Rect', () => {});
+  describe('getRect(): Rect', () => {
+    const rect = testView.getRect();
+    const rectKeys = ['sliderLength', 'minCoord', 'maxCoord'];
+
+    it('Should return an object', () => {
+      expect(rect).to.be.an('object');
+    });
+
+    it('Result should contain certain keys', () => {
+      expect(rect).to.have.deep.keys(rectKeys);
+    });
+
+    it('Result should contain numeric values', () => {
+      rectKeys.forEach((key) => {
+        expect(rect[key]).to.be.a('number');
+      });
+    });
+  });
 
   describe('update(values: number[]): void', () => {});
 

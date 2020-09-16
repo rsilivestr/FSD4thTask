@@ -11,11 +11,8 @@ export interface Panel extends Observer {
   values: number[];
   handlerInputs: HTMLInputElement[];
 
-  // createInput(parent: HTMLElement, labelText: string): HTMLElement;
-  // setHandlerValue(e: KeyboardEvent, index: number): void;
-  // setModelOption(e: KeyboardEvent, key: keyof ModelOptions): ModelOptions;
-  // render(): HTMLElement;
-  // update(): number[];
+  render(): HTMLElement;
+  update(): number[];
 }
 
 export default class RSPanel implements Panel {
