@@ -44,7 +44,10 @@ export default class RSPanel implements Panel {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private createInput(parent: HTMLElement, labelText: string) {
+  private createInput(
+    parent: HTMLElement,
+    labelText: string
+  ): HTMLInputElement {
     const label = document.createElement('label');
     label.className = 'rslider-panel__label';
     label.innerText = labelText;
@@ -57,23 +60,33 @@ export default class RSPanel implements Panel {
     return input;
   }
 
-  private setHandlerValue(e: KeyboardEvent, index: number) {
-    if (e.key === 'Enter') {
-      const input: HTMLInputElement = <HTMLInputElement>e.target;
-      const inputValue = input.value;
-
-      const re = /^-?\d+$/;
-      const valid = re.test(inputValue);
-
-      if (valid) {
-        this.model.updateValue(index, +inputValue);
-      }
-      return inputValue;
+  private handleEnterKey(e: KeyboardEvent, index: number): string {
+    if (e.key !== 'Enter') {
+      return '';
     }
-    return null;
+
+    const input = <HTMLInputElement>e.target;
+
+    const inputValue = this.setHandlerValue(input, index);
+
+    return inputValue;
   }
 
-  private setModelOption(e: KeyboardEvent, key: keyof ModelOptions) {
+  private setHandlerValue(input: HTMLInputElement, index: number): string {
+    const inputValue = input.value;
+    const valid = /^-?\d+$/.test(inputValue);
+
+    if (valid) {
+      this.model.updateValue(index, +inputValue);
+    }
+
+    return inputValue;
+  }
+
+  private setModelOption(
+    e: KeyboardEvent,
+    key: keyof ModelOptions
+  ): ModelOptions {
     if (e.key === 'Enter') {
       const input: HTMLInputElement = <HTMLInputElement>e.target;
       const options: ModelOptions = {};
@@ -104,7 +117,7 @@ export default class RSPanel implements Panel {
       input.value = this.values[i].toString(10);
 
       input.addEventListener('keyup', (e) => {
-        this.setHandlerValue(e, i);
+        this.handleEnterKey(e, i);
       });
 
       this.handlerInputs.push(input);
