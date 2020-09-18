@@ -28,7 +28,6 @@ export interface View extends Observer {
   handlerCount: number;
   handlers: HTMLElement[];
   handlerCoords: number[];
-  // setCoords(values: number[]): void;
   render(): HTMLElement;
   getRect(): Rect;
   update(values: number[]): void;
@@ -127,8 +126,8 @@ export default class RSView implements View {
     let max = 100 - this.handlerCoords[0];
 
     if (this.handlerCount === 2) {
-      min = this.handlerCoords[0];
-      max = 100 - this.handlerCoords[1];
+      [min, max] = this.handlerCoords;
+      max = 100 - max;
     }
 
     if (this.options.isHorizontal) {
@@ -284,7 +283,7 @@ export default class RSView implements View {
       this.options.isHorizontal = isHorizontal;
     }
 
-    if (typeof handlerRadius === 'number' && !isNaN(handlerRadius)) {
+    if (typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius)) {
       this.options.handlerRadius = handlerRadius;
     }
 
