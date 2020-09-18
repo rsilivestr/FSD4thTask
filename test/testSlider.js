@@ -16,3 +16,7 @@ const testSlider = RSlider.create('#test-container', testOptions);
 const testModel = testSlider.model;
 const testController = testSlider.controller;
 const testView = testSlider.view;
+
+const testPanel = RSlider.addPanel(testSlider);
+
+const testScale = RSlider.addScale(testSlider);

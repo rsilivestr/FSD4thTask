@@ -60,19 +60,7 @@ export default class RSPanel implements Panel {
     return input;
   }
 
-  private handleEnterKey(e: KeyboardEvent, index: number): string {
-    if (e.key !== 'Enter') {
-      return '';
-    }
-
-    const input = <HTMLInputElement>e.target;
-
-    const inputValue = this.setHandlerValue(input, index);
-
-    return inputValue;
-  }
-
-  private setHandlerValue(input: HTMLInputElement, index: number): string {
+  private setHandlerValue(input: HTMLInputElement, index: number): number {
     const inputValue = input.value;
     const valid = /^-?\d+$/.test(inputValue);
 
@@ -80,26 +68,28 @@ export default class RSPanel implements Panel {
       this.model.updateValue(index, +inputValue);
     }
 
-    return inputValue;
+    const modelValue = this.model.getValues()[index];
+
+    input.value = modelValue.toString();
+
+    return modelValue;
   }
 
   private setModelOption(
-    e: KeyboardEvent,
+    input: HTMLInputElement,
     key: keyof ModelOptions
   ): ModelOptions {
-    if (e.key === 'Enter') {
-      const input: HTMLInputElement = <HTMLInputElement>e.target;
-      const options: ModelOptions = {};
-      const value: number = +input.value;
+    const options: ModelOptions = {};
+    const value: number = +input.value;
 
-      if (key === 'stepSize') {
-        options[key] = Math.abs(value);
-      } else if (key !== 'range' && key !== 'changed') {
-        options[key] = value;
-      }
-
-      this.model.setOptions(options);
+    if (key === 'stepSize') {
+      options[key] = Math.abs(value);
+    } else if (key !== 'range' && key !== 'changed') {
+      options[key] = value;
     }
+
+    this.model.setOptions(options);
+
     return this.modelOptions;
   }
 
@@ -117,7 +107,9 @@ export default class RSPanel implements Panel {
       input.value = this.values[i].toString(10);
 
       input.addEventListener('keyup', (e) => {
-        this.handleEnterKey(e, i);
+        if (e.key === 'Enter') {
+          this.setHandlerValue(<HTMLInputElement>e.target, i);
+        }
       });
 
       this.handlerInputs.push(input);
@@ -126,19 +118,25 @@ export default class RSPanel implements Panel {
     const minInput = this.createInput(panel, 'Min value');
     minInput.value = this.modelOptions.minValue.toString(10);
     minInput.addEventListener('keydown', (e) => {
-      this.setModelOption(e, 'minValue');
+      if (e.key === 'Enter') {
+        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+      }
     });
 
     const maxInput = this.createInput(panel, 'Max value');
     maxInput.value = this.modelOptions.maxValue.toString(10);
     maxInput.addEventListener('keydown', (e) => {
-      this.setModelOption(e, 'maxValue');
+      if (e.key === 'Enter') {
+        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+      }
     });
 
     const stepInput = this.createInput(panel, 'Step size');
     stepInput.value = this.modelOptions.stepSize.toString(10);
     stepInput.addEventListener('keydown', (e) => {
-      this.setModelOption(e, 'stepSize');
+      if (e.key === 'Enter') {
+        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+      }
     });
 
     const tooltipInput = this.createInput(panel, 'Tooltip');
