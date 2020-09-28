@@ -1,4 +1,5 @@
 .cmessage
+.eslintcache
 .vscode
 _test
 dist

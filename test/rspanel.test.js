@@ -64,6 +64,11 @@ describe('RSPanel', () => {
       expect(fn(testInput, 'minValue')).to.have.deep.keys(ModelOptionsKeys);
     });
 
+    it('Should return ModelOptions object', () => {
+      // testInput.value = '10';
+      expect(fn(testInput, 'stepSize')).to.have.deep.keys(ModelOptionsKeys);
+    });
+
     it('Should ignore invalid keys', () => {
       const opt = testModel.getOptions();
 
