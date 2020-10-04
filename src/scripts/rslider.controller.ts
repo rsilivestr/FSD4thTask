@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import { Model } from './rslider.model';
+// eslint-disable-next-line no-unused-vars
 import { View } from './rslider.view';
 
 interface Controller {

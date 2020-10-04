@@ -123,7 +123,7 @@ export default class RSModel implements Model {
 
   // Return coordinate of the closest step,
   // take into account max value of each handler
-  private normalizeHandlerCoord(index: number, coord: number) {
+  private normalizeHandlerCoord(index: number, coord: number): number {
     if (typeof index !== 'number' || typeof coord !== 'number') {
       // throw new Error('RSModel.normalizeHandlerCoord: wrong params');
       return;

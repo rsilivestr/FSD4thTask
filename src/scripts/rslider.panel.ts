@@ -1,5 +1,8 @@
+// eslint-disable-next-line no-unused-vars
 import { Observer } from './interfaces';
+// eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
+// eslint-disable-next-line no-unused-vars
 import { View, ViewOptions } from './rslider.view';
 
 export interface Panel extends Observer {
