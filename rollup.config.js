@@ -26,6 +26,7 @@ export default {
   plugins: [
     copy({
       targets: [
+        { src: './node_modules/jquery/dist/jquery.min.js', dest: './dist/js/' },
         { src: './src/demo/*.css', dest: './dist/css/' },
         { src: './src/demo/*.js', dest: './dist/js/' },
         { src: './src/demo/*.html', dest: './dist/' },

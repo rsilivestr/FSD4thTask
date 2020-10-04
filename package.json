@@ -56,11 +56,6 @@
   "dependencies": {
     "jquery": "^3.5.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "src/**/*.ts": [
       "eslint --fix",
