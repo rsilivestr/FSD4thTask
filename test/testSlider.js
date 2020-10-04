@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const testContainer = document.createElement('div');
 testContainer.id = 'test-container';
 document.body.appendChild(testContainer);
@@ -11,12 +13,12 @@ const testOptions = {
   showTooltip: false,
 };
 
-const testSlider = RSlider.create('#test-container', testOptions);
+const testSlider = $().RSlider.create('#test-container', testOptions);
 
 const testModel = testSlider.model;
 const testController = testSlider.controller;
 const testView = testSlider.view;
 
-const testPanel = RSlider.addPanel(testSlider);
+const testPanel = $().RSlider.addPanel(testSlider);
 
-const testScale = RSlider.addScale(testSlider);
+const testScale = $().RSlider.addScale(testSlider);

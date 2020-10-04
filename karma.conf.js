@@ -1,8 +1,9 @@
+/* eslint-disable */
 module.exports = (config) => {
   config.set({
     frameworks: ['mocha', 'chai'],
     files: [
-      // { pattern: './dist/demo.html', type: 'dom' },
+      'node_modules/jquery/dist/jquery.min.js',
       './dist/js/rslider.js',
       './test/testSlider.js',
       './test/*.test.js',
