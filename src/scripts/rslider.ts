@@ -8,15 +8,15 @@ import RScale from './rslider.scale';
 
 import '../styles/rslider.sass';
 
-interface Slider {
+type Slider = {
   container: HTMLElement;
   model: RSModel;
   view: RSView;
   controller: RSController;
   setOptions(options: SliderOptions): SliderOptions;
-}
+};
 
-interface SliderOptions {
+type SliderOptions = {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -25,7 +25,7 @@ interface SliderOptions {
   isHorizontal?: boolean;
   handlerRadius?: number;
   showTooltip?: boolean;
-}
+};
 
 function create(selector: string, options: SliderOptions = {}) {
   const container: HTMLElement = document.querySelector(selector);

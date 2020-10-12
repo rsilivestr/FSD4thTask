@@ -1,7 +1,7 @@
 export interface Subject {
   addObserver(o: Observer): Observer[];
   removeObserver(o: Observer): Observer[];
-  notifyObservers(): any;
+  notifyObservers(): void;
 }
 
 export interface Observer {
