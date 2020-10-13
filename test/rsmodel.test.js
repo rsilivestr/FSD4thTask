@@ -12,48 +12,48 @@ describe('RSModel', () => {
     const fn = testModel.updateHandlers.bind(testModel);
 
     it('should be a function', () => {
-      assert.isFunction(fn);
+      expect(fn).to.be.a('function');
     });
 
     it('should return an array of a single value of 0', () => {
-      assert.deepEqual(fn(0, 0), [0]);
+      expect(fn(0, 0)).to.eql([0]);
     });
 
     it('should return an array of a single value of 10', () => {
-      assert.deepEqual(fn(0, 10), [10]);
+      expect(fn(0, 10)).to.eql([10]);
     });
 
     it('should return an array of two values', () => {
       // add one more handler
       testModel.setOptions({ handlerCount: 2 });
 
-      assert.deepEqual(fn(1, 40), [0, 40]);
+      expect(fn(1, 40)).to.eql([0, 40]);
     });
 
     it('should push handler with lesser index left', () => {
       testModel.setOptions({ handlerCount: 2 });
       fn(0, 10);
 
-      assert.deepEqual(fn(1, 10), [0, 10]);
+      expect(fn(1, 10)).to.eql([0, 10]);
     });
 
     it('should push handler with larger index right', () => {
       testModel.setOptions({ handlerCount: 2 });
 
-      assert.deepEqual(fn(0, 10), [10, 20]);
+      expect(fn(0, 10)).to.eql([10, 20]);
     });
 
     it('should push handler with larger index further right', () => {
       testModel.setOptions({ handlerCount: 2 });
 
-      assert.deepEqual(fn(0, 50), [50, 60]);
+      expect(fn(0, 50)).to.eql([50, 60]);
     });
 
     it('should push handler with lesser index further left', () => {
       testModel.setOptions({ handlerCount: 2 });
       fn(0, 30);
 
-      assert.deepEqual(fn(1, 30), [20, 30]);
+      expect(fn(1, 30)).to.eql([20, 30]);
     });
 
     it('should ignore non-numerical values', () => {
@@ -62,13 +62,13 @@ describe('RSModel', () => {
       fn(0, 0);
       fn(1, 50);
 
-      assert.deepEqual(fn('1', 20), [0, 50]);
-      assert.deepEqual(fn(1, true), [0, 50]);
-      assert.deepEqual(fn(1, NaN), [0, 50]);
+      expect(fn('1', 20)).to.eql([0, 50]);
+      expect(fn(1, true)).to.eql([0, 50]);
+      expect(fn(1, NaN)).to.eql([0, 50]);
     });
 
     it('should return min/maxValue when value is out of range', () => {
-      assert.deepEqual(fn(0, 999), [100]);
+      expect(fn(0, 999)).to.eql([100]);
     });
   });
 
@@ -76,12 +76,12 @@ describe('RSModel', () => {
     const fn = testModel.updateValue.bind(testModel);
 
     it('should be a function', () => {
-      assert.isFunction(fn);
+      expect(fn).to.be.a('function');
     });
 
     it('should normalize value according to step size', () => {
-      assert.equal(fn(0, 94.999), 90);
-      assert.equal(fn(0, 85), 90);
+      expect(fn(0, 94.999)).to.equal(90);
+      expect(fn(0, 85)).to.equal(90);
     });
 
     it('should set handler value', () => {
@@ -90,7 +90,7 @@ describe('RSModel', () => {
       fn(0, 30);
 
       // direct model access
-      assert.deepEqual(testModel.handlerValues, [30]);
+      expect(testModel.handlerValues).to.eql([30]);
     });
   });
 
@@ -98,7 +98,7 @@ describe('RSModel', () => {
     const fn = testModel.getValues.bind(testModel);
 
     it('should be a function', () => {
-      assert.isFunction(fn);
+      expect(fn).to.be.a('function');
     });
 
     it('should return handler values array', () => {
@@ -108,7 +108,7 @@ describe('RSModel', () => {
       testModel.updateValue(2, 80);
       testModel.updateValue(3, 100);
 
-      assert.deepEqual(fn(), [0, 30, 80, 100]);
+      expect(fn()).to.eql([0, 30, 80, 100]);
     });
   });
 
@@ -157,13 +157,12 @@ describe('RSModel', () => {
     });
 
     it('should ignore incorrect maxValue', () => {
-      const opt = testModel.setOptions(testOptions);
+      const max = testModel.setOptions(testOptions).maxValue;
 
-      // can not compare to testOptions directly
-      assert.equal(testModel.setOptions({ maxValue: true }), opt);
-      assert.equal(testModel.setOptions({ maxValue: 'true' }), opt);
-      assert.equal(testModel.setOptions({ maxValue: NaN }), opt);
-      assert.equal(testModel.setOptions({ maxValue: null }), opt);
+      expect(testModel.setOptions({ minValue: true }).maxValue).to.equal(max);
+      expect(testModel.setOptions({ minValue: 'true' }).maxValue).to.equal(max);
+      expect(testModel.setOptions({ minValue: NaN }).maxValue).to.equal(max);
+      expect(testModel.setOptions({ minValue: null }).maxValue).to.equal(max);
     });
   });
 });
