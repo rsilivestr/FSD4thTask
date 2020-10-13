@@ -148,13 +148,12 @@ describe('RSModel', () => {
     });
 
     it('should ignore incorrect minValue', () => {
-      const opt = testModel.setOptions(testOptions);
+      const min = testModel.setOptions(testOptions).minValue;
 
-      // can not compare to testOptions directly
-      assert.equal(testModel.setOptions({ minValue: true }), opt);
-      assert.equal(testModel.setOptions({ minValue: 'true' }), opt);
-      assert.equal(testModel.setOptions({ minValue: NaN }), opt);
-      assert.equal(testModel.setOptions({ minValue: null }), opt);
+      expect(testModel.setOptions({ minValue: true }).minValue).to.equal(min);
+      expect(testModel.setOptions({ minValue: 'true' }).minValue).to.equal(min);
+      expect(testModel.setOptions({ minValue: NaN }).minValue).to.equal(min);
+      expect(testModel.setOptions({ minValue: null }).minValue).to.equal(min);
     });
 
     it('should ignore incorrect maxValue', () => {

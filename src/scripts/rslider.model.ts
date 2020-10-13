@@ -276,26 +276,38 @@ export default class RSModel implements Model {
 
     if (
       typeof handlerCount === 'number' &&
+      !isNaN(handlerCount) &&
       handlerCount !== this.options.handlerCount
     ) {
       this.options.handlerCount = handlerCount;
       changed = true;
-
       // reset handler values
       this.handlerValues = this.presetValues();
     }
 
-    if (typeof minValue === 'number' && minValue !== this.options.minValue) {
+    if (
+      typeof minValue === 'number' &&
+      !isNaN(minValue) &&
+      minValue !== this.options.minValue
+    ) {
       this.options.minValue = minValue;
       changed = true;
     }
 
-    if (typeof maxValue === 'number' && maxValue !== this.options.maxValue) {
+    if (
+      typeof maxValue === 'number' &&
+      !isNaN(maxValue) &&
+      maxValue !== this.options.maxValue
+    ) {
       this.options.maxValue = maxValue;
       changed = true;
     }
 
-    if (typeof stepSize === 'number' && stepSize !== this.options.stepSize) {
+    if (
+      typeof stepSize === 'number' &&
+      !isNaN(stepSize) &&
+      stepSize !== this.options.stepSize
+    ) {
       this.options.stepSize = stepSize;
       changed = true;
     }
