@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 describe('RSModel', () => {
   beforeEach(() => {
     testModel.setOptions(testOptions);
@@ -163,6 +164,12 @@ describe('RSModel', () => {
       expect(testModel.setOptions({ minValue: 'true' }).maxValue).to.equal(max);
       expect(testModel.setOptions({ minValue: NaN }).maxValue).to.equal(max);
       expect(testModel.setOptions({ minValue: null }).maxValue).to.equal(max);
+    });
+
+    it('should do something when minValue > maxValue', () => {
+      const opt = testModel.setOptions({ minValue: 100, maxValue: 0 });
+
+      console.log(opt);
     });
   });
 });

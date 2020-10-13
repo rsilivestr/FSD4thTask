@@ -68,7 +68,7 @@ export default class RSPanel implements Panel {
     const valid = /^-?\d+$/.test(inputValue);
 
     if (valid) {
-      this.model.updateValue(index, +inputValue);
+      this.model.updateValue(index, parseInt(inputValue));
     }
 
     const modelValue = this.model.getValues()[index];
@@ -85,9 +85,7 @@ export default class RSPanel implements Panel {
     const options: ModelOptions = {};
     const value: number = +input.value;
 
-    if (key === 'stepSize') {
-      options[key] = Math.abs(value);
-    } else if (key !== 'range' && key !== 'changed') {
+    if (key !== 'range' && key !== 'changed') {
       options[key] = value;
     }
 
@@ -130,7 +128,7 @@ export default class RSPanel implements Panel {
     maxInput.value = this.modelOptions.maxValue.toString(10);
     maxInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+        this.setModelOption(<HTMLInputElement>e.target, 'maxValue');
       }
     });
 
@@ -138,7 +136,7 @@ export default class RSPanel implements Panel {
     stepInput.value = this.modelOptions.stepSize.toString(10);
     stepInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+        this.setModelOption(<HTMLInputElement>e.target, 'stepSize');
       }
     });
 

@@ -33,23 +33,36 @@ export default class RSModel implements Model {
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
-    if (
-      options.minValue !== undefined &&
-      typeof options.minValue === 'number'
-    ) {
-      this.options.minValue = options.minValue;
-    } else this.options.minValue = -50;
+    this.options.minValue =
+      typeof options.minValue === 'number' && !isNaN(options.minValue)
+        ? options.minValue
+        : -50;
 
-    if (
-      options.maxValue !== undefined &&
-      typeof options.maxValue === 'number'
-    ) {
-      this.options.maxValue = options.maxValue;
-    } else this.options.maxValue = 50;
+    this.options.maxValue =
+      typeof options.maxValue === 'number' && !isNaN(options.maxValue)
+        ? options.maxValue
+        : 50;
 
-    this.options.stepSize = options.stepSize || 20;
-    this.options.handlerCount = options.handlerCount || 1;
-    this.options.range = options.range || false;
+    if (typeof options.stepSize === 'number' && !isNaN(options.stepSize)) {
+      const positiveStep = Math.abs(options.stepSize);
+      const negativeStep = -positiveStep;
+
+      this.options.stepSize =
+        this.options.maxValue > this.options.minValue
+          ? positiveStep
+          : negativeStep;
+    } else {
+      this.options.stepSize =
+        this.options.maxValue > this.options.minValue ? 20 : -20;
+    }
+
+    this.options.handlerCount =
+      typeof options.handlerCount === 'number' && !isNaN(options.handlerCount)
+        ? options.handlerCount
+        : 1;
+
+    this.options.range =
+      typeof options.range === 'boolean' ? options.range : false;
 
     this.stepSizePerc = this.updatePercentStep();
 
@@ -85,6 +98,8 @@ export default class RSModel implements Model {
   private coordToValue(coord: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
+    // console.log(minValue, maxValue, stepSize, coord);
+
     if (coord < 0) return minValue;
 
     if (coord > 100) return maxValue;
@@ -99,11 +114,17 @@ export default class RSModel implements Model {
   private valueToCoord(value: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
-    if (value < minValue) {
+    if (
+      (maxValue > minValue && value < minValue) ||
+      (maxValue < minValue && value > minValue)
+    ) {
       return 0;
     }
 
-    if (value > maxValue) {
+    if (
+      (maxValue > minValue && value > maxValue) ||
+      (maxValue < minValue && value < maxValue)
+    ) {
       return 100;
     }
 
@@ -114,7 +135,7 @@ export default class RSModel implements Model {
 
   // Set percentage based stepSize
   private updatePercentStep() {
-    const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
+    const scaleLength = this.options.maxValue - this.options.minValue;
     const stepPerc = (this.options.stepSize / scaleLength) * 100;
     this.stepSizePerc = stepPerc;
 
@@ -129,7 +150,7 @@ export default class RSModel implements Model {
       return;
     }
 
-    const step = this.updatePercentStep();
+    const step = Math.abs(this.updatePercentStep());
     const x = coord + step / 2;
     const normalizedCoord = x - (x % step);
 
@@ -180,12 +201,25 @@ export default class RSModel implements Model {
       let newValue = normalizedValue;
       let newCoord = normalizedCoord;
 
-      if (idx === index + 1 && val <= normalizedValue) {
+      if (
+        idx === index + 1 &&
+        ((this.options.maxValue > this.options.minValue &&
+          val <= normalizedValue) ||
+          (this.options.maxValue < this.options.minValue &&
+            val >= normalizedValue))
+      ) {
         newValue = normalizedValue + this.options.stepSize;
         newCoord = normalizedCoord + this.stepSizePerc;
+
         this.handlerValues[idx] = newValue;
         this.updateHandlers(idx, newCoord);
-      } else if (idx === index - 1 && val >= normalizedValue) {
+      } else if (
+        idx === index - 1 &&
+        ((this.options.maxValue > this.options.minValue &&
+          val >= normalizedValue) ||
+          (this.options.maxValue < this.options.minValue &&
+            val <= normalizedValue))
+      ) {
         newValue = normalizedValue - this.options.stepSize;
         newCoord = normalizedCoord - this.stepSizePerc;
         this.handlerValues[idx] = newValue;
@@ -201,9 +235,10 @@ export default class RSModel implements Model {
   private postUpdate(idx?: number) {
     this.stepSizePerc = this.updatePercentStep();
 
-    if (idx) {
+    if (idx !== undefined) {
       const value: number = this.handlerValues[idx];
       const coord: number = this.valueToCoord(value);
+
       this.updateHandlers(idx, coord);
     } else {
       // change handlerValues according to handlerCount
@@ -211,6 +246,7 @@ export default class RSModel implements Model {
 
       this.handlerValues.forEach((value, index) => {
         const coord: number = this.valueToCoord(value);
+
         this.updateHandlers(index, coord);
       });
     }
@@ -224,9 +260,15 @@ export default class RSModel implements Model {
 
     let normalizedValue;
 
-    if (value < minValue) {
+    if (
+      (maxValue > minValue && value < minValue) ||
+      (maxValue < minValue && value > minValue)
+    ) {
       normalizedValue = minValue;
-    } else if (value > maxValue) {
+    } else if (
+      (maxValue > minValue && value > maxValue) ||
+      (maxValue < minValue && value < maxValue)
+    ) {
       normalizedValue = maxValue;
     } else {
       const val = value - minValue;
@@ -245,12 +287,12 @@ export default class RSModel implements Model {
   private presetValues() {
     const arr: number[] = [];
 
-    arr.length = this.options.handlerCount;
+    const length = this.options.handlerCount;
 
     let index: number = 0;
     let value: number = this.options.minValue;
 
-    while (index < arr.length) {
+    while (index < length) {
       arr[index] = value;
       index += 1;
       value += this.options.stepSize;
@@ -285,22 +327,27 @@ export default class RSModel implements Model {
       this.handlerValues = this.presetValues();
     }
 
-    if (
-      typeof minValue === 'number' &&
-      !isNaN(minValue) &&
-      minValue !== this.options.minValue
-    ) {
-      this.options.minValue = minValue;
-      changed = true;
-    }
+    // minValue cannot be the same as maxValue
+    if (minValue !== maxValue) {
+      if (
+        typeof minValue === 'number' &&
+        !isNaN(minValue) &&
+        minValue !== this.options.minValue &&
+        (minValue !== this.options.maxValue || maxValue !== undefined)
+      ) {
+        this.options.minValue = minValue;
+        changed = true;
+      }
 
-    if (
-      typeof maxValue === 'number' &&
-      !isNaN(maxValue) &&
-      maxValue !== this.options.maxValue
-    ) {
-      this.options.maxValue = maxValue;
-      changed = true;
+      if (
+        typeof maxValue === 'number' &&
+        !isNaN(maxValue) &&
+        maxValue !== this.options.maxValue &&
+        (maxValue !== this.options.minValue || minValue !== undefined)
+      ) {
+        this.options.maxValue = maxValue;
+        changed = true;
+      }
     }
 
     if (
@@ -318,6 +365,15 @@ export default class RSModel implements Model {
     }
 
     if (changed) {
+      // Update stepSize sign
+      const positiveStep = Math.abs(this.options.stepSize);
+      const negativeStep = -positiveStep;
+
+      this.options.stepSize =
+        this.options.maxValue > this.options.minValue
+          ? positiveStep
+          : negativeStep;
+
       this.options.changed = true;
       this.postUpdate();
     }
