@@ -58,19 +58,24 @@ export default class RScale implements Scale {
     this.markValues = [];
 
     const { minValue, maxValue } = this.model.getOptions();
+    const scaleLength: number = Math.abs(maxValue - minValue);
     const scaleStepSize: number = this.calcScaleStep();
+    const stepNumber: number = Math.abs(scaleLength / scaleStepSize);
 
-    for (let i = minValue; i < maxValue + scaleStepSize; i += scaleStepSize) {
-      // when last step is smaller (scale length isn't multiple of step size)
-      if (i > maxValue) i = maxValue;
+    let i = 0;
+    let value = minValue;
 
+    while (i <= stepNumber) {
       const mark = document.createElement('li');
       mark.className = 'rslider-scale__mark';
-      mark.innerText = i.toString(10);
+      mark.innerText = value.toString(10);
       scale.appendChild(mark);
 
       this.scaleMarks.push(mark);
-      this.markValues.push(i);
+      this.markValues.push(value);
+
+      value += scaleStepSize;
+      i += 1;
     }
     return this.scale;
   }

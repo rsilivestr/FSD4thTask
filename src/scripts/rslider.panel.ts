@@ -15,7 +15,7 @@ export interface Panel extends Observer {
   handlerInputs: HTMLInputElement[];
 
   render(): HTMLElement;
-  update(): number[];
+  update(): void;
 }
 
 export default class RSPanel implements Panel {
@@ -157,6 +157,5 @@ export default class RSPanel implements Panel {
     this.handlerInputs.forEach((input, index) => {
       input.value = this.values[index].toString(10);
     });
-    return this.values;
   }
 }

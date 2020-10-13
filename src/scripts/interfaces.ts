@@ -5,5 +5,5 @@ export interface Subject {
 }
 
 export interface Observer {
-  update(handlerValuesArray: number[]): any;
+  update(handlerValuesArray: number[]): void;
 }
