@@ -3,19 +3,8 @@
 describe('RSPanel', () => {
   describe('public render()', () => {});
 
-  describe('public update()', () => {
-    const result = testPanel.update();
-
-    it('Should return values array', () => {
-      expect(result).to.be.an('array');
-    });
-
-    it('Should return numeric array', () => {
-      result.forEach((value) => {
-        expect(value).to.be.a('number');
-      });
-    });
-  });
+  // Void
+  describe('public update()', () => {});
 
   // Nothing to test here
   // describe('private createInput(): HTMLInputElement', () => {});

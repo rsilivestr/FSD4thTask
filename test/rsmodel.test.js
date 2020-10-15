@@ -166,10 +166,10 @@ describe('RSModel', () => {
       expect(testModel.setOptions({ minValue: null }).maxValue).to.equal(max);
     });
 
-    it('should do something when minValue > maxValue', () => {
+    it('stepSize should be negative when minValue > maxValue', () => {
       const opt = testModel.setOptions({ minValue: 100, maxValue: 0 });
 
-      console.log(opt);
+      expect(opt.stepSize).to.be.below(0);
     });
   });
 });

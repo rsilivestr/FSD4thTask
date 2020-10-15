@@ -98,8 +98,6 @@ export default class RSModel implements Model {
   private coordToValue(coord: number) {
     const { minValue, maxValue, stepSize } = this.options;
 
-    // console.log(minValue, maxValue, stepSize, coord);
-
     if (coord < 0) return minValue;
 
     if (coord > 100) return maxValue;
