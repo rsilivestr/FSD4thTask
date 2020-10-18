@@ -1,46 +1,40 @@
 # FSD 4th task: range slider javascript library
 
-## Commands
+## Команды
 
-Install project dependencies
+Установка зависимостей
 
 ```
 npm i
 ```
 
-Run webpack-dev-server
+Запуск сервера
 
 ```
 npm start
 ```
 
-Build project
+Сборка проекта
 
 ```
 npm run build
 ```
 
-Build project with `--watch` option
+Запуск тестов
 
 ```
-npm run watch
+npm test
 ```
 
-Run tests
+## Использование плагина
 
-```
-npm run build && npm test
-```
-
-## Plugin usage
-
-### Create new slider
+### Создать слайдер
 
 ```javascript
-const mySlider = RSlider.create(selector, options);
+const mySlider = $().RSlider.create(selector, options);
 ```
 
-### Default options
+### Настройки по умолчанию
 
 ```javascript
 {
@@ -53,14 +47,20 @@ const mySlider = RSlider.create(selector, options);
 }
 ```
 
-### Add a control panel to `mySlider`
+### Добавить панель управления
 
 ```javascript
-const myPanel = RSlider.addPanel(mySlider);
+const myPanel = $().RSlider.addPanel(mySlider);
 ```
 
-### Add a scale to `mySlider`
+### Добавить шкалу значений
 
 ```javascript
-const myScale = RSlider.addScale(mySlider);
+const myScale = $().RSlider.addScale(mySlider);
 ```
+
+## Архитектура приложения
+
+Слайдер разделён на слои модель, вид и контроллер. Модель (RSModel) содержит данные и логику, вид (RSView) управляет отображением слайдера, контроллер (RSController) обрабатывает события мыши. Слои связаны по шаблону наблюдатель (Observer): вид и контроллер (observers) подписываются на уведомления, которые модель (Subject) рассылает при изменении данных. Шкала значений (RScale) и панель управления (RSPanel) также являются наблюдателями и подписаны на изменения в модели.
+
+нужно написать, как вы отвязываете ваши слои приложений от внешних зависимостей и осуществляете передачу данных по слоям
