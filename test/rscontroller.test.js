@@ -53,7 +53,7 @@ describe('RSController', () => {
       expect(fn(mup)).to.be.an('undefined');
     });
 
-    it('should null grabbedHandler', () => {
+    it('should set grabbedHandler to null', () => {
       expect(testController.grabbedHandler).to.equal(null);
     });
   });
