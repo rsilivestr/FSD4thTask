@@ -104,6 +104,11 @@ export default class RScale implements Scale {
   }
 
   public update() {
-    if (this.model.getOptions().changed) this.populateScale(this.scale);
+    const { changed } = this.model.getOptions();
+
+    if (changed) {
+      // Re-render scale if model options were changed
+      this.populateScale(this.scale);
+    }
   }
 }

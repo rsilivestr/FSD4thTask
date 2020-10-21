@@ -7,7 +7,7 @@ describe('RSController', () => {
   const mmove = new MouseEvent('mousemove');
   const mup = new MouseEvent('mouseup');
 
-  const grabbed = testController.grabbedHandler;
+  // const grabbed = testController.grabbedHandler;
 
   describe('grab', () => {
     const fn = testController.grab.bind(testController);
