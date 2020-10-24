@@ -47,7 +47,7 @@ export default class RSPanel implements Panel {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private createInput(
+  private _createInput(
     parent: HTMLElement,
     labelText: string
   ): HTMLInputElement {
@@ -63,7 +63,7 @@ export default class RSPanel implements Panel {
     return input;
   }
 
-  private setHandlerValue(input: HTMLInputElement, index: number): number {
+  private _setHandlerValue(input: HTMLInputElement, index: number): number {
     const inputValue = input.value;
     const valid = /^-?\d+$/.test(inputValue);
 
@@ -78,7 +78,7 @@ export default class RSPanel implements Panel {
     return modelValue;
   }
 
-  private setModelOption(
+  private _setModelOption(
     input: HTMLInputElement,
     key: keyof ModelOptions
   ): ModelOptions {
@@ -103,44 +103,44 @@ export default class RSPanel implements Panel {
 
     for (let i = 0; i < handlerCount; i += 1) {
       const name = `Handler #${i + 1}`;
-      const input = this.createInput(panel, name);
+      const input = this._createInput(panel, name);
 
       input.value = this.values[i].toString(10);
 
       input.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-          this.setHandlerValue(<HTMLInputElement>e.target, i);
+          this._setHandlerValue(<HTMLInputElement>e.target, i);
         }
       });
 
       this.handlerInputs.push(input);
     }
 
-    const minInput = this.createInput(panel, 'Min value');
+    const minInput = this._createInput(panel, 'Min value');
     minInput.value = this.modelOptions.minValue.toString(10);
     minInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        this.setModelOption(<HTMLInputElement>e.target, 'minValue');
+        this._setModelOption(<HTMLInputElement>e.target, 'minValue');
       }
     });
 
-    const maxInput = this.createInput(panel, 'Max value');
+    const maxInput = this._createInput(panel, 'Max value');
     maxInput.value = this.modelOptions.maxValue.toString(10);
     maxInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        this.setModelOption(<HTMLInputElement>e.target, 'maxValue');
+        this._setModelOption(<HTMLInputElement>e.target, 'maxValue');
       }
     });
 
-    const stepInput = this.createInput(panel, 'Step size');
+    const stepInput = this._createInput(panel, 'Step size');
     stepInput.value = this.modelOptions.stepSize.toString(10);
     stepInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        this.setModelOption(<HTMLInputElement>e.target, 'stepSize');
+        this._setModelOption(<HTMLInputElement>e.target, 'stepSize');
       }
     });
 
-    const tooltipInput = this.createInput(panel, 'Tooltip');
+    const tooltipInput = this._createInput(panel, 'Tooltip');
     tooltipInput.type = 'checkbox';
     tooltipInput.checked = this.viewOptions.showTooltip;
     tooltipInput.addEventListener('change', () => {

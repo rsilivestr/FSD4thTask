@@ -40,7 +40,7 @@ export default class RScale implements Scale {
     this.container = container;
   }
 
-  private calcScaleStep(): number {
+  private _calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.model.getOptions();
     const stepNumber: number = (maxValue - minValue) / stepSize;
 
@@ -52,14 +52,14 @@ export default class RScale implements Scale {
     return stepSize;
   }
 
-  private populateScale(scale: HTMLElement): HTMLElement {
+  private _populateScale(scale: HTMLElement): HTMLElement {
     this.scale.textContent = '';
     this.scaleMarks = [];
     this.markValues = [];
 
     const { minValue, maxValue } = this.model.getOptions();
     const scaleLength: number = Math.abs(maxValue - minValue);
-    const scaleStepSize: number = this.calcScaleStep();
+    const scaleStepSize: number = this._calcScaleStep();
     const stepNumber: number = Math.abs(scaleLength / scaleStepSize);
 
     let i = 0;
@@ -86,7 +86,7 @@ export default class RScale implements Scale {
     const layout = isHorizontal ? 'horizontal' : 'vertical';
     this.scale.className = `rslider-scale rslider-scale--layout_${layout}`;
 
-    this.populateScale(this.scale);
+    this._populateScale(this.scale);
 
     this.scale.addEventListener('click', (e) => {
       this.scaleMarks.forEach((el, index) => {
@@ -108,7 +108,7 @@ export default class RScale implements Scale {
 
     if (changed) {
       // Re-render scale if model options were changed
-      this.populateScale(this.scale);
+      this._populateScale(this.scale);
     }
   }
 }

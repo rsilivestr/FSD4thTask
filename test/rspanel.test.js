@@ -9,8 +9,8 @@ describe('RSPanel', () => {
   // Nothing to test here
   // describe('private createInput(): HTMLInputElement', () => {});
 
-  describe('private setHandlerValue(input: HTMLInputElement, index: number): string', () => {
-    const fn = testPanel.setHandlerValue.bind(testPanel);
+  describe('private _setHandlerValue(input: HTMLInputElement, index: number): string', () => {
+    const fn = testPanel._setHandlerValue.bind(testPanel);
     const testInput = document.createElement('input');
 
     it('Should return a number regardless of input', () => {
@@ -39,8 +39,8 @@ describe('RSPanel', () => {
     });
   });
 
-  describe('private setModelOption(input: HTMLInputElement, key: keyof ModelOptions) ModelOptions', () => {
-    const fn = testPanel.setModelOption.bind(testPanel);
+  describe('private _setModelOption(input: HTMLInputElement, key: keyof ModelOptions) ModelOptions', () => {
+    const fn = testPanel._setModelOption.bind(testPanel);
     const ModelOptionsKeys = [
       'minValue',
       'maxValue',

@@ -27,8 +27,8 @@ export default class RSController implements Controller {
     this.grabbedHandler = null;
 
     this.boundGrab = this.grab.bind(this);
-    this.boundDrag = this.drag.bind(this);
-    this.boundRelease = this.release.bind(this);
+    this.boundDrag = this._drag.bind(this);
+    this.boundRelease = this._release.bind(this);
 
     this.model = model;
     this.view = view;
@@ -60,7 +60,7 @@ export default class RSController implements Controller {
     return target;
   }
 
-  private drag(e: MouseEvent) {
+  private _drag(e: MouseEvent) {
     const { isHorizontal } = this.view.options;
     const coord = isHorizontal ? e.clientX : e.clientY;
     const { minCoord, maxCoord } = this.view.getRect();
@@ -76,7 +76,7 @@ export default class RSController implements Controller {
     return handlerPosition;
   }
 
-  private release() {
+  private _release() {
     this.grabbedHandler = null;
 
     window.removeEventListener('mousemove', this.boundDrag);

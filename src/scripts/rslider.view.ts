@@ -86,7 +86,7 @@ export default class RSView implements View {
     this.handlerValues = this.model.getValues();
   }
 
-  private setCoords(values: number[]): void {
+  private _setCoords(values: number[]): void {
     this.handlerCoords = [];
 
     const { minValue, maxValue } = this.modelOptions;
@@ -98,21 +98,21 @@ export default class RSView implements View {
     });
   }
 
-  private getScaleFactor(): number {
+  private _getScaleFactor(): number {
     const { sliderLength } = this.getRect();
     const r = this.options.handlerRadius;
 
     return (sliderLength - 2 * r) / sliderLength;
   }
 
-  private elCreateSlider(): void {
+  private _elCreateSlider(): void {
     this.slider = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
     this.slider.className = `rslider rslider--layout_${layout}`;
     this.container.appendChild(this.slider);
   }
 
-  private elCreateTrack(): void {
+  private _elCreateTrack(): void {
     this.track = document.createElement('div');
     this.track.className = 'rslider__track';
     this.slider.appendChild(this.track);
@@ -120,7 +120,7 @@ export default class RSView implements View {
     this.trackRect = this.track.getBoundingClientRect();
   }
 
-  private setProgress(): void {
+  private _setProgress(): void {
     // if this.handlerCount === 1fff
     let min = 0;
     let max = 100 - this.handlerCoords[0];
@@ -139,24 +139,34 @@ export default class RSView implements View {
     }
   }
 
-  private elCreateProgress(): void {
+  private _elCreateProgress(): void {
     this.progress = document.createElement('div');
     this.progress.className = 'rslider__progress';
     this.track.appendChild(this.progress);
 
-    this.setProgress();
+    this._setProgress();
   }
 
-  private elCreateHandler(id: number): void {
+  private _addTooltip(handler: HTMLElement, index: number): void {
+    const tooltip = document.createElement('div');
+    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+
+    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
+    tooltip.innerText = this.handlerValues[index].toString(10);
+
+    handler.appendChild(tooltip);
+  }
+
+  private _elCreateHandler(id: number): void {
     const handler = document.createElement('div');
     handler.className = 'rslider__handler';
     handler.dataset.id = `${id}`;
 
     const value = this.handlerCoords[id];
-    const coord = value * this.getScaleFactor();
+    const coord = value * this._getScaleFactor();
 
     // add tooltip if set in options
-    if (this.options.showTooltip) this.addTooltip(handler, id);
+    if (this.options.showTooltip) this._addTooltip(handler, id);
 
     // position handler according to slider layout
     if (this.options.isHorizontal) handler.style.left = `${coord}%`;
@@ -167,33 +177,23 @@ export default class RSView implements View {
     this.handlers.push(handler);
   }
 
-  private addTooltip(handler: HTMLElement, index: number): void {
-    const tooltip = document.createElement('div');
-    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-
-    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.handlerValues[index].toString(10);
-
-    handler.appendChild(tooltip);
-  }
-
   public render() {
-    this.setCoords(this.handlerValues);
+    this._setCoords(this.handlerValues);
 
     if (this.container == null) {
       throw new Error('There is no element matching provided selector...');
     }
 
-    this.elCreateSlider();
+    this._elCreateSlider();
 
-    this.elCreateTrack();
+    this._elCreateTrack();
 
-    if (this.showProgress) this.elCreateProgress();
+    if (this.showProgress) this._elCreateProgress();
 
     let handlersRendered = 0;
 
     while (handlersRendered < this.handlerCount) {
-      this.elCreateHandler(handlersRendered);
+      this._elCreateHandler(handlersRendered);
 
       handlersRendered += 1;
     }
@@ -229,9 +229,9 @@ export default class RSView implements View {
   public update(values: number[]) {
     // update handler values and coordinates
     this.handlerValues = values;
-    this.setCoords(values);
+    this._setCoords(values);
 
-    const scaleFactor = this.getScaleFactor();
+    const scaleFactor = this._getScaleFactor();
 
     this.handlers.forEach((handler, index) => {
       const viewCoord = this.handlerCoords[index] * scaleFactor;
@@ -246,7 +246,7 @@ export default class RSView implements View {
       if (tooltip) tooltip.innerText = `${this.handlerValues[index]}`;
     });
 
-    if (this.showProgress) this.setProgress();
+    if (this.showProgress) this._setProgress();
   }
 
   // used in rslider.ts
@@ -260,7 +260,7 @@ export default class RSView implements View {
     if (this.options.showTooltip) {
       // add tooltips if showTooltip is true
       this.handlers.forEach((handler, index) => {
-        this.addTooltip(handler, index);
+        this._addTooltip(handler, index);
       });
       return;
     }
