@@ -20,6 +20,12 @@ npm start
 npm run build
 ```
 
+Запуск линтера
+
+```
+npm run lint
+```
+
 Запуск тестов
 
 ```

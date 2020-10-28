@@ -9,6 +9,7 @@
     "rollup:watch": "rollup -c -w",
     "build": "npm run clean && npm run rollup:build",
     "start": "npm run clean && npm run rollup:watch",
+    "lint": "eslint src/**/*.ts --fix",
     "test": "karma start karma.conf.js"
   },
   "repository": {
