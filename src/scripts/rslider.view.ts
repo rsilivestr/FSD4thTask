@@ -76,14 +76,29 @@ export default class RSView implements View {
 
     this.container = container;
 
-    this.options.isHorizontal = options.isHorizontal || true;
-    this.options.handlerRadius = options.handlerRadius || 8;
-    this.options.showTooltip = options.showTooltip || true;
+    this.options = this._validateOptions(options);
 
     // show progress bar for less than 3 handlers
     this.showProgress = this.handlerCount < 3;
 
     this.handlerValues = this.model.getValues();
+  }
+
+  private _validateOptions(o: ViewOptions = {}): ViewOptions {
+    const result: ViewOptions = {};
+
+    result.isHorizontal =
+      typeof o.isHorizontal === 'boolean' ? o.isHorizontal : true;
+
+    result.handlerRadius =
+      typeof o.handlerRadius === 'number' && !Number.isNaN(o.handlerRadius)
+        ? o.handlerRadius
+        : 8;
+
+    result.showTooltip =
+      typeof o.showTooltip === 'boolean' ? o.showTooltip : true;
+
+    return result;
   }
 
   private _setCoords(values: number[]): void {

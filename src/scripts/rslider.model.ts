@@ -40,7 +40,7 @@ export default class RSModel implements Model {
     this.handlerValues = this._presetValues();
   }
 
-  private _validateOptions(o: ModelOptions): ModelOptions {
+  private _validateOptions(o: ModelOptions = {}): ModelOptions {
     const result: ModelOptions = {};
 
     result.minValue =
