@@ -33,40 +33,40 @@ export default class RSModel implements Model {
   handlerValues: number[] = [];
 
   constructor(options?: ModelOptions) {
-    this.options.minValue =
-      typeof options.minValue === 'number' && !isNaN(options.minValue)
-        ? options.minValue
-        : -50;
-
-    this.options.maxValue =
-      typeof options.maxValue === 'number' && !isNaN(options.maxValue)
-        ? options.maxValue
-        : 50;
-
-    if (typeof options.stepSize === 'number' && !isNaN(options.stepSize)) {
-      const positiveStep = Math.abs(options.stepSize);
-      const negativeStep = -positiveStep;
-
-      this.options.stepSize =
-        this.options.maxValue > this.options.minValue
-          ? positiveStep
-          : negativeStep;
-    } else {
-      this.options.stepSize =
-        this.options.maxValue > this.options.minValue ? 20 : -20;
-    }
-
-    this.options.handlerCount =
-      typeof options.handlerCount === 'number' && !isNaN(options.handlerCount)
-        ? options.handlerCount
-        : 1;
-
-    this.options.range =
-      typeof options.range === 'boolean' ? options.range : false;
+    this.options = this._validateOptions(options);
 
     this.stepSizePerc = this._updatePercentStep();
 
     this.handlerValues = this._presetValues();
+  }
+
+  private _validateOptions(o: ModelOptions): ModelOptions {
+    const result: ModelOptions = {};
+
+    result.minValue =
+      typeof o.minValue === 'number' && !isNaN(o.minValue) ? o.minValue : -50;
+
+    result.maxValue =
+      typeof o.maxValue === 'number' && !isNaN(o.maxValue) ? o.maxValue : 50;
+
+    if (typeof o.stepSize === 'number' && !isNaN(o.stepSize)) {
+      const positiveStep = Math.abs(o.stepSize);
+      const negativeStep = -positiveStep;
+
+      result.stepSize =
+        result.maxValue > result.minValue ? positiveStep : negativeStep;
+    } else {
+      result.stepSize = result.maxValue > result.minValue ? 20 : -20;
+    }
+
+    result.handlerCount =
+      typeof o.handlerCount === 'number' && !isNaN(o.handlerCount)
+        ? o.handlerCount
+        : 1;
+
+    result.range = typeof o.range === 'boolean' ? o.range : false;
+
+    return result;
   }
 
   public addObserver(o: Observer) {
