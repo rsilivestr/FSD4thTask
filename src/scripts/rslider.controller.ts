@@ -35,11 +35,6 @@ export default class RSController implements Controller {
 
     // Add event listener for handlers
     this.view.getContainer().addEventListener('mousedown', this.boundGrab);
-
-    // prevent tooltip text selection
-    this.view
-      .getContainer()
-      .addEventListener('dragstart', (e) => e.preventDefault());
   }
 
   public grab(e: MouseEvent) {

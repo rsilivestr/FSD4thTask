@@ -213,6 +213,9 @@ export default class RSView implements View {
       handlersRendered += 1;
     }
 
+    // prevent text selection
+    this.container.addEventListener('dragstart', (e) => e.preventDefault());
+
     return this.slider;
   }
 
