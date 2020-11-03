@@ -63,8 +63,8 @@ export default class RSView implements View {
 
   modelOptions: ModelOptions;
 
-  // eslint-disable-next-line no-unused-vars
   constructor(
+    // eslint-disable-next-line no-unused-vars
     private model: Model,
     container: HTMLElement,
     options: ViewOptions = {}
