@@ -16,7 +16,6 @@ export interface Rect {
 }
 
 export interface View extends Observer {
-  model: Model;
   modelOptions: ModelOptions;
   container: HTMLElement;
   slider: HTMLElement;
@@ -38,8 +37,6 @@ export interface View extends Observer {
 }
 
 export default class RSView implements View {
-  model: Model;
-
   container: HTMLElement;
 
   slider: HTMLElement;
@@ -66,17 +63,25 @@ export default class RSView implements View {
 
   modelOptions: ModelOptions;
 
-  constructor(model: Model, container: HTMLElement, options: ViewOptions = {}) {
-    this.model = model;
-    model.addObserver(this);
-
-    this.modelOptions = this.model.getOptions();
-
-    this.handlerCount = this.model.getOptions().handlerCount;
-
+  // eslint-disable-next-line no-unused-vars
+  constructor(
+    private model: Model,
+    container: HTMLElement,
+    options: ViewOptions = {}
+  ) {
     this.container = container;
 
     this.options = this._validateOptions(options);
+
+    this._init();
+  }
+
+  private _init() {
+    this.model.addObserver(this);
+
+    this.modelOptions = this.model.getOptions();
+
+    this.handlerCount = this.modelOptions.handlerCount;
 
     // show progress bar for less than 3 handlers
     this.showProgress = this.handlerCount < 3;

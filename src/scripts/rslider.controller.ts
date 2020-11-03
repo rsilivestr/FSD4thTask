@@ -20,10 +20,10 @@ export default class RSController implements Controller {
 
   // eslint-disable-next-line no-unused-vars
   constructor(private model: Model, private view: View) {
-    this.init();
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.handlers = [];
     this.grabbedHandler = null;
 
