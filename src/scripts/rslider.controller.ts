@@ -18,20 +18,18 @@ export default class RSController implements Controller {
 
   boundRelease: () => void;
 
-  model: Model;
+  // eslint-disable-next-line no-unused-vars
+  constructor(private model: Model, private view: View) {
+    this.init();
+  }
 
-  view: View;
-
-  constructor(model: Model, view: View) {
+  private init() {
     this.handlers = [];
     this.grabbedHandler = null;
 
     this.boundGrab = this.grab.bind(this);
     this.boundDrag = this._drag.bind(this);
     this.boundRelease = this._release.bind(this);
-
-    this.model = model;
-    this.view = view;
 
     // Add event listener for handlers
     this.view.getContainer().addEventListener('mousedown', this.boundGrab);
