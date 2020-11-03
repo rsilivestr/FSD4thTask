@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 describe('$().RSlider', () => {
   const div = document.createElement('div');
   document.body.appendChild(div);

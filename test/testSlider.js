@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const testContainer = document.createElement('div');
 testContainer.id = 'test-container';
 document.body.appendChild(testContainer);

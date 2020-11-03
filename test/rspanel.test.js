@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 describe('RSPanel', () => {
   describe('public render()', () => {});
 

@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 describe('RSModel', () => {
   beforeEach(() => {
     testModel.setOptions(testOptions);

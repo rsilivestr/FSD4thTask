@@ -1,0 +1,4 @@
+karma.conf.js
+rollup.config.js
+test/*
+src/demo/*

@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 describe('RSController', () => {
   const handler = testContainer.querySelector('.rslider__handler');
 

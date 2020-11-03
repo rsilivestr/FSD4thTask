@@ -1,3 +1,4 @@
+/* eslint-disable */
 import copy from 'rollup-plugin-copy';
 import sass from 'rollup-plugin-sass';
 import { terser } from 'rollup-plugin-terser';
@@ -15,12 +16,14 @@ export default {
       file: './dist/js/rslider.js',
       format: 'iife',
       name: 'RSlider',
+      globals: { jquery: '$' }
     },
     {
       file: './dist/js/rslider.min.js',
       format: 'iife',
       name: 'RSlider',
       plugins: [terser()],
+      globals: { jquery: '$' }
     },
   ],
   plugins: [
@@ -46,4 +49,5 @@ export default {
       }),
     !production && livereload({ watch: 'dist' }),
   ],
+  external: [ 'jquery' ]
 };

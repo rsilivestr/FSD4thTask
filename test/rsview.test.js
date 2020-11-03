@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];
 
 describe('RSView', () => {

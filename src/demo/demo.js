@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 const opt1 = { handlerCount: 2, minValue: 0 };
 
 // const sl1 = RSlider.create('#foo', opt1);

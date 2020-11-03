@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 describe('RScale', () => {
   describe('RScale click event', () => {
     it('Should change handler value in model', () => {
