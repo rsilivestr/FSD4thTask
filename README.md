@@ -1,5 +1,9 @@
 # FSD 4th task: range slider javascript library
 
+## Live preview
+
+[Netlify](https://peaceful-joliot-362591.netlify.app/demo.html)
+
 ## Команды
 
 Установка зависимостей
