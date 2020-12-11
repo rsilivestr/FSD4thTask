@@ -18,7 +18,7 @@ module.exports = (config) => {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    browsers: ['FirefoxHeadless'],
+    browsers: ['jsdom'],
     autoWatch: true,
     singleRun: false,
     concurrency: Infinity,
