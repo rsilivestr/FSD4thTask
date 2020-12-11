@@ -13,7 +13,7 @@ body {
 main {
   display: grid;
   grid-template: 'foo bar' auto 'fizz buzz' auto/1fr 1fr;
-  grid-gap: 10px;
+  gap: 10px;
   max-width: 900px;
   margin: 40px auto;
 }
@@ -27,20 +27,24 @@ h2 {
 }
 
 .demo-container {
-  padding: 20px;
   background: white;
   border-radius: 6px;
+  padding: 20px;
+}
+
+.demo-content {
+  display: flex;
+  gap: 32px;
+}
+
+#foo,
+#fizz {
+  flex-direction: column;
 }
 
 #bar,
 #buzz {
-  display: flex;
-  flex-flow: row nowrap;
-}
-#bar .rslider-panel,
-#buzz .rslider-panel {
-  flex: 1;
-  margin: 0 0 0 40px;
+  flex-direction: row;
 }
 
 /*# sourceMappingURL=demo.css.map */
