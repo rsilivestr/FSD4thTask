@@ -1,4 +1,3 @@
-/* eslint-disable */
 module.exports = (config) => {
   config.set({
     frameworks: ['mocha', 'chai'],

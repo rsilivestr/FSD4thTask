@@ -1,4 +1,3 @@
-/* eslint-disable */
 import copy from 'rollup-plugin-copy';
 import sass from 'rollup-plugin-sass';
 import { terser } from 'rollup-plugin-terser';

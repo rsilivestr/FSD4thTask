@@ -1,8 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 import { Observer } from './interfaces';
-// eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
-// eslint-disable-next-line no-unused-vars
 import { View, ViewOptions } from './rslider.view';
 
 export interface Panel extends Observer {
@@ -46,7 +43,6 @@ export default class RSPanel implements Panel {
     this.values = this.model.handlerValues.slice();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private _createInput(
     parent: HTMLElement,
     labelText: string

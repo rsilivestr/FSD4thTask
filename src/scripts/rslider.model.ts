@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { Subject, Observer } from './interfaces';
 
 export interface ModelOptions {

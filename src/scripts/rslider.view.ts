@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-unused-vars
 import { Observer } from './interfaces';
-// eslint-disable-next-line no-unused-vars
 import { Model, ModelOptions } from './rslider.model';
 
 export interface ViewOptions {
@@ -64,7 +62,6 @@ export default class RSView implements View {
   modelOptions: ModelOptions;
 
   constructor(
-    // eslint-disable-next-line no-unused-vars
     private model: Model,
     container: HTMLElement,
     options: ViewOptions = {}

@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-unused-vars
 import { Model } from './rslider.model';
-// eslint-disable-next-line no-unused-vars
 import { View } from './rslider.view';
 
 interface Controller {
@@ -18,7 +16,6 @@ export default class RSController implements Controller {
 
   boundRelease: () => void;
 
-  // eslint-disable-next-line no-unused-vars
   constructor(private model: Model, private view: View) {
     this._init();
   }
