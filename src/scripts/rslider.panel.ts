@@ -1,46 +1,44 @@
 import { Observer } from './interfaces';
-import { Model, ModelOptions } from './rslider.model';
-import { View, ViewOptions } from './rslider.view';
+import { ModelOptions } from './rslider.model';
+import { ViewOptions } from './rslider.view';
+import { Slider } from './rslider';
 
 export interface Panel extends Observer {
-  model: Model;
+  slider: Slider;
   modelOptions: ModelOptions;
-  view: View;
   viewOptions: ViewOptions;
   container: HTMLElement;
   values: number[];
   handlerInputs: HTMLInputElement[];
 
-  render(): HTMLElement;
   update(): void;
 }
 
 export default class RSPanel implements Panel {
-  model: Model;
-
+  slider: Slider;
   modelOptions: ModelOptions;
-
-  view: View;
-
   viewOptions: ViewOptions;
-
   container: HTMLElement;
-
   values: number[];
-
   handlerInputs: HTMLInputElement[] = [];
 
-  constructor(model: Model, view: View, container: HTMLElement) {
-    this.model = model;
-    model.addObserver(this);
-    this.modelOptions = this.model.getOptions();
+  constructor(slider: Slider) {
+    this.slider = slider;
 
-    this.view = view;
-    this.viewOptions = view.getOptions();
+    this._init();
+  }
 
-    this.container = container;
+  private _init() {
+    this.slider.model.addObserver(this);
+    this.modelOptions = this.slider.model.getOptions();
 
-    this.values = this.model.handlerValues.slice();
+    this.viewOptions = this.slider.view.getOptions();
+
+    this.container = this.slider.container;
+
+    this.values = this.slider.getValues();
+
+    this._render();
   }
 
   private _createInput(
@@ -64,14 +62,14 @@ export default class RSPanel implements Panel {
     const valid = /^-?\d+$/.test(inputValue);
 
     if (valid) {
-      this.model.updateValue(index, parseInt(inputValue));
+      this.slider.setValue(parseInt(inputValue), index);
     }
 
-    const modelValue = this.model.getValues()[index];
+    const value = this.slider.getValue(index);
 
-    input.value = modelValue.toString();
+    input.value = value.toString();
 
-    return modelValue;
+    return value;
   }
 
   private _setModelOption(
@@ -85,17 +83,17 @@ export default class RSPanel implements Panel {
       options[key] = value;
     }
 
-    this.model.setOptions(options);
+    this.slider.setOptions(options);
 
     return this.modelOptions;
   }
 
   // used in rslider.ts
-  public render() {
+  private _render() {
     const panel: HTMLElement = document.createElement('div');
     panel.className = 'rslider-panel';
 
-    const { handlerCount } = this.model.options;
+    const { handlerCount } = this.modelOptions;
 
     for (let i = 0; i < handlerCount; i += 1) {
       const name = `Handler #${i + 1}`;
@@ -138,9 +136,9 @@ export default class RSPanel implements Panel {
 
     const tooltipInput = this._createInput(panel, 'Tooltip');
     tooltipInput.type = 'checkbox';
-    tooltipInput.checked = this.viewOptions.showTooltip;
+    tooltipInput.checked = this.viewOptions.tooltip;
     tooltipInput.addEventListener('change', () => {
-      this.view.setTooltip(tooltipInput.checked);
+      this.slider.setOptions({ tooltip: tooltipInput.checked });
     });
 
     this.container.appendChild(panel);
@@ -149,7 +147,7 @@ export default class RSPanel implements Panel {
   }
 
   public update() {
-    this.values = this.model.getValues();
+    this.values = this.slider.getValues();
     this.handlerInputs.forEach((input, index) => {
       input.value = this.values[index].toString(10);
     });

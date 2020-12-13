@@ -1,11 +1,8 @@
 import { Observer } from './interfaces';
-import { Model } from './rslider.model';
-import { View } from './rslider.view';
+import { Slider } from './rslider';
 
 export interface Scale extends Observer {
-  model: Model;
-  view: View;
-  container: HTMLElement;
+  slider: Slider;
   scaleMarks: HTMLElement[];
   markValues: number[];
 
@@ -13,32 +10,26 @@ export interface Scale extends Observer {
 }
 
 export default class RScale implements Scale {
-  model: Model;
-
-  view: View;
-
-  container: HTMLElement;
-
+  slider: Slider;
   scale: HTMLElement = document.createElement('ul');
-
   scaleMarks: HTMLElement[] = [];
-
   markValues: number[] = [];
-
   scaleStep: number;
-
   // 10 steps = 11 marks
   maxScaleSteps: number = 10;
 
-  constructor(model: Model, view: View, container: HTMLElement) {
-    this.model = model;
-    model.addObserver(this);
-    this.view = view;
-    this.container = container;
+  constructor(slider: Slider) {
+    this.slider = slider;
+    this._init();
+  }
+
+  private _init() {
+    this.slider.model.addObserver(this);
+    this._render();
   }
 
   private _calcScaleStep(): number {
-    const { minValue, maxValue, stepSize } = this.model.getOptions();
+    const { minValue, maxValue, stepSize } = this.slider.getOptions();
     const stepNumber: number = (maxValue - minValue) / stepSize;
 
     if (stepNumber > this.maxScaleSteps) {
@@ -54,7 +45,7 @@ export default class RScale implements Scale {
     this.scaleMarks = [];
     this.markValues = [];
 
-    const { minValue, maxValue } = this.model.getOptions();
+    const { minValue, maxValue } = this.slider.getOptions();
     const scaleLength: number = Math.abs(maxValue - minValue);
     const scaleStepSize: number = this._calcScaleStep();
     const stepNumber: number = Math.abs(scaleLength / scaleStepSize);
@@ -78,8 +69,8 @@ export default class RScale implements Scale {
   }
 
   // used by RSlider
-  public render() {
-    const { isHorizontal } = this.view.getOptions();
+  private _render() {
+    const { isHorizontal } = this.slider.getOptions();
     const layout = isHorizontal ? 'horizontal' : 'vertical';
     this.scale.className = `rslider-scale rslider-scale--layout_${layout}`;
 
@@ -90,22 +81,17 @@ export default class RScale implements Scale {
         if (e.target === el) {
           // jump to value on click
           const val = this.markValues[index];
-          this.model.updateValue(0, val);
+          this.slider.setValue(val, 0);
         }
       });
     });
 
-    this.container.appendChild(this.scale);
+    this.slider.container.appendChild(this.scale);
 
     return this.scale;
   }
 
   public update() {
-    const { changed } = this.model.getOptions();
-
-    if (changed) {
-      // Re-render scale if model options were changed
-      this._populateScale(this.scale);
-    }
+    this._populateScale(this.scale);
   }
 }

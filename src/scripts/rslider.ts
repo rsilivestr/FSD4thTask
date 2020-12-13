@@ -6,18 +6,21 @@ import RScale from './rslider.scale';
 
 import '../styles/rslider.sass';
 
-type Slider = {
+export type Slider = {
   container: HTMLElement;
   model: RSModel;
   view: RSView;
   controller: RSController;
+  getOptions(): SliderOptions;
   setOptions(options: SliderOptions): SliderOptions;
   setValue(value: number, index: number): number;
   addScale(): Object;
   addPanel(): Object;
+  getValues(): number[];
+  getValue(index: number): number;
 };
 
-type SliderOptions = {
+export type SliderOptions = {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -25,7 +28,7 @@ type SliderOptions = {
   range?: boolean;
   isHorizontal?: boolean;
   handlerRadius?: number;
-  showTooltip?: boolean;
+  tooltip?: boolean;
 };
 
 export function create(selector: string, options: SliderOptions = {}) {
@@ -33,9 +36,7 @@ export function create(selector: string, options: SliderOptions = {}) {
 
   const model = new RSModel(options);
 
-  const view = new RSView(model, container);
-  view.setOptions(options);
-  view.render();
+  const view = new RSView(model, container, options);
 
   const controller = new RSController(model, view);
 
@@ -44,7 +45,12 @@ export function create(selector: string, options: SliderOptions = {}) {
     model,
     view,
     controller,
-    setOptions(opt) {
+    getOptions() {
+      const modelOptions = this.model.getOptions();
+      const viewOptions = this.view.getOptions();
+      return { ...modelOptions, ...viewOptions };
+    },
+    setOptions(opt = {}) {
       const modelOptions = this.model.setOptions(opt);
 
       const viewOptions = this.view.setOptions(opt);
@@ -55,16 +61,18 @@ export function create(selector: string, options: SliderOptions = {}) {
       return this.model.updateValue(index, value);
     },
     addScale() {
-      const scale = new RScale(this.model, this.view, this.container);
-      scale.render();
+      const scale = new RScale(this);
 
       return scale;
     },
     addPanel() {
-      const panel = new RSPanel(this.model, this.view, this.container);
-      panel.render();
-
-      return panel;
+      return new RSPanel(this);
+    },
+    getValues() {
+      return this.model.getValues();
+    },
+    getValue(index = 0) {
+      return this.model.getValues()[index];
     },
   };
 

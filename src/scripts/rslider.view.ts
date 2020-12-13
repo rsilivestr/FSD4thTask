@@ -4,7 +4,7 @@ import { Model, ModelOptions } from './rslider.model';
 export interface ViewOptions {
   isHorizontal?: boolean;
   handlerRadius?: number;
-  showTooltip?: boolean;
+  tooltip?: boolean;
 }
 
 export interface Rect {
@@ -25,10 +25,9 @@ export interface View extends Observer {
   handlerCount: number;
   handlers: HTMLElement[];
   handlerCoords: number[];
-  render(): HTMLElement;
   getRect(): Rect;
   update(values: number[]): void;
-  setTooltip(value: boolean): void;
+  _toggleTooltip(value: boolean): void;
   getOptions(): ViewOptions;
   setOptions(options: ViewOptions): ViewOptions;
   getContainer(): HTMLElement;
@@ -36,29 +35,17 @@ export interface View extends Observer {
 
 export default class RSView implements View {
   container: HTMLElement;
-
   slider: HTMLElement;
-
   track: HTMLElement;
-
   trackRect: ClientRect;
-
   progress: HTMLElement | null;
-
   handler: HTMLElement;
-
   options: ViewOptions = {};
-
   showProgress: boolean;
-
   handlerCount: number;
-
   handlers: HTMLElement[] = [];
-
   handlerValues: number[];
-
   handlerCoords: number[] = [];
-
   modelOptions: ModelOptions;
 
   constructor(
@@ -84,6 +71,10 @@ export default class RSView implements View {
     this.showProgress = this.handlerCount < 3;
 
     this.handlerValues = this.model.getValues();
+
+    this.setOptions(this.options);
+
+    this._render();
   }
 
   private _validateOptions(o: ViewOptions = {}): ViewOptions {
@@ -97,8 +88,7 @@ export default class RSView implements View {
         ? o.handlerRadius
         : 8;
 
-    result.showTooltip =
-      typeof o.showTooltip === 'boolean' ? o.showTooltip : true;
+    result.tooltip = typeof o.tooltip === 'boolean' ? o.tooltip : true;
 
     return result;
   }
@@ -183,7 +173,7 @@ export default class RSView implements View {
     const coord = value * this._getScaleFactor();
 
     // add tooltip if set in options
-    if (this.options.showTooltip) this._addTooltip(handler, id);
+    if (this.options.tooltip) this._addTooltip(handler, id);
 
     // position handler according to slider layout
     if (this.options.isHorizontal) handler.style.left = `${coord}%`;
@@ -194,7 +184,7 @@ export default class RSView implements View {
     this.handlers.push(handler);
   }
 
-  public render() {
+  private _render() {
     this._setCoords(this.handlerValues);
 
     if (this.container == null) {
@@ -270,22 +260,22 @@ export default class RSView implements View {
   }
 
   // used in rslider.ts
-  public setTooltip(value: boolean) {
+  public _toggleTooltip(value: boolean) {
     // return if nothing changes
-    if (this.options.showTooltip === value) return;
+    if (this.options.tooltip === value) return;
 
     // update options
-    this.options.showTooltip = value;
+    this.options.tooltip = value;
 
-    if (this.options.showTooltip) {
-      // add tooltips if showTooltip is true
+    if (this.options.tooltip) {
+      // add tooltips if tooltip is true
       this.handlers.forEach((handler, index) => {
         this._addTooltip(handler, index);
       });
       return;
     }
 
-    // remove tooltips if showTooltip is false
+    // remove tooltips if tooltip is false
     const tooltips = this.container.getElementsByClassName('rslider__tooltip');
     for (let i = tooltips.length - 1; i >= 0; i -= 1) {
       tooltips[i].remove();
@@ -297,7 +287,7 @@ export default class RSView implements View {
   }
 
   public setOptions(options: ViewOptions = {}) {
-    const { isHorizontal, handlerRadius, showTooltip } = options;
+    const { isHorizontal, handlerRadius, tooltip } = options;
 
     if (typeof isHorizontal === 'boolean') {
       this.options.isHorizontal = isHorizontal;
@@ -307,8 +297,8 @@ export default class RSView implements View {
       this.options.handlerRadius = handlerRadius;
     }
 
-    if (typeof showTooltip === 'boolean') {
-      this.options.showTooltip = showTooltip;
+    if (typeof tooltip === 'boolean') {
+      this._toggleTooltip(tooltip);
     }
 
     return this.options;
