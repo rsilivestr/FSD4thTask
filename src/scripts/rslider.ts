@@ -1,5 +1,3 @@
-import * as $ from 'jquery';
-
 import RSModel from './rslider.model';
 import RSView from './rslider.view';
 import RSController from './rslider.controller';
@@ -14,6 +12,9 @@ type Slider = {
   view: RSView;
   controller: RSController;
   setOptions(options: SliderOptions): SliderOptions;
+  setValue(value: number, index: number): number;
+  addScale(): Object;
+  addPanel(): Object;
 };
 
 type SliderOptions = {
@@ -27,7 +28,7 @@ type SliderOptions = {
   showTooltip?: boolean;
 };
 
-function create(selector: string, options: SliderOptions = {}) {
+export function create(selector: string, options: SliderOptions = {}) {
   const container: HTMLElement = document.querySelector(selector);
 
   const model = new RSModel(options);
@@ -43,36 +44,29 @@ function create(selector: string, options: SliderOptions = {}) {
     model,
     view,
     controller,
-    setOptions(opt: SliderOptions): SliderOptions {
+    setOptions(opt) {
       const modelOptions = this.model.setOptions(opt);
 
       const viewOptions = this.view.setOptions(opt);
 
       return { ...modelOptions, ...viewOptions };
     },
+    setValue(value, index = 0) {
+      return this.model.updateValue(index, value);
+    },
+    addScale() {
+      const scale = new RScale(this.model, this.view, this.container);
+      scale.render();
+
+      return scale;
+    },
+    addPanel() {
+      const panel = new RSPanel(this.model, this.view, this.container);
+      panel.render();
+
+      return panel;
+    },
   };
 
   return slider;
 }
-
-function addScale(slider: Slider) {
-  const scale = new RScale(slider.model, slider.view, slider.container);
-  scale.render();
-
-  return scale;
-}
-
-function addPanel(slider: Slider) {
-  const panel = new RSPanel(slider.model, slider.view, slider.container);
-  panel.render();
-
-  return panel;
-}
-
-$.fn.extend({
-  RSlider: {
-    create,
-    addScale,
-    addPanel,
-  },
-});

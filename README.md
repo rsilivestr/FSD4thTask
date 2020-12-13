@@ -41,10 +41,16 @@ npm test
 ### Создать слайдер
 
 ```javascript
-const mySlider = $().RSlider.create(selector, options);
+const mySlider = RSlider.create(selector, options);
 ```
 
-### Настройки по умолчанию
+### Задать настройки
+
+```javascript
+mySlider.setOptions(options);
+```
+
+Настройки по умолчанию
 
 ```javascript
 {
@@ -57,16 +63,22 @@ const mySlider = $().RSlider.create(selector, options);
 }
 ```
 
+### Изменить значение ползунка
+
+```javascript
+mySlider.setValue(value, [index]);
+```
+
 ### Добавить панель управления
 
 ```javascript
-const myPanel = $().RSlider.addPanel(mySlider);
+mySlider.addPanel();
 ```
 
 ### Добавить шкалу значений
 
 ```javascript
-const myScale = $().RSlider.addScale(mySlider);
+mySlider.addScale();
 ```
 
 ## Архитектура приложения
