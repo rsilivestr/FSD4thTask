@@ -1,21 +1,31 @@
-import ModelOptions from './interface/ModelOptions';
+// import ModelOptions from './interface/ModelOptions';
 import Model from './_interface/Model';
+import Presenter from './_interface/Presenter';
 import RSModel from './_model';
+import RSPresenter from './_presenter';
+import RSView from './_view';
+import Slider from './_interface/Slider';
+import SliderOptions from './_interface/SliderOptions';
+import View from './_interface/View';
 
-export function create(selector: string, options: ModelOptions) {
+export function create(selector: string, options: SliderOptions) {
   const el: HTMLElement = document.querySelector(selector);
-  const model: Model = new RSModel(el, options);
+  const model: Model = new RSModel(options);
+  const view: View = new RSView(el, options);
+  const presenter: Presenter = new RSPresenter(model, view);
 
-  return {
+  const slider: Slider = {
+    el,
     model,
-    getOptions() {
-      return model.getOptions();
-    },
-    addPanel() {
-      console.log('Add panel');
-    },
-    addScale() {
-      console.log('Add scale');
+    view,
+    presenter,
+    config(o?: SliderOptions) {
+      const modelOptions = o ? this.model.config(o) : this.model.config();
+      const viewOptions = o ? this.view.config(o) : this.view.config();
+
+      return { ...modelOptions, ...viewOptions };
     },
   };
+
+  return slider;
 }

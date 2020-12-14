@@ -3,6 +3,4 @@ export default interface ModelOptions {
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
-  range?: boolean;
-  changed?: boolean;
 }

@@ -1,13 +1,15 @@
 import ModelOptions from './ModelOptions';
-import Subject from './Subject';
+import Presenter from './Presenter';
 
-export default interface Model extends Subject {
+export default interface Model {
   options: ModelOptions;
-  stepSizePerc: number;
+  presenter: Presenter;
+  // stepSizePerc: number;
 
+  config(o?: ModelOptions): ModelOptions;
   // updateHandlers(index: number, coord: number): number[];
   // updateValue(index: number, value: number): number;
-  getValues(): number[];
-  getOptions(): ModelOptions;
-  setOptions(options: ModelOptions): ModelOptions;
+  // getValues(): number[];
+  // getOptions(): ModelOptions;
+  // setOptions(options: ModelOptions): ModelOptions;
 }

@@ -13,10 +13,10 @@ const testOptions = {
 
 const testSlider = RSlider.create('#test-container', testOptions);
 
-const testModel = testSlider.model;
-const testController = testSlider.controller;
-const testView = testSlider.view;
+// const testModel = testSlider.model;
+// const testController = testSlider.controller;
+// const testView = testSlider.view;
 
-const testPanel = testSlider.addPanel();
+// const testPanel = testSlider.addPanel();
 
-const testScale = testSlider.addScale();
+// const testScale = testSlider.addScale();
