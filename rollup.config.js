@@ -9,20 +9,20 @@ const production = !process.env.ROLLUP_WATCH;
 const port = 8080;
 
 export default {
-  input: './src/scripts/rslider.ts',
+  input: './src/scripts/_rslider.ts',
   output: [
     {
       file: './dist/js/rslider.js',
       format: 'iife',
       name: 'RSlider',
-      globals: { jquery: '$' }
+      globals: { jquery: '$' },
     },
     {
       file: './dist/js/rslider.min.js',
       format: 'iife',
       name: 'RSlider',
       plugins: [terser()],
-      globals: { jquery: '$' }
+      globals: { jquery: '$' },
     },
   ],
   plugins: [
@@ -48,5 +48,5 @@ export default {
       }),
     !production && livereload({ watch: 'dist' }),
   ],
-  external: [ 'jquery' ]
+  external: ['jquery'],
 };

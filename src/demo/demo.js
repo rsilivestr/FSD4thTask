@@ -2,6 +2,7 @@ const opt1 = { handlerCount: 2, minValue: 0 };
 
 const sl1 = RSlider.create('#foo', opt1);
 const pan1 = sl1.addPanel();
+console.log(sl1.getOptions());
 // const jqSlider1 = $().RSlider.create('#foo', opt1);
 // $().RSlider.setValue(jqSlider1, 0, 1000);
 // const jqPanel1 = $().RSlider.addPanel(jqSlider1);
@@ -21,7 +22,6 @@ const pan3 = sl3.addPanel();
 // const jqSlider3 = $().RSlider.create('#fizz', { stepSize: 1 });
 // const jqScale3 = $().RSlider.addScale(jqSlider3);
 // const jqPanel3 = $().RSlider.addPanel(jqSlider3);
-
 
 const opt4 = {
   minValue: 0,

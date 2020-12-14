@@ -1,31 +1,31 @@
-import { Observer } from './interfaces';
+import Model from './_interface/Model';
+import ModelOptions from './_interface/ModelOptions';
+import Subject from './_subject';
 
-export interface Model extends Observer {
-  options: ModelOptions;
-  values: number[];
+export default class RSModel extends Subject implements Model {
+  public container: HTMLElement;
+  public options: ModelOptions;
+  public stepSizePerc: number;
+  public values: number[] = [];
 
-  updateValues(index: number, value: any): number[];
-}
+  constructor(container: HTMLElement, options: ModelOptions) {
+    super();
 
-export interface ModelOptions {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-  range?: boolean;
-  changed?: boolean;
-}
+    this.container = container;
+    this.options = options;
+  }
 
-export class RSModel implements Model {
-  options: ModelOptions;
-  values: number[];
+  public getValues(): number[] {
+    return this.values;
+  }
 
-  constructor() {}
+  public getOptions(): ModelOptions {
+    return this.options;
+  }
 
-  public updateValues(index: number, value: any) {
-    const result = [];
-    result[index] = value;
-    return result;
+  public setOptions(o: ModelOptions): ModelOptions {
+    this.options = o;
+    return this.options;
   }
 
   public update() {}
