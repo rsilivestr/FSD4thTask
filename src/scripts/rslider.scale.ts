@@ -1,13 +1,5 @@
-import { Observer } from './interfaces';
-import { Slider } from './rslider';
-
-export interface Scale extends Observer {
-  slider: Slider;
-  scaleMarks: HTMLElement[];
-  markValues: number[];
-
-  update(): void;
-}
+import Scale from './interface/Scale';
+import Slider from './interface/Slider';
 
 export default class RScale implements Scale {
   slider: Slider;

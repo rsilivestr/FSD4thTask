@@ -1,37 +1,7 @@
-import { Observer } from './interfaces';
-import { Model, ModelOptions } from './rslider.model';
-
-export interface ViewOptions {
-  isHorizontal?: boolean;
-  handlerRadius?: number;
-  tooltip?: boolean;
-}
-
-export interface Rect {
-  sliderLength: number;
-  minCoord: number;
-  maxCoord: number;
-}
-
-export interface View extends Observer {
-  modelOptions: ModelOptions;
-  container: HTMLElement;
-  slider: HTMLElement;
-  track: HTMLElement;
-  trackRect: ClientRect;
-  handler: HTMLElement;
-  options: ViewOptions;
-  showProgress: boolean;
-  handlerCount: number;
-  handlers: HTMLElement[];
-  handlerCoords: number[];
-  getRect(): Rect;
-  update(values: number[]): void;
-  _toggleTooltip(value: boolean): void;
-  getOptions(): ViewOptions;
-  setOptions(options: ViewOptions): ViewOptions;
-  getContainer(): HTMLElement;
-}
+import Model from './interface/Model';
+import ModelOptions from './interface/ModelOptions';
+import View from './interface/View';
+import ViewOptions from './interface/ViewOptions';
 
 export default class RSView implements View {
   container: HTMLElement;
