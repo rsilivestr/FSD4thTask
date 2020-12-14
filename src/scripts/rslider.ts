@@ -48,12 +48,12 @@ export function create(selector: string, options: SliderOptions = {}) {
     getOptions() {
       const modelOptions = this.model.getOptions();
       const viewOptions = this.view.getOptions();
+
       return { ...modelOptions, ...viewOptions };
     },
-    setOptions(opt = {}) {
-      const modelOptions = this.model.setOptions(opt);
-
-      const viewOptions = this.view.setOptions(opt);
+    setOptions(o = {}) {
+      const modelOptions = this.model.setOptions(o);
+      const viewOptions = this.view.setOptions(o);
 
       return { ...modelOptions, ...viewOptions };
     },
@@ -61,9 +61,7 @@ export function create(selector: string, options: SliderOptions = {}) {
       return this.model.updateValue(index, value);
     },
     addScale() {
-      const scale = new RScale(this);
-
-      return scale;
+      return new RScale(this);
     },
     addPanel() {
       return new RSPanel(this);
