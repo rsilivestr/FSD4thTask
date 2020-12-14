@@ -1,9 +1,6 @@
-import { Model } from './rslider.model';
-import { View } from './rslider.view';
-
-export interface Controller {
-  grab(e: MouseEvent): HTMLElement;
-}
+import Controller from './interface/Controller';
+import Model from './interface/Model';
+import View from './interface/View';
 
 export default class RSController implements Controller {
   handlers: Array<HTMLElement>;

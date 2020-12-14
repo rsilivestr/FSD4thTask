@@ -1,26 +1,6 @@
-import { Subject, Observer } from './interfaces';
-
-export interface ModelOptions {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-  range?: boolean;
-  changed?: boolean;
-}
-
-export interface Model extends Subject {
-  observers: Observer[];
-  options: ModelOptions;
-  stepSizePerc: number;
-  handlerValues: number[];
-
-  updateHandlers(index: number, coord: number): number[];
-  updateValue(index: number, value: number): number;
-  getValues(): number[];
-  getOptions(): ModelOptions;
-  setOptions(options: ModelOptions): ModelOptions;
-}
+import Model from './interface/Model';
+import ModelOptions from './interface/ModelOptions';
+import Observer from './interface/Observer';
 
 export default class RSModel implements Model {
   observers: Observer[] = [];

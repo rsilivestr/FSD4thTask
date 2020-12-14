@@ -1,18 +1,7 @@
-import { Observer } from './interfaces';
-import { ModelOptions } from './rslider.model';
-import { ViewOptions } from './rslider.view';
-import { Slider } from './rslider';
-
-export interface Panel extends Observer {
-  slider: Slider;
-  modelOptions: ModelOptions;
-  viewOptions: ViewOptions;
-  container: HTMLElement;
-  values: number[];
-  handlerInputs: HTMLInputElement[];
-
-  update(): void;
-}
+import ModelOptions from './interface/ModelOptions';
+import Panel from './interface/Panel';
+import Slider from './interface/Slider';
+import ViewOptions from './interface/ViewOptions';
 
 export default class RSPanel implements Panel {
   slider: Slider;

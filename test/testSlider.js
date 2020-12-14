@@ -11,12 +11,12 @@ const testOptions = {
   showTooltip: false,
 };
 
-const testSlider = $().RSlider.create('#test-container', testOptions);
+const testSlider = RSlider.create('#test-container', testOptions);
 
 const testModel = testSlider.model;
 const testController = testSlider.controller;
 const testView = testSlider.view;
 
-const testPanel = $().RSlider.addPanel(testSlider);
+const testPanel = testSlider.addPanel();
 
-const testScale = $().RSlider.addScale(testSlider);
+const testScale = testSlider.addScale();
