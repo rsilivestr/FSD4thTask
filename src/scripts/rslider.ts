@@ -1,23 +1,24 @@
-import RSModel from './rslider.model';
-import RSView from './rslider.view';
-import RSController from './rslider.controller';
-import RSPanel from './rslider.panel';
-import RScale from './rslider.scale';
+import RSModel, { Model } from './rslider.model';
+import RSView, { View } from './rslider.view';
+import RSController, { Controller } from './rslider.controller';
+import RSPanel, { Panel } from './rslider.panel';
+import RScale, { Scale } from './rslider.scale';
 
 import '../styles/rslider.sass';
 
 export type Slider = {
   container: HTMLElement;
-  model: RSModel;
-  view: RSView;
-  controller: RSController;
+  model: Model;
+  view: View;
+  controller: Controller;
+
   getOptions(): SliderOptions;
   setOptions(options: SliderOptions): SliderOptions;
-  setValue(value: number, index: number): number;
-  addScale(): Object;
-  addPanel(): Object;
-  getValues(): number[];
   getValue(index: number): number;
+  getValues(): number[];
+  setValue(value: number, index: number): number;
+  addPanel(): Panel;
+  addScale(): Scale;
 };
 
 export type SliderOptions = {
@@ -57,20 +58,20 @@ export function create(selector: string, options: SliderOptions = {}) {
 
       return { ...modelOptions, ...viewOptions };
     },
-    setValue(value, index = 0) {
-      return this.model.updateValue(index, value);
-    },
-    addScale() {
-      return new RScale(this);
-    },
-    addPanel() {
-      return new RSPanel(this);
+    getValue(index = 0) {
+      return this.model.getValues()[index];
     },
     getValues() {
       return this.model.getValues();
     },
-    getValue(index = 0) {
-      return this.model.getValues()[index];
+    setValue(value, index = 0) {
+      return this.model.updateValue(index, value);
+    },
+    addPanel() {
+      return new RSPanel(this);
+    },
+    addScale() {
+      return new RScale(this);
     },
   };
 

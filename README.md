@@ -40,19 +40,21 @@ npm test
 
 ### Создать слайдер
 
-```javascript
-const mySlider = RSlider.create(selector, options);
+```typescript
+const mySlider = RSlider.create(selector: string, options: Object);
 ```
 
-### Задать настройки
+### Задать / узнать настройки
 
-```javascript
-mySlider.setOptions(options);
+```typescript
+mySlider.setOptions(options: Object = {}): Object;
+
+mySlider.getOptions(): Object;
 ```
 
 Настройки по умолчанию
 
-```javascript
+```typescript
 {
   minValue: -50, // number
   maxValue: 50, // number
@@ -63,22 +65,30 @@ mySlider.setOptions(options);
 }
 ```
 
+### Узнать одно или все значения ползунков
+
+```typescript
+mySlider.getValue(index: number): number;
+
+mySlider.getValues(): number[];
+```
+
 ### Изменить значение ползунка
 
-```javascript
-mySlider.setValue(value, [index]);
+```typescript
+mySlider.setValue(value: number, [index: number]): number;
 ```
 
 ### Добавить панель управления
 
-```javascript
-mySlider.addPanel();
+```typescript
+mySlider.addPanel(): Object;
 ```
 
 ### Добавить шкалу значений
 
-```javascript
-mySlider.addScale();
+```typescript
+mySlider.addScale(): Object;
 ```
 
 ## Архитектура приложения

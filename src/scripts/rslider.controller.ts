@@ -1,7 +1,7 @@
 import { Model } from './rslider.model';
 import { View } from './rslider.view';
 
-interface Controller {
+export interface Controller {
   grab(e: MouseEvent): HTMLElement;
 }
 
