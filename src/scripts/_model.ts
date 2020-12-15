@@ -10,10 +10,6 @@ export default class RSModel implements Model {
     this._configure(o);
   }
 
-  notify() {
-    this.presenter.update(this);
-  }
-
   private _isNumber(n: number) {
     if (typeof n === 'number' && !isNaN(n)) return true;
 
@@ -70,5 +66,9 @@ export default class RSModel implements Model {
     }
 
     return this.options;
+  }
+
+  public notify() {
+    this.presenter.update(this);
   }
 }

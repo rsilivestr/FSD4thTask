@@ -3,6 +3,7 @@ import Presenter from './Presenter';
 import ViewOptions from './ViewOptions';
 
 export default interface View {
+  container: HTMLElement;
   options: ViewOptions;
   presenter: Presenter;
 
