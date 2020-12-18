@@ -1,5 +1,8 @@
+import Handler from './_interface/Handler';
+import HandlerOptions from './_interface/HandlerOptions';
 import ModelOptions from './_interface/ModelOptions';
 import Presenter from './_interface/Presenter';
+import RSHandler from './_handler';
 import SliderOptions from './_interface/SliderOptions';
 import View from './_interface/View';
 import ViewElements from './_interface/ViewElements';
@@ -12,7 +15,7 @@ export default class RSView implements View {
   public presenter: Presenter;
   public UI: ViewElements = {};
   public trackRect: ClientRect;
-  public handlers: HTMLElement[] = [];
+  public handlers: Handler[] = [];
   public values: number[];
   public coords: number[] = [];
   public grabbed: null | HTMLElement = null;
@@ -101,23 +104,25 @@ export default class RSView implements View {
     handler.appendChild(tooltip);
   }
 
-  private _elCreateHandler(id: number): void {
-    // Create element
-    const handler = document.createElement('div');
-    handler.className = 'rslider__handler';
-    handler.dataset.id = `${id}`;
-    // Get handler coord
-    const value = this.coords[id];
-    const coord = value * this._getScaleFactor();
-    // Add tooltip if enabled
-    if (this.options.tooltip) this._addTooltip(handler, id);
-    // Set handler position
-    if (this.options.isHorizontal) handler.style.left = `${coord}%`;
-    else handler.style.bottom = `${coord}%`;
-    // Append
-    this.UI.slider.appendChild(handler);
-    // Save to this
-    this.handlers.push(handler);
+  private _addHandler(index: number) {
+    // Initialize options
+    const options: HandlerOptions = {
+      id: index,
+      layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
+      tooltip: this.options.tooltip,
+      value: this.values[index],
+    };
+    // Create handler instance
+    const handler: Handler = new RSHandler(options);
+    // Append to slider
+    const handlerElement = handler.getElement();
+    this.UI.slider.appendChild(handlerElement);
+    // Set position
+    handler.setPosition(this._valueToCoord(options.value));
+    // Add event listener
+    handlerElement.addEventListener('mousedown', () => this._grab(handlerElement));
+
+    return handler;
   }
 
   public render() {
@@ -131,21 +136,18 @@ export default class RSView implements View {
     this._elCreateTrack();
     // Create & append handler elements
     for (let i = 0; i < handlerCount; i += 1) {
-      this._elCreateHandler(i);
+      const handler = this._addHandler(i);
+      this.handlers.push(handler);
     }
     // Create & append progress element
     if (this.options.progress) {
       this._elCreateProgress();
     }
 
-    this.handlers.forEach((handler) => {
-      handler.addEventListener('mousedown', () => this.grab(handler));
-    });
-
     return this.UI.slider;
   }
 
-  private grab(handler: HTMLElement): void {
+  private _grab(handler: HTMLElement): void {
     // Set grabbed handler
     this.grabbed = handler;
     // Add listeners
@@ -153,19 +155,30 @@ export default class RSView implements View {
     document.body.addEventListener('mouseup', this._boundRelease);
   }
 
+  private _valueToCoord(value: number) {
+    const { minValue, maxValue } = this.modelOptions;
+
+    const coord = ((value - minValue) / (maxValue - minValue)) * 100;
+
+    return coord * this._getScaleFactor();
+  }
+
   private _drag(e: MouseEvent): void {
     const { minCoord, sliderLength } = this._getRect();
     // Get relative coord in px
     const coord = e.clientX - minCoord;
     // Get relative coordinate in percent
-    let relative = ((coord + this.options.handlerRadius) / sliderLength) * 100;
+    let relative = (coord / sliderLength) * 100;
     if (relative < 0) relative = 0;
     if (relative > 100) relative = 100;
-
+    // Update model through presenter
     const id = parseInt(this.grabbed.dataset.id, 10);
-    const normalized = this.presenter.moveHandler(id, relative);
-
-    this.grabbed.style.left = `${normalized * this._getScaleFactor()}%`;
+    const normalized = this.presenter.moveHandler(id, relative) * this._getScaleFactor();
+    // Update handler value
+    const value = this.presenter.getValues()[id];
+    this.handlers[id].updateValue(value);
+    // Set handler position
+    this.handlers[id].setPosition(normalized);
   }
 
   // Bind _drag method to this

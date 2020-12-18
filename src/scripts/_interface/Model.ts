@@ -9,6 +9,7 @@ export default interface Model {
   config(o?: ModelOptions): ModelOptions;
   // updateHandlers(index: number, coord: number): number[];
   // updateValue(index: number, value: number): number;
+  getValue(index: number): number | null;
   getValues(): number[];
   setValueByCoord(id: number, coord: number): number;
   setValues(v: number[]): number[];

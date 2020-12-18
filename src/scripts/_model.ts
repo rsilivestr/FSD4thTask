@@ -151,7 +151,12 @@ export default class RSModel implements Model {
   }
 
   public getValues() {
+    // Get values array
     return this.values;
+  }
+
+  public getValue(id: number) {
+    return this.values[id] || null;
   }
 
   public notify() {

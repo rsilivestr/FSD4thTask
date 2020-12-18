@@ -7,4 +7,5 @@ export default interface Presenter {
 
   update(sender: View | Model): void;
   moveHandler(id: number, percent: number): number;
+  getValues(): number[];
 }
