@@ -8,6 +8,8 @@ import Slider from './_interface/Slider';
 import SliderOptions from './_interface/SliderOptions';
 import View from './_interface/View';
 
+import '../styles/rslider.sass';
+
 export function create(selector: string, options: SliderOptions) {
   const el: HTMLElement = document.querySelector(selector);
   const model: Model = new RSModel(options);

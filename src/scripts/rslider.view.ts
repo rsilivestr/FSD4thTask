@@ -18,11 +18,7 @@ export default class RSView implements View {
   handlerCoords: number[] = [];
   modelOptions: ModelOptions;
 
-  constructor(
-    private model: Model,
-    container: HTMLElement,
-    options: ViewOptions = {}
-  ) {
+  constructor(private model: Model, container: HTMLElement, options: ViewOptions = {}) {
     this.container = container;
 
     this.options = this._validateOptions(options);
@@ -50,8 +46,7 @@ export default class RSView implements View {
   private _validateOptions(o: ViewOptions = {}): ViewOptions {
     const result: ViewOptions = {};
 
-    result.isHorizontal =
-      typeof o.isHorizontal === 'boolean' ? o.isHorizontal : true;
+    result.isHorizontal = typeof o.isHorizontal === 'boolean' ? o.isHorizontal : true;
 
     result.handlerRadius =
       typeof o.handlerRadius === 'number' && !Number.isNaN(o.handlerRadius)
@@ -179,6 +174,10 @@ export default class RSView implements View {
     this.container.addEventListener('dragstart', (e) => e.preventDefault());
 
     return this.slider;
+  }
+
+  public setModelOptions(o: ModelOptions) {
+    this.modelOptions = o;
   }
 
   // used in rslider.ts

@@ -9,4 +9,6 @@ export default interface View {
 
   config(o?: ViewOptions): ViewOptions;
   setModelOptions(o: ModelOptions): ModelOptions;
+  setValues(v: number[]): number[];
+  render(): HTMLElement;
 }

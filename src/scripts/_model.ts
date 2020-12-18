@@ -5,9 +5,12 @@ import Presenter from './_interface/Presenter';
 export default class RSModel implements Model {
   public options: ModelOptions = {};
   public presenter: Presenter;
+  public values: number[] = [];
 
-  constructor(o: ModelOptions) {
+  constructor(o: ModelOptions, v: number[] = []) {
     this._configure(o);
+
+    this._initValues(v);
   }
 
   private _isNumber(n: number) {
@@ -60,12 +63,36 @@ export default class RSModel implements Model {
     return this.options;
   }
 
+  private _initValues(v: number[]) {
+    const len = v.length;
+    const { minValue, stepSize, handlerCount } = this.options;
+    if (len === 0) {
+      // Array is empty
+      for (let i = 0; i < handlerCount; i += 1) {
+        this.values[i] = minValue + i * stepSize;
+      }
+    } else {
+      // Set values
+      this.values = v;
+    }
+  }
+
   public config(o?: ModelOptions) {
     if (o) {
       return this._configure(o);
     }
 
     return this.options;
+  }
+
+  public setValues(v: number[]) {
+    this.values = v;
+
+    return this.values;
+  }
+
+  public getValues() {
+    return this.values;
   }
 
   public notify() {

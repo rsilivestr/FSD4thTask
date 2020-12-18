@@ -10,18 +10,20 @@ export default class RSView implements View {
   public options: ViewOptions = {};
   public modelOptions: ModelOptions;
   public presenter: Presenter;
-  public UI: ViewElements;
+  public UI: ViewElements = {};
   public trackRect: ClientRect;
-  public handlers: HTMLElement[];
-  public handlerValues: number[];
-  public handlerCoords: number[];
+  public handlers: HTMLElement[] = [];
+  public values: number[];
+  public coords: number[] = [];
 
   constructor(el: HTMLElement, o: SliderOptions) {
     // Initialize root element
     this.container = el;
     // Initialize options
     this._configure(o);
-    this._render();
+    // this.setModelOptions(mo);
+    // Render
+    // this._render();
   }
 
   private _getRect() {
@@ -73,10 +75,10 @@ export default class RSView implements View {
   private _setProgress(): void {
     // if this.handlerCount === 1fff
     let min = 0;
-    let max = 100 - this.handlerCoords[0];
+    let max = 100 - this.coords[0];
 
     if (this.modelOptions.handlerCount === 2) {
-      [min, max] = this.handlerCoords;
+      [min, max] = this.coords;
       max = 100 - max;
     }
 
@@ -102,7 +104,7 @@ export default class RSView implements View {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
     tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.handlerValues[index].toString(10);
+    tooltip.innerText = this.values[index].toString(10);
 
     handler.appendChild(tooltip);
   }
@@ -112,7 +114,7 @@ export default class RSView implements View {
     handler.className = 'rslider__handler';
     handler.dataset.id = `${id}`;
 
-    const value = this.handlerCoords[id];
+    const value = this.coords[id];
     const coord = value * this._getScaleFactor();
 
     // add tooltip if set in options
@@ -127,10 +129,24 @@ export default class RSView implements View {
     this.handlers.push(handler);
   }
 
-  private _render() {
+  public render() {
     if (this.container == null) {
       throw new Error('There is no element matching provided selector...');
     }
+
+    this._elCreateSlider();
+
+    this._elCreateTrack();
+
+    let handlersRendered = 0;
+
+    while (handlersRendered < this.modelOptions.handlerCount) {
+      this._elCreateHandler(handlersRendered);
+
+      handlersRendered += 1;
+    }
+
+    return this.UI.slider;
   }
 
   private _configure(o: ViewOptions) {
@@ -163,6 +179,18 @@ export default class RSView implements View {
     return this.options;
   }
 
+  private _setCoords(values: number[]): number[] {
+    const { minValue, maxValue } = this.modelOptions;
+
+    values.forEach((value) => {
+      const factor = 100 / (maxValue - minValue);
+      const coord = (value - minValue) * factor;
+      this.coords.push(coord);
+    });
+
+    return this.coords;
+  }
+
   public config(o?: ViewOptions) {
     if (o) return this._configure(o);
 
@@ -173,6 +201,14 @@ export default class RSView implements View {
     this.modelOptions = o;
 
     return this.modelOptions;
+  }
+
+  public setValues(v: number[]) {
+    this.values = v;
+
+    this._setCoords(v);
+
+    return this.values;
   }
 
   public notify() {
