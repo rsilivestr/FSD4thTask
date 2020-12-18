@@ -15,6 +15,7 @@ export default class RSView implements View {
   public handlers: HTMLElement[] = [];
   public values: number[];
   public coords: number[] = [];
+  public grabbed: null | HTMLElement = null;
 
   constructor(el: HTMLElement, o: SliderOptions) {
     // Initialize root element
@@ -137,8 +138,49 @@ export default class RSView implements View {
       this._elCreateProgress();
     }
 
+    this.handlers.forEach((handler) => {
+      handler.addEventListener('mousedown', () => this.grab(handler));
+    });
+
     return this.UI.slider;
   }
+
+  private grab(handler: HTMLElement): void {
+    // Set grabbed handler
+    this.grabbed = handler;
+    // Add listeners
+    document.body.addEventListener('mousemove', this._boundDrag);
+    document.body.addEventListener('mouseup', this._boundRelease);
+  }
+
+  private _drag(e: MouseEvent): void {
+    const { minCoord, sliderLength } = this._getRect();
+    // Get relative coord in px
+    const coord = e.clientX - minCoord;
+    // Get relative coordinate in percent
+    let relative = ((coord + this.options.handlerRadius) / sliderLength) * 100;
+    if (relative < 0) relative = 0;
+    if (relative > 100) relative = 100;
+
+    const id = parseInt(this.grabbed.dataset.id, 10);
+    const normalized = this.presenter.moveHandler(id, relative);
+
+    this.grabbed.style.left = `${normalized * this._getScaleFactor()}%`;
+  }
+
+  // Bind _drag method to this
+  private _boundDrag: (e: MouseEvent) => void = this._drag.bind(this);
+
+  private _release(): void {
+    // Unset grabbed handler
+    this.grabbed = null;
+    // Remove listeners
+    document.body.removeEventListener('mousemove', this._boundDrag);
+    document.body.removeEventListener('mouseup', this._boundRelease);
+  }
+
+  // Bind _release method to this
+  private _boundRelease: () => void = this._release.bind(this);
 
   private _configure(o: ViewOptions) {
     const { isHorizontal, handlerRadius, tooltip, progress } = o;

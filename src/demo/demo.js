@@ -1,4 +1,9 @@
-const s1o = { handlerCount: 2, progress: true };
+const s1o = {
+  minValue: -50,
+  maxValue: 50,
+  handlerCount: 2,
+  progress: true,
+};
 
 const s1 = RSlider.create('#foo', s1o);
 

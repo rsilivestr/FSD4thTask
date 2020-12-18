@@ -10,6 +10,7 @@ export default interface Model {
   // updateHandlers(index: number, coord: number): number[];
   // updateValue(index: number, value: number): number;
   getValues(): number[];
+  setValueByCoord(id: number, coord: number): number;
   setValues(v: number[]): number[];
   // getOptions(): ModelOptions;
   // setOptions(options: ModelOptions): ModelOptions;

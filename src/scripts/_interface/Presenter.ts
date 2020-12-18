@@ -6,4 +6,5 @@ export default interface Presenter {
   view: View;
 
   update(sender: View | Model): void;
+  moveHandler(id: number, percent: number): number;
 }

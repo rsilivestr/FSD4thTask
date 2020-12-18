@@ -6,6 +6,7 @@ export default class RSModel implements Model {
   public options: ModelOptions = {};
   public presenter: Presenter;
   public values: number[] = [];
+  private stepSizePerc: number;
 
   constructor(o: ModelOptions, v: number[] = []) {
     // Set config
@@ -76,11 +77,71 @@ export default class RSModel implements Model {
     }
   }
 
+  private _updatePercentStep() {
+    const scaleLength = this.options.maxValue - this.options.minValue;
+    this.stepSizePerc = (this.options.stepSize / scaleLength) * 100;
+
+    return this.stepSizePerc;
+  }
+
+  // Return coordinate of the closest step,
+  // take into account max value of each handler
+  private _normalizeHandlerCoord(index: number, coord: number): number {
+    if (typeof index !== 'number' || typeof coord !== 'number') {
+      // throw new Error('RSModel._normalizeHandlerCoord: wrong params');
+      return;
+    }
+
+    const step = Math.abs(this._updatePercentStep());
+    const x = coord + step / 2;
+    const normalizedCoord = x - (x % step);
+
+    const stepsToMax = this.values.length - (index + 1);
+    // min coordinate by index
+    const minIndexCoord = step * index;
+    // if last step is smaller scaleLength (percent) is extended to be multiple of stepSize
+    const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
+    const correctedLength =
+      100 + ((scaleLength % this.options.stepSize) / scaleLength) * 100;
+    // max coordinate by index
+    const maxIndexCoord = correctedLength - step * stepsToMax;
+
+    // if coordinate exeeds allowed max for index
+    if (normalizedCoord > maxIndexCoord) return maxIndexCoord;
+
+    // if coordinate is less than allowed min for index
+    if (normalizedCoord < minIndexCoord) return minIndexCoord;
+
+    // if coordinate is in allowed range
+    return normalizedCoord;
+  }
+
+  private _coordToValue(coord: number) {
+    const { minValue, maxValue, stepSize } = this.options;
+
+    if (coord < 0) return minValue;
+
+    if (coord > 100) return maxValue;
+
+    const factor = stepSize / this.stepSizePerc;
+    const value = coord * factor + minValue;
+
+    return Math.round(value);
+  }
+
   public config(o?: ModelOptions) {
     // Set config
     if (o) return this._configure(o);
     // Get config
     return this.options;
+  }
+
+  public setValueByCoord(id: number, coord: number) {
+    const normalizedCoord = this._normalizeHandlerCoord(id, coord);
+    const value = this._coordToValue(normalizedCoord);
+    this.values[id] = value;
+
+    return normalizedCoord;
   }
 
   public setValues(v: number[]) {

@@ -27,6 +27,10 @@ export default class RSPresenter implements Presenter {
     this.view.render();
   }
 
+  public moveHandler(id: number, coord: number) {
+    return this.model.setValueByCoord(id, coord);
+  }
+
   public update(sender: Model | View) {
     console.log(sender);
   }
