@@ -8,15 +8,14 @@ export default class RSModel implements Model {
   public values: number[] = [];
 
   constructor(o: ModelOptions, v: number[] = []) {
+    // Set config
     this._configure(o);
-
+    // Set hander values
     this._initValues(v);
   }
 
   private _isNumber(n: number) {
-    if (typeof n === 'number' && !isNaN(n)) return true;
-
-    return false;
+    return typeof n === 'number' && !isNaN(n);
   }
 
   private _configure(o: ModelOptions) {
@@ -78,10 +77,9 @@ export default class RSModel implements Model {
   }
 
   public config(o?: ModelOptions) {
-    if (o) {
-      return this._configure(o);
-    }
-
+    // Set config
+    if (o) return this._configure(o);
+    // Get config
     return this.options;
   }
 

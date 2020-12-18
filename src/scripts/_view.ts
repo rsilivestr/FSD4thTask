@@ -21,32 +21,17 @@ export default class RSView implements View {
     this.container = el;
     // Initialize options
     this._configure(o);
-    // this.setModelOptions(mo);
-    // Render
-    // this._render();
   }
 
   private _getRect() {
     const rect = this.UI.slider.getBoundingClientRect();
 
-    let sliderLength;
-    let minCoord;
-    let maxCoord;
-
-    if (this.options.isHorizontal) {
-      sliderLength = rect.right - rect.left;
-      minCoord = rect.left;
-      maxCoord = rect.right;
-    } else {
-      sliderLength = rect.bottom - rect.top;
-      minCoord = rect.bottom;
-      maxCoord = rect.top;
-    }
+    const { isHorizontal } = this.options;
 
     return {
-      sliderLength,
-      minCoord,
-      maxCoord,
+      sliderLength: isHorizontal ? rect.right - rect.left : rect.bottom - rect.top,
+      minCoord: isHorizontal ? rect.left : rect.bottom,
+      maxCoord: isHorizontal ? rect.right : rect.top,
     };
   }
 
@@ -58,22 +43,26 @@ export default class RSView implements View {
   }
 
   private _elCreateSlider(): void {
-    this.UI.slider = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+    // Create element
+    this.UI.slider = document.createElement('div');
     this.UI.slider.className = `rslider rslider--layout_${layout}`;
+    // Append
     this.container.appendChild(this.UI.slider);
   }
 
   private _elCreateTrack(): void {
+    // Create element
     this.UI.track = document.createElement('div');
     this.UI.track.className = 'rslider__track';
+    // Append
     this.UI.slider.appendChild(this.UI.track);
-
+    // Save track geometry
     this.trackRect = this.UI.track.getBoundingClientRect();
   }
 
   private _setProgress(): void {
-    // if this.handlerCount === 1fff
+    // if this.handlerCount === 1
     let min = 0;
     let max = 100 - this.coords[0];
 
@@ -92,65 +81,67 @@ export default class RSView implements View {
   }
 
   private _elCreateProgress(): void {
+    // Create element
     this.UI.progress = document.createElement('div');
     this.UI.progress.className = 'rslider__progress';
+    // Append
     this.UI.track.appendChild(this.UI.progress);
-
+    // Update progress
     this._setProgress();
   }
 
   private _addTooltip(handler: HTMLElement, index: number): void {
-    const tooltip = document.createElement('div');
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-
+    // Create element
+    const tooltip = document.createElement('div');
     tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
     tooltip.innerText = this.values[index].toString(10);
-
+    // Append
     handler.appendChild(tooltip);
   }
 
   private _elCreateHandler(id: number): void {
+    // Create element
     const handler = document.createElement('div');
     handler.className = 'rslider__handler';
     handler.dataset.id = `${id}`;
-
+    // Get handler coord
     const value = this.coords[id];
     const coord = value * this._getScaleFactor();
-
-    // add tooltip if set in options
+    // Add tooltip if enabled
     if (this.options.tooltip) this._addTooltip(handler, id);
-
-    // position handler according to slider layout
+    // Set handler position
     if (this.options.isHorizontal) handler.style.left = `${coord}%`;
     else handler.style.bottom = `${coord}%`;
-
+    // Append
     this.UI.slider.appendChild(handler);
-
+    // Save to this
     this.handlers.push(handler);
   }
 
   public render() {
     if (this.container == null) {
-      throw new Error('There is no element matching provided selector...');
+      throw new Error('There is no element matching provided selector.');
     }
-
+    const { handlerCount } = this.modelOptions;
+    // Create & append slider element
     this._elCreateSlider();
-
+    // Create & append track element
     this._elCreateTrack();
-
-    let handlersRendered = 0;
-
-    while (handlersRendered < this.modelOptions.handlerCount) {
-      this._elCreateHandler(handlersRendered);
-
-      handlersRendered += 1;
+    // Create & append handler elements
+    for (let i = 0; i < handlerCount; i += 1) {
+      this._elCreateHandler(i);
+    }
+    // Create & append progress element
+    if (this.options.progress) {
+      this._elCreateProgress();
     }
 
     return this.UI.slider;
   }
 
   private _configure(o: ViewOptions) {
-    const { isHorizontal, handlerRadius, tooltip } = o;
+    const { isHorizontal, handlerRadius, tooltip, progress } = o;
 
     if (typeof isHorizontal === 'boolean') {
       // Set value
@@ -176,6 +167,13 @@ export default class RSView implements View {
       this.options.tooltip = true;
     }
 
+    if (typeof progress === 'boolean') {
+      // Set value
+      this.options.progress = progress;
+    } else if (this.options.progress === undefined) {
+      this.options.progress = false;
+    }
+
     return this.options;
   }
 
@@ -192,20 +190,20 @@ export default class RSView implements View {
   }
 
   public config(o?: ViewOptions) {
+    // Set config
     if (o) return this._configure(o);
-
+    // Get config
     return this.options;
   }
 
   public setModelOptions(o: ModelOptions) {
-    this.modelOptions = o;
-
-    return this.modelOptions;
+    return (this.modelOptions = o);
   }
 
   public setValues(v: number[]) {
+    // Set handler values
     this.values = v;
-
+    // Set handler coordinates
     this._setCoords(v);
 
     return this.values;
