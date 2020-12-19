@@ -53,6 +53,10 @@ export default class RSView implements View {
     this.UI.slider.className = `rslider rslider--layout_${layout}`;
     // Append
     this.container.appendChild(this.UI.slider);
+    // Prevent dragstart
+    this.UI.slider.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+    });
   }
 
   private _elCreateTrack(): void {
@@ -163,6 +167,19 @@ export default class RSView implements View {
     return coord * this._getScaleFactor();
   }
 
+  private _updateHandlers() {
+    const factor = this._getScaleFactor();
+
+    this.handlers.forEach((handler, index) => {
+      // Update postion
+      const coord = this.coords[index] * factor;
+      handler.setPosition(coord);
+      // Update value (tooltip)
+      const value = this.values[index];
+      handler.updateValue(value);
+    });
+  }
+
   private _drag(e: MouseEvent): void {
     const { minCoord, sliderLength } = this._getRect();
     // Get relative coord in px
@@ -173,12 +190,11 @@ export default class RSView implements View {
     if (relative > 100) relative = 100;
     // Update model through presenter
     const id = parseInt(this.grabbed.dataset.id, 10);
-    const normalized = this.presenter.moveHandler(id, relative) * this._getScaleFactor();
-    // Update handler value
-    const value = this.presenter.getValues()[id];
-    this.handlers[id].updateValue(value);
-    // Set handler position
-    this.handlers[id].setPosition(normalized);
+    this.presenter.moveHandler(id, relative);
+    // Update handlers
+    this._updateHandlers();
+    // Update progress bar
+    this._setProgress();
   }
 
   // Bind _drag method to this
@@ -235,10 +251,10 @@ export default class RSView implements View {
   private _setCoords(values: number[]): number[] {
     const { minValue, maxValue } = this.modelOptions;
 
-    values.forEach((value) => {
+    values.forEach((value, index) => {
       const factor = 100 / (maxValue - minValue);
       const coord = (value - minValue) * factor;
-      this.coords.push(coord);
+      this.coords[index] = coord;
     });
 
     return this.coords;

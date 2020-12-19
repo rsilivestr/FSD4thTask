@@ -129,6 +129,20 @@ export default class RSModel implements Model {
     return Math.round(value);
   }
 
+  private _updateValues(index: number, value: number) {
+    const { stepSize } = this.options;
+
+    this.values.forEach((v, i) => {
+      if (i < index && v >= value) {
+        this.values[i] = value - stepSize;
+      } else if (i > index && v <= value) {
+        this.values[i] = value + stepSize;
+      }
+    });
+
+    this.notify();
+  }
+
   public config(o?: ModelOptions) {
     // Set config
     if (o) return this._configure(o);
@@ -137,9 +151,14 @@ export default class RSModel implements Model {
   }
 
   public setValueByCoord(id: number, coord: number) {
+    // Get coord
     const normalizedCoord = this._normalizeHandlerCoord(id, coord);
+    // Get value
     const value = this._coordToValue(normalizedCoord);
+    // Set value
     this.values[id] = value;
+    // Move other handlers if needed
+    this._updateValues(id, value);
 
     return normalizedCoord;
   }

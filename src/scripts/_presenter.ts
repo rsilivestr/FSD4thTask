@@ -36,6 +36,9 @@ export default class RSPresenter implements Presenter {
   }
 
   public update(sender: Model | View) {
-    console.log(sender);
+    if (sender === this.model) {
+      const values = this.model.getValues();
+      this.view.setValues(values);
+    }
   }
 }
