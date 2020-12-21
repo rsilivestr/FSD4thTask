@@ -1,3 +1,3 @@
 export default interface Observer {
-  update(values: number[]): void;
+  update(values: number[]): number[];
 }

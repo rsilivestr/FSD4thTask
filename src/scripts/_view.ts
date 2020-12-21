@@ -271,16 +271,17 @@ export default class RSView implements View {
     return (this.modelOptions = o);
   }
 
-  public setValues(v: number[]) {
+  public notify() {
+    this.presenter.update(this);
+  }
+
+  // Observer
+  public update(v: number[]) {
     // Set handler values
     this.values = v;
     // Set handler coordinates
-    this._setCoords(v);
+    this._setCoords(this.values);
 
     return this.values;
-  }
-
-  public notify() {
-    this.presenter.update(this);
   }
 }

@@ -1,5 +1,6 @@
 // import ModelOptions from './interface/ModelOptions';
 import Model from './_interface/Model';
+import Panel from './_interface/Panel';
 import Presenter from './_interface/Presenter';
 import RSModel from './_model';
 import RSPresenter from './_presenter';
@@ -9,6 +10,7 @@ import SliderOptions from './_interface/SliderOptions';
 import View from './_interface/View';
 
 import '../styles/rslider.sass';
+import RSPanel from './_panel';
 
 export function create(selector: string, options: SliderOptions) {
   const el: HTMLElement = document.querySelector(selector);
@@ -26,6 +28,15 @@ export function create(selector: string, options: SliderOptions) {
       const viewOptions = o ? this.view.config(o) : this.view.config();
 
       return { ...modelOptions, ...viewOptions };
+    },
+    addPanel() {
+      const modelOptions = this.model.config();
+      // Create panel
+      const panel: Panel = new RSPanel(this.el, modelOptions);
+      // Add panel as observer
+      this.model.addObserver(panel);
+
+      return panel;
     },
   };
 

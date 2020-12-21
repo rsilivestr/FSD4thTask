@@ -1,7 +1,8 @@
 import ModelOptions from './ModelOptions';
 import Presenter from './Presenter';
+import Subject from './Subject';
 
-export default interface Model {
+export default interface Model extends Subject {
   options: ModelOptions;
   presenter: Presenter;
   // stepSizePerc: number;

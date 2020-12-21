@@ -17,12 +17,15 @@ export default class RSPresenter implements Presenter {
     this.model.presenter = this;
     this.view.presenter = this;
 
+    this.model.addObserver(this.view);
+
     // Set view options
     const modelOptions = this.model.config();
     this.view.setModelOptions(modelOptions);
-    // Set view values (and coords)
-    const values = this.model.getValues();
-    this.view.setValues(values);
+
+    // Notify observers about the model changes
+    this.model.notifyObservers();
+
     // Render view
     this.view.render();
   }
@@ -36,9 +39,6 @@ export default class RSPresenter implements Presenter {
   }
 
   public update(sender: Model | View) {
-    if (sender === this.model) {
-      const values = this.model.getValues();
-      this.view.setValues(values);
-    }
+    console.log(sender);
   }
 }
