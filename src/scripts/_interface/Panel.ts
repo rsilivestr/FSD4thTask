@@ -4,6 +4,10 @@ import Observer from './Observer';
 // import ViewOptions from './ViewOptions';
 
 export default interface Panel extends Observer {
+  UI: {
+    container: HTMLElement;
+    panel: HTMLElement;
+  };
   // slider: Slider;
   // modelOptions: ModelOptions;
   // viewOptions: ViewOptions;

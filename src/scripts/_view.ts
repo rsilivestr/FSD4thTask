@@ -16,7 +16,7 @@ export default class RSView implements View {
   public UI: ViewElements = {};
   public trackRect: ClientRect;
   public handlers: Handler[] = [];
-  public values: number[];
+  public values: number[] = [];
   public coords: number[] = [];
   public grabbed: null | HTMLElement = null;
 
@@ -94,19 +94,17 @@ export default class RSView implements View {
     this.UI.progress.className = 'rslider__progress';
     // Append
     this.UI.track.appendChild(this.UI.progress);
-    // Update progress
-    this._setProgress();
   }
 
-  private _addTooltip(handler: HTMLElement, index: number): void {
-    const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-    // Create element
-    const tooltip = document.createElement('div');
-    tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-    tooltip.innerText = this.values[index].toString(10);
-    // Append
-    handler.appendChild(tooltip);
-  }
+  // private _addTooltip(handler: HTMLElement, index: number): void {
+  //   const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+  //   // Create element
+  //   const tooltip = document.createElement('div');
+  //   tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
+  //   tooltip.innerText = this.values[index].toString(10);
+  //   // Append
+  //   handler.appendChild(tooltip);
+  // }
 
   private _addHandler(index: number) {
     // Initialize options
@@ -114,7 +112,7 @@ export default class RSView implements View {
       id: index,
       layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
       tooltip: this.options.tooltip,
-      value: this.values[index],
+      value: 0,
     };
     // Create handler instance
     const handler: Handler = new RSHandler(options);
@@ -122,7 +120,7 @@ export default class RSView implements View {
     const handlerElement = handler.getElement();
     this.UI.slider.appendChild(handlerElement);
     // Set position
-    handler.setPosition(this._valueToCoord(options.value));
+    // handler.setPosition(this._valueToCoord(options.value));
     // Add event listener
     handlerElement.addEventListener('mousedown', () => this._grab(handlerElement));
 
@@ -141,7 +139,7 @@ export default class RSView implements View {
     // Create & append handler elements
     for (let i = 0; i < handlerCount; i += 1) {
       const handler = this._addHandler(i);
-      this.handlers.push(handler);
+      this.handlers[i] = handler;
     }
     // Create & append progress element
     if (this.options.progress) {
@@ -159,13 +157,13 @@ export default class RSView implements View {
     document.body.addEventListener('mouseup', this._boundRelease);
   }
 
-  private _valueToCoord(value: number) {
-    const { minValue, maxValue } = this.modelOptions;
+  // private _valueToCoord(value: number) {
+  //   const { minValue, maxValue } = this.modelOptions;
 
-    const coord = ((value - minValue) / (maxValue - minValue)) * 100;
+  //   const coord = ((value - minValue) / (maxValue - minValue)) * 100;
 
-    return coord * this._getScaleFactor();
-  }
+  //   return coord * this._getScaleFactor();
+  // }
 
   private _updateHandlers() {
     const factor = this._getScaleFactor();
@@ -272,7 +270,7 @@ export default class RSView implements View {
   }
 
   public notify() {
-    this.presenter.update(this);
+    // this.presenter.update(this);
   }
 
   // Observer
@@ -281,6 +279,10 @@ export default class RSView implements View {
     this.values = v;
     // Set handler coordinates
     this._setCoords(this.values);
+    // Move handlers
+    this._updateHandlers();
+    // Update progress
+    this._setProgress();
 
     return this.values;
   }

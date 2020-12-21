@@ -30,11 +30,13 @@ export function create(selector: string, options: SliderOptions) {
       return { ...modelOptions, ...viewOptions };
     },
     addPanel() {
-      const modelOptions = this.model.config();
+      // const modelOptions = this.model.config();
+      const options = this.config();
       // Create panel
-      const panel: Panel = new RSPanel(this.el, modelOptions);
+      const panel: Panel = new RSPanel(this.el, options);
       // Add panel as observer
-      this.model.addObserver(panel);
+      this.presenter.addSender(panel);
+      // this.model.notifyObservers();
 
       return panel;
     },

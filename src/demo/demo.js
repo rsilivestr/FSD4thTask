@@ -7,6 +7,8 @@ const s1o = {
 
 const s1 = RSlider.create('#foo', s1o);
 
+const s1p = s1.addPanel();
+
 const opt4 = {
   minValue: 0,
   maxValue: 100,

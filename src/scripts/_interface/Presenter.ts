@@ -1,11 +1,14 @@
 import Model from './Model';
+import Observer from './Observer';
 import View from './View';
 
 export default interface Presenter {
   model: Model;
   view: View;
 
-  update(sender: View | Model): void;
-  moveHandler(id: number, percent: number): number;
+  addSender(s: Observer): void;
   getValues(): number[];
+  setModelValue(index: number, value: number): number[];
+  moveHandler(id: number, percent: number): number;
+  update(sender: View | Model): void;
 }

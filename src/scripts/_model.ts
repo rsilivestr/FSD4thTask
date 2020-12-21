@@ -165,6 +165,14 @@ export default class RSModel extends RSubject implements Model {
     return normalizedCoord;
   }
 
+  public setValue(index: number, value: number) {
+    this.values[index] = value;
+
+    this._updateValues(index, value);
+
+    return this.values;
+  }
+
   public setValues(v: number[]) {
     this.values = v;
 

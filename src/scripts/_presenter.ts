@@ -1,4 +1,5 @@
 import Model from './_interface/Model';
+import Observer from './_interface/Observer';
 import Presenter from './_interface/Presenter';
 import View from './_interface/View';
 
@@ -17,25 +18,37 @@ export default class RSPresenter implements Presenter {
     this.model.presenter = this;
     this.view.presenter = this;
 
-    this.model.addObserver(this.view);
-
     // Set view options
     const modelOptions = this.model.config();
     this.view.setModelOptions(modelOptions);
 
     // Notify observers about the model changes
-    this.model.notifyObservers();
+    // this.model.notifyObservers();
 
     // Render view
     this.view.render();
+    // Add and notify observer
+    this.model.addObserver(this.view);
   }
 
   public moveHandler(id: number, coord: number) {
     return this.model.setValueByCoord(id, coord);
   }
 
+  public setModelValue(index: number, value: number) {
+    return this.model.setValue(index, value);
+  }
+
   public getValues() {
     return this.model.getValues();
+  }
+
+  public addSender(s: Observer) {
+    s.presenter = this;
+    // Add observer to model
+    this.model.addObserver(s);
+    // Update added observer
+    this.model.notifyObservers();
   }
 
   public update(sender: Model | View) {
