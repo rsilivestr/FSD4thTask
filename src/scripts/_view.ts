@@ -27,7 +27,7 @@ export default class RSView implements View {
   }
 
   private _getRect() {
-    const rect = this.UI.slider.getBoundingClientRect();
+    const rect = this.UI.track.getBoundingClientRect();
 
     const { isHorizontal } = this.options;
 
@@ -39,24 +39,24 @@ export default class RSView implements View {
   }
 
   private _correctHandlerCoord(): number {
+    // Get track length
     const { sliderLength } = this._getRect();
     const r = this.options.handlerRadius;
 
-    return (sliderLength - 2 * r) / sliderLength;
+    return 1 - (2 * r) / sliderLength;
   }
 
   private _coordToValue(coord: number): number {
     const { minValue, maxValue } = this.modelOptions;
-    const factor = this._correctHandlerCoord() * 100;
+    // const factor = this._correctHandlerCoord() * 100;
 
-    return minValue + (maxValue - minValue) * (coord / factor);
+    return minValue + (maxValue - minValue) * (coord / 100);
   }
 
-  private _valueToCoord(value: number, useFactor = false): number {
+  private _valueToCoord(value: number): number {
     const { minValue, maxValue } = this.modelOptions;
-    const factor = useFactor ? this._correctHandlerCoord() * 100 : 100;
 
-    return ((value - minValue) / (maxValue - minValue)) * factor;
+    return ((value - minValue) / (maxValue - minValue)) * 100;
   }
 
   private _elCreateSlider(): void {
@@ -163,7 +163,7 @@ export default class RSView implements View {
   private _updateHandlers() {
     this.handlers.forEach((handler, index) => {
       const value = this.values[index];
-      const coord = this._valueToCoord(value, true);
+      const coord = this._valueToCoord(value) * this._correctHandlerCoord();
       // Update handler position and value
       handler.setPosition(coord);
       handler.updateValue(value);

@@ -1,6 +1,7 @@
 const s1o = {
   minValue: -50,
   maxValue: 50,
+  stepSize: 5,
   handlerCount: 2,
   progress: true,
 };
