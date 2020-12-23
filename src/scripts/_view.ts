@@ -17,13 +17,12 @@ export default class RSView implements View {
   public trackRect: ClientRect;
   public handlers: Handler[] = [];
   public values: number[] = [];
-  public coords: number[] = [];
   public grabbed: null | HTMLElement = null;
 
   constructor(el: HTMLElement, o: SliderOptions) {
-    // Initialize root element
+    // Save root element
     this.container = el;
-    // Initialize options
+    // Set options
     this._configure(o);
   }
 
@@ -39,11 +38,25 @@ export default class RSView implements View {
     };
   }
 
-  private _getScaleFactor(): number {
+  private _correctHandlerCoord(): number {
     const { sliderLength } = this._getRect();
     const r = this.options.handlerRadius;
 
     return (sliderLength - 2 * r) / sliderLength;
+  }
+
+  private _coordToValue(coord: number): number {
+    const { minValue, maxValue } = this.modelOptions;
+    const factor = this._correctHandlerCoord() * 100;
+
+    return minValue + (maxValue - minValue) * (coord / factor);
+  }
+
+  private _valueToCoord(value: number, useFactor = false): number {
+    const { minValue, maxValue } = this.modelOptions;
+    const factor = useFactor ? this._correctHandlerCoord() * 100 : 100;
+
+    return ((value - minValue) / (maxValue - minValue)) * factor;
   }
 
   private _elCreateSlider(): void {
@@ -70,12 +83,14 @@ export default class RSView implements View {
   }
 
   private _setProgress(): void {
-    // if this.handlerCount === 1
+    // For single handler
+    const coordOne = this._valueToCoord(this.values[0]);
     let min = 0;
-    let max = 100 - this.coords[0];
+    let max = 100 - coordOne;
 
     if (this.modelOptions.handlerCount === 2) {
-      [min, max] = this.coords;
+      const coordTwo = this._valueToCoord(this.values[1]);
+      [min, max] = [coordOne, coordTwo];
       max = 100 - max;
     }
 
@@ -96,16 +111,6 @@ export default class RSView implements View {
     this.UI.track.appendChild(this.UI.progress);
   }
 
-  // private _addTooltip(handler: HTMLElement, index: number): void {
-  //   const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
-  //   // Create element
-  //   const tooltip = document.createElement('div');
-  //   tooltip.className = `rslider__tooltip rslider__tooltip--${layout}`;
-  //   tooltip.innerText = this.values[index].toString(10);
-  //   // Append
-  //   handler.appendChild(tooltip);
-  // }
-
   private _addHandler(index: number) {
     // Initialize options
     const options: HandlerOptions = {
@@ -119,8 +124,6 @@ export default class RSView implements View {
     // Append to slider
     const handlerElement = handler.getElement();
     this.UI.slider.appendChild(handlerElement);
-    // Set position
-    // handler.setPosition(this._valueToCoord(options.value));
     // Add event listener
     handlerElement.addEventListener('mousedown', () => this._grab(handlerElement));
 
@@ -157,23 +160,12 @@ export default class RSView implements View {
     document.body.addEventListener('mouseup', this._boundRelease);
   }
 
-  // private _valueToCoord(value: number) {
-  //   const { minValue, maxValue } = this.modelOptions;
-
-  //   const coord = ((value - minValue) / (maxValue - minValue)) * 100;
-
-  //   return coord * this._getScaleFactor();
-  // }
-
   private _updateHandlers() {
-    const factor = this._getScaleFactor();
-
     this.handlers.forEach((handler, index) => {
-      // Update postion
-      const coord = this.coords[index] * factor;
-      handler.setPosition(coord);
-      // Update value (tooltip)
       const value = this.values[index];
+      const coord = this._valueToCoord(value, true);
+      // Update handler position and value
+      handler.setPosition(coord);
       handler.updateValue(value);
     });
   }
@@ -181,14 +173,15 @@ export default class RSView implements View {
   private _drag(e: MouseEvent): void {
     const { minCoord, sliderLength } = this._getRect();
     // Get relative coord in px
-    const coord = e.clientX - minCoord;
+    const diff = e.clientX - minCoord;
     // Get relative coordinate in percent
-    let relative = (coord / sliderLength) * 100;
-    if (relative < 0) relative = 0;
-    if (relative > 100) relative = 100;
+    let coord = (diff / sliderLength) * 100;
+    if (coord < 0) coord = 0;
+    if (coord > 100) coord = 100;
+
     // Update model through presenter
     const id = parseInt(this.grabbed.dataset.id, 10);
-    this.presenter.moveHandler(id, relative);
+    this.presenter.moveHandler(id, coord);
     // Update handlers
     this._updateHandlers();
     // Update progress bar
@@ -246,18 +239,6 @@ export default class RSView implements View {
     return this.options;
   }
 
-  private _setCoords(values: number[]): number[] {
-    const { minValue, maxValue } = this.modelOptions;
-
-    values.forEach((value, index) => {
-      const factor = 100 / (maxValue - minValue);
-      const coord = (value - minValue) * factor;
-      this.coords[index] = coord;
-    });
-
-    return this.coords;
-  }
-
   public config(o?: ViewOptions) {
     // Set config
     if (o) return this._configure(o);
@@ -277,8 +258,6 @@ export default class RSView implements View {
   public update(v: number[]) {
     // Set handler values
     this.values = v;
-    // Set handler coordinates
-    this._setCoords(this.values);
     // Move handlers
     this._updateHandlers();
     // Update progress
