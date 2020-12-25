@@ -1,7 +1,5 @@
-import Observer from './Observer';
-
 export default interface Subject {
-  addObserver(o: Observer): Observer[];
-  removeObserver(o: Observer): Observer[];
+  addObserver(o: Function): Function[];
+  removeObserver(o: Function): Function[];
   notifyObservers(): void;
 }

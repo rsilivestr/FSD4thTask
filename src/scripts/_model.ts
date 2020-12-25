@@ -166,9 +166,22 @@ export default class RSModel extends RSubject implements Model {
   }
 
   public setValue(index: number, value: number) {
-    this.values[index] = value;
-
-    this._updateValues(index, value);
+    const { minValue, maxValue, stepSize, handlerCount } = this.options;
+    // Get min and max allowed values for this handler index
+    const min = minValue + index * stepSize;
+    const max = maxValue - (handlerCount - index - 1) * stepSize;
+    // Set value
+    let val = 0;
+    if (value < min) {
+      val = min;
+    } else if (value > max) {
+      val = max;
+    } else {
+      val = value;
+    }
+    this.values[index] = val;
+    // Update other values
+    this._updateValues(index, val);
 
     return this.values;
   }

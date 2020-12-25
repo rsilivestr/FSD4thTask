@@ -25,7 +25,7 @@ export default class RSPresenter implements Presenter {
     // Render view
     this.view.render();
     // Add and notify observer
-    this.model.addObserver(this.view);
+    this.model.addObserver(this.view.update.bind(this.view));
   }
 
   public setModelValue(index: number, value: number) {
@@ -39,8 +39,10 @@ export default class RSPresenter implements Presenter {
   public addSender(s: Observer) {
     s.presenter = this;
     // Add observer to model
-    this.model.addObserver(s);
+    this.model.addObserver(s.update.bind(s));
     // Update added observer
     this.model.notifyObservers();
   }
+
+  // public update(v: any): any {}
 }
