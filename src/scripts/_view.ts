@@ -59,6 +59,13 @@ export default class RSView implements View {
     return ((value - minValue) / (maxValue - minValue)) * 100;
   }
 
+  private _normalizeValue(value: number): number {
+    const { minValue, stepSize } = this.modelOptions;
+    // minValue added to work with negative values
+    const x = value - minValue + stepSize / 2;
+    return minValue + x - (x % stepSize);
+  }
+
   private _elCreateSlider(): void {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
     // Create element
@@ -82,7 +89,7 @@ export default class RSView implements View {
     this.trackRect = this.UI.track.getBoundingClientRect();
   }
 
-  private _setProgress(): void {
+  private _updateProgress(): void {
     // For single handler
     const coordOne = this._valueToCoord(this.values[0]);
     let min = 0;
@@ -178,14 +185,18 @@ export default class RSView implements View {
     let coord = (diff / sliderLength) * 100;
     if (coord < 0) coord = 0;
     if (coord > 100) coord = 100;
+    // Convert coord to value
+    const value = this._coordToValue(coord);
+    const normalizedValue = this._normalizeValue(value);
 
     // Update model through presenter
-    const id = parseInt(this.grabbed.dataset.id, 10);
-    this.presenter.moveHandler(id, coord);
+    const index = parseInt(this.grabbed.dataset.id, 10);
+    this.presenter.setModelValue(index, normalizedValue);
+
     // Update handlers
     this._updateHandlers();
     // Update progress bar
-    this._setProgress();
+    this._updateProgress();
   }
 
   // Bind _drag method to this
@@ -250,10 +261,6 @@ export default class RSView implements View {
     return (this.modelOptions = o);
   }
 
-  public notify() {
-    // this.presenter.update(this);
-  }
-
   // Observer
   public update(v: number[]) {
     // Set handler values
@@ -261,7 +268,7 @@ export default class RSView implements View {
     // Move handlers
     this._updateHandlers();
     // Update progress
-    this._setProgress();
+    this._updateProgress();
 
     return this.values;
   }

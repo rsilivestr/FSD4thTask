@@ -9,6 +9,4 @@ export default interface Presenter {
   addSender(s: Observer): void;
   getValues(): number[];
   setModelValue(index: number, value: number): number[];
-  moveHandler(id: number, percent: number): number;
-  update(sender: View | Model): void;
 }
