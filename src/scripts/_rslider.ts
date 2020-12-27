@@ -34,9 +34,11 @@ export function create(selector: string, options: SliderOptions) {
       const options = this.config();
       // Create panel
       const panel: Panel = new RSPanel(this.el, options);
-      // Add panel as observer
-      // this.presenter.addSender(panel);
-      // this.model.notifyObservers();
+      // Add panel as observer, notify
+      this.model.addObserver(panel.update.bind(panel));
+      this.model.notifyObservers();
+      // Add presenter method
+      panel.notifyPresenter = this.presenter.setModelValue.bind(presenter);
 
       return panel;
     },

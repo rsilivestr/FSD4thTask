@@ -198,6 +198,4 @@ export default class RSModel extends RSubject implements Model {
   public getValue(id: number) {
     return this.values[id] || null;
   }
-
-  public notify() {}
 }

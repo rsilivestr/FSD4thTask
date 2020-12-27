@@ -14,7 +14,7 @@ export default class RSPresenter implements Presenter {
   }
 
   private _init(): void {
-    this.view.notifyPresenter = this.updateFromView.bind(this);
+    this.view.notifyPresenter = this.setModelValue.bind(this);
 
     // Set view options
     const modelOptions = this.model.config();
@@ -36,11 +36,9 @@ export default class RSPresenter implements Presenter {
     return this.model.getValues();
   }
 
-  public updateFromView(index: number, value: number): void {
-    this.model.setValue(index, value);
-  }
-
   public update(v: number[]): void {
     this.view.setValues(v);
+
+    this.view.update();
   }
 }

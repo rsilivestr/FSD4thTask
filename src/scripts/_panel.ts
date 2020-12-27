@@ -2,6 +2,7 @@ import SliderOptions from './_interface/SliderOptions';
 import Panel from './_interface/Panel';
 
 export default class RSPanel implements Panel {
+  notifyPresenter: Function;
   options: SliderOptions;
   UI: {
     container: HTMLElement;
@@ -49,8 +50,7 @@ export default class RSPanel implements Panel {
           // const target: HTMLInputElement = <HTMLInputElement>e.target;
           const value = parseInt(this.UI.inputs[i].value, 10);
 
-          console.log(value);
-          // this.presenter.setModelValue(i, value);
+          this.notifyPresenter(i, value);
         }
       });
 

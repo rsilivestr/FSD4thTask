@@ -1,13 +1,11 @@
-// import ModelOptions from './ModelOptions';
 import Observer from './Observer';
-// import Slider from './Slider';
-// import ViewOptions from './ViewOptions';
 
 export default interface Panel extends Observer {
   UI: {
     container: HTMLElement;
     panel: HTMLElement;
   };
+  notifyPresenter: Function;
   // slider: Slider;
   // modelOptions: ModelOptions;
   // viewOptions: ViewOptions;
