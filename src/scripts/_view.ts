@@ -1,7 +1,6 @@
 import Handler from './_interface/Handler';
 import HandlerOptions from './_interface/HandlerOptions';
 import ModelOptions from './_interface/ModelOptions';
-import Presenter from './_interface/Presenter';
 import RSHandler from './_handler';
 import SliderOptions from './_interface/SliderOptions';
 import View from './_interface/View';
@@ -12,12 +11,12 @@ export default class RSView implements View {
   public container: HTMLElement;
   public options: ViewOptions = {};
   public modelOptions: ModelOptions;
-  public presenter: Presenter;
   public UI: ViewElements = {};
   public trackRect: ClientRect;
   public handlers: Handler[] = [];
   public values: number[] = [];
   public grabbed: null | HTMLElement = null;
+  public notifyPresenter: Function;
 
   constructor(el: HTMLElement, o: SliderOptions) {
     // Save root element
@@ -191,7 +190,8 @@ export default class RSView implements View {
 
     // Update model through presenter
     const index = parseInt(this.grabbed.dataset.id, 10);
-    this.presenter.setModelValue(index, normalizedValue);
+    // this.presenter.setModelValue(index, normalizedValue);
+    this.notifyPresenter(index, normalizedValue);
 
     // Update handlers
     this._updateHandlers();
@@ -250,6 +250,10 @@ export default class RSView implements View {
     return this.options;
   }
 
+  public setValues(values: number[]): void {
+    this.values = values;
+  }
+
   public config(o?: ViewOptions) {
     // Set config
     if (o) return this._configure(o);
@@ -262,9 +266,7 @@ export default class RSView implements View {
   }
 
   // Observer
-  public update(v: number[]) {
-    // Set handler values
-    this.values = v;
+  public update() {
     // Move handlers
     this._updateHandlers();
     // Update progress

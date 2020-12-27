@@ -1,11 +1,9 @@
 import Model from './_interface/Model';
 import ModelOptions from './_interface/ModelOptions';
-import Presenter from './_interface/Presenter';
 import RSubject from './_subject';
 
 export default class RSModel extends RSubject implements Model {
   public options: ModelOptions = {};
-  public presenter: Presenter;
   public values: number[] = [];
   private stepSizePerc: number;
 

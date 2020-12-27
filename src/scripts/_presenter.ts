@@ -1,5 +1,4 @@
 import Model from './_interface/Model';
-import Observer from './_interface/Observer';
 import Presenter from './_interface/Presenter';
 import View from './_interface/View';
 
@@ -15,8 +14,7 @@ export default class RSPresenter implements Presenter {
   }
 
   private _init(): void {
-    this.model.presenter = this;
-    this.view.presenter = this;
+    this.view.notifyPresenter = this.updateFromView.bind(this);
 
     // Set view options
     const modelOptions = this.model.config();
@@ -25,7 +23,9 @@ export default class RSPresenter implements Presenter {
     // Render view
     this.view.render();
     // Add and notify observer
-    this.model.addObserver(this.view.update.bind(this.view));
+    this.model.addObserver(this.update.bind(this));
+    this.model.notifyObservers();
+    this.view.update();
   }
 
   public setModelValue(index: number, value: number) {
@@ -36,13 +36,11 @@ export default class RSPresenter implements Presenter {
     return this.model.getValues();
   }
 
-  public addSender(s: Observer) {
-    s.presenter = this;
-    // Add observer to model
-    this.model.addObserver(s.update.bind(s));
-    // Update added observer
-    this.model.notifyObservers();
+  public updateFromView(index: number, value: number): void {
+    this.model.setValue(index, value);
   }
 
-  // public update(v: any): any {}
+  public update(v: number[]): void {
+    this.view.setValues(v);
+  }
 }

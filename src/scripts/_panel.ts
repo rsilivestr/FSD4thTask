@@ -1,11 +1,8 @@
 import SliderOptions from './_interface/SliderOptions';
 import Panel from './_interface/Panel';
-import Presenter from './_interface/Presenter';
 
 export default class RSPanel implements Panel {
-  // inputs: HTMLInputElement[] = [];
   options: SliderOptions;
-  presenter: Presenter;
   UI: {
     container: HTMLElement;
     inputs: HTMLInputElement[];
@@ -52,7 +49,8 @@ export default class RSPanel implements Panel {
           // const target: HTMLInputElement = <HTMLInputElement>e.target;
           const value = parseInt(this.UI.inputs[i].value, 10);
 
-          this.presenter.setModelValue(i, value);
+          console.log(value);
+          // this.presenter.setModelValue(i, value);
         }
       });
 

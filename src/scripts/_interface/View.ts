@@ -1,15 +1,15 @@
 import ModelOptions from './ModelOptions';
-import Observer from './Observer';
-import Presenter from './Presenter';
 import ViewOptions from './ViewOptions';
 
-export default interface View extends Observer {
+export default interface View {
   container: HTMLElement;
   options: ViewOptions;
-  presenter: Presenter;
+  values: number[];
 
   config(o?: ViewOptions): ViewOptions;
   setModelOptions(o: ModelOptions): ModelOptions;
-  // setValues(v: number[]): number[];
+  setValues(v: number[]): void;
   render(): HTMLElement;
+  update(): number[];
+  notifyPresenter: Function;
 }
