@@ -11,6 +11,8 @@ import View from './_interface/View';
 
 import '../styles/rslider.sass';
 import RSPanel from './_panel';
+import RScale from './_scale';
+import Scale from './_interface/Scale';
 
 export function create(selector: string, options: SliderOptions) {
   const el: HTMLElement = document.querySelector(selector);
@@ -41,6 +43,14 @@ export function create(selector: string, options: SliderOptions) {
       panel.notifyPresenter = this.presenter.setModelValue.bind(presenter);
 
       return panel;
+    },
+    addScale() {
+      const options = this.config();
+      const scale: Scale = new RScale(this.el, options);
+
+      scale.notifyPresenter = this.presenter.setModelValue.bind(presenter);
+
+      return scale;
     },
   };
 

@@ -1,6 +1,7 @@
 import Model from './Model';
 import Panel from './Panel';
 import Presenter from './Presenter';
+import Scale from './Scale';
 import SliderOptions from './SliderOptions';
 import View from './View';
 
@@ -17,5 +18,5 @@ export default interface Slider {
   // getValues(): number[];
   // setValue(value: number, index: number): number;
   addPanel(): Panel;
-  // addScale(): Scale;
+  addScale(): Scale;
 }
