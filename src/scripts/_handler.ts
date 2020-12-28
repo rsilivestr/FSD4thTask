@@ -47,7 +47,11 @@ export default class RSHandler {
   }
 
   public setPosition(coord: number) {
-    this.UI.handler.style.left = `${coord}%`;
+    if (this.layout === 'horizontal') {
+      this.UI.handler.style.left = `${coord}%`;
+    } else {
+      this.UI.handler.style.bottom = `${coord}%`;
+    }
   }
 
   public toggleTooltip() {

@@ -65,27 +65,31 @@ export default class RSView implements View {
     return minValue + x - (x % stepSize);
   }
 
-  private _elCreateSlider(): void {
+  private _elCreateSlider(): HTMLElement {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
     // Create element
-    this.UI.slider = document.createElement('div');
-    this.UI.slider.className = `rslider rslider--layout_${layout}`;
+    const slider = document.createElement('div');
+    slider.className = `rslider rslider--layout_${layout}`;
     // Append
-    this.container.appendChild(this.UI.slider);
+    this.container.appendChild(slider);
     // Prevent dragstart
-    this.UI.slider.addEventListener('dragstart', (e) => {
+    slider.addEventListener('dragstart', (e) => {
       e.preventDefault();
     });
+
+    return slider;
   }
 
-  private _elCreateTrack(): void {
+  private _elCreateTrack(): HTMLElement {
     // Create element
-    this.UI.track = document.createElement('div');
-    this.UI.track.className = 'rslider__track';
+    const track = document.createElement('div');
+    track.className = 'rslider__track';
     // Append
-    this.UI.slider.appendChild(this.UI.track);
+    this.UI.slider.appendChild(track);
     // Save track geometry
-    this.trackRect = this.UI.track.getBoundingClientRect();
+    this.trackRect = track.getBoundingClientRect();
+
+    return track;
   }
 
   private _updateProgress(): void {
@@ -104,17 +108,20 @@ export default class RSView implements View {
       this.UI.progress.style.left = `${min.toString()}%`;
       this.UI.progress.style.right = `${max.toString()}%`;
     } else {
+      console.log(456);
       this.UI.progress.style.bottom = `${min.toString()}%`;
       this.UI.progress.style.top = `${max.toString()}%`;
     }
   }
 
-  private _elCreateProgress(): void {
+  private _elCreateProgress(): HTMLElement {
     // Create element
-    this.UI.progress = document.createElement('div');
-    this.UI.progress.className = 'rslider__progress';
+    const progress = document.createElement('div');
+    progress.className = 'rslider__progress';
     // Append
-    this.UI.track.appendChild(this.UI.progress);
+    this.UI.track.appendChild(progress);
+
+    return progress;
   }
 
   private _addHandler(index: number) {
@@ -131,7 +138,11 @@ export default class RSView implements View {
     const handlerElement = handler.getElement();
     this.UI.slider.appendChild(handlerElement);
     // Add event listener
-    handlerElement.addEventListener('mousedown', () => this._grab(handlerElement));
+    handlerElement.addEventListener('mousedown', (e) => {
+      this._grab(handlerElement);
+      // Prevent text selection
+      e.preventDefault();
+    });
 
     return handler;
   }
@@ -142,9 +153,9 @@ export default class RSView implements View {
     }
     const { handlerCount } = this.modelOptions;
     // Create & append slider element
-    this._elCreateSlider();
+    this.UI.slider = this._elCreateSlider();
     // Create & append track element
-    this._elCreateTrack();
+    this.UI.track = this._elCreateTrack();
     // Create & append handler elements
     for (let i = 0; i < handlerCount; i += 1) {
       const handler = this._addHandler(i);
@@ -152,7 +163,7 @@ export default class RSView implements View {
     }
     // Create & append progress element
     if (this.options.progress) {
-      this._elCreateProgress();
+      this.UI.progress = this._elCreateProgress();
     }
 
     return this.UI.slider;
@@ -177,9 +188,11 @@ export default class RSView implements View {
   }
 
   private _drag(e: MouseEvent): void {
+    const { isHorizontal } = this.options;
     const { minCoord, sliderLength } = this._getRect();
     // Get relative coord in px
-    const diff = e.clientX - minCoord;
+    const diff = isHorizontal ? e.clientX - minCoord : minCoord - e.clientY;
+    console.log(diff);
     // Get relative coordinate in percent
     let coord = (diff / sliderLength) * 100;
     if (coord < 0) coord = 0;
@@ -196,7 +209,9 @@ export default class RSView implements View {
     // Update handlers
     this._updateHandlers();
     // Update progress bar
-    this._updateProgress();
+    if (this.options.progress) {
+      this._updateProgress();
+    }
   }
 
   // Bind _drag method to this
@@ -270,7 +285,9 @@ export default class RSView implements View {
     // Move handlers
     this._updateHandlers();
     // Update progress
-    this._updateProgress();
+    if (this.options.progress) {
+      this._updateProgress();
+    }
 
     return this.values;
   }

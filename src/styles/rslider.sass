@@ -22,7 +22,12 @@ $trackTipOffset: $handlerSize / 2
   &--layout_vertical
     width: $handlerSize
     height: $maxLength
-    max-height: $maxLength
+
+    .rslider__track
+      top: $trackTipOffset
+      right: $trackSideOffset
+      bottom: $trackTipOffset
+      left: $trackSideOffset
 
   &__track
     position: absolute
@@ -30,7 +35,6 @@ $trackTipOffset: $handlerSize / 2
     right: $trackTipOffset
     bottom: $trackSideOffset
     left: $trackTipOffset
-    // border: 1px solid $color_secondary
     background-color: lighten($color_secondary, 30 )
     border-radius: $trackThickness / 2
     z-index: 2

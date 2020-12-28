@@ -38,11 +38,11 @@ h2 {
 }
 
 #foo,
-#fizz {
+#bar {
   flex-direction: column;
 }
 
-#bar,
+#fizz,
 #buzz {
   flex-direction: row;
 }

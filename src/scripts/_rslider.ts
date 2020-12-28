@@ -14,7 +14,7 @@ import RSPanel from './_panel';
 import RScale from './_scale';
 import Scale from './_interface/Scale';
 
-export function create(selector: string, options: SliderOptions) {
+export function create(selector: string, options: SliderOptions = {}) {
   const el: HTMLElement = document.querySelector(selector);
   const model: Model = new RSModel(options);
   const view: View = new RSView(el, options);
