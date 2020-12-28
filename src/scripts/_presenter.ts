@@ -25,6 +25,7 @@ export default class RSPresenter implements Presenter {
     // Add and notify observer
     this.model.addObserver(this.update.bind(this));
     this.model.notifyObservers();
+    // Update view
     this.view.update();
   }
 

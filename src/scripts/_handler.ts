@@ -1,10 +1,16 @@
 import HandlerOptions from './_interface/HandlerOptions';
 
 export default class RSHandler {
-  UI: { handler: HTMLElement; tooltip: HTMLElement } = { handler: null, tooltip: null };
   id: number;
   layout: string;
   tooltip: boolean;
+  UI: {
+    handler: HTMLElement;
+    tooltip: HTMLElement;
+  } = {
+    handler: null,
+    tooltip: null,
+  };
   value: number;
 
   constructor(o: HandlerOptions) {
@@ -18,28 +24,29 @@ export default class RSHandler {
     this.tooltip = o.tooltip;
     this.value = o.value;
     // Create handler element
-    this._createHandler();
+    this.UI.handler = this._createHandler();
   }
 
   private _createHandler(): HTMLElement {
-    this.UI.handler = document.createElement('div');
-    this.UI.handler.className = 'rslider__handler';
-    this.UI.handler.dataset.id = this.id.toString();
-    // Create tooltip element
-    this._createTooltip();
-    // Append tooltip
+    const handler = document.createElement('div');
+    handler.className = 'rslider__handler';
+    handler.dataset.id = this.id.toString();
+
     if (this.tooltip) {
-      this.UI.handler.appendChild(this.UI.tooltip);
+      // Create tooltip element
+      this.UI.tooltip = this._createTooltip();
+      // Append tooltip
+      handler.appendChild(this.UI.tooltip);
     }
-    return this.UI.handler;
+    return handler;
   }
 
-  private _createTooltip() {
-    this.UI.tooltip = document.createElement('div');
-    this.UI.tooltip.className = `rslider__tooltip rslider__tooltip--${this.layout}`;
-    this.UI.tooltip.textContent = this.value.toString(10);
+  private _createTooltip(): HTMLElement {
+    const tooltip = document.createElement('div');
+    tooltip.className = `rslider__tooltip rslider__tooltip--${this.layout}`;
+    tooltip.textContent = this.value.toString(10);
 
-    return this.UI.tooltip;
+    return tooltip;
   }
 
   private _updateTooltip() {
@@ -58,8 +65,11 @@ export default class RSHandler {
     this.tooltip = !this.tooltip;
 
     if (this.tooltip) {
+      // Create and append tooltip
+      this.UI.tooltip = this._createTooltip();
       this.UI.handler.appendChild(this.UI.tooltip);
     } else {
+      // Remove tooltip element
       this.UI.tooltip.remove();
     }
   }
