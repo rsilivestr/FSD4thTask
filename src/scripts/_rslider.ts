@@ -29,6 +29,12 @@ export function create(selector: string, options: SliderOptions = {}) {
 
       return { ...modelOptions, ...viewOptions };
     },
+    getValues() {
+      return this.model.getValues();
+    },
+    setValues(values: number[]) {
+      this.model.setValues(values);
+    },
     addPanel() {
       // const modelOptions = this.model.config();
       const options = this.config();
