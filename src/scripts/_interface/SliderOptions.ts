@@ -6,4 +6,5 @@ export default interface SliderOptions {
   isHorizontal?: boolean;
   handlerRadius?: number;
   tooltip?: boolean;
+  progress?: boolean;
 }

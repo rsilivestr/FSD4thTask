@@ -201,10 +201,16 @@ export default class RSModel extends RSubject implements Model {
     const { stepSize } = this.options;
 
     this.values.forEach((v, i) => {
-      if (i < index && v >= value) {
-        this.values[i] = value - stepSize;
-      } else if (i > index && v <= value) {
-        this.values[i] = value + stepSize;
+      // Minimum difference between value and v
+      const minValueDiff = (i - index) * stepSize;
+      // Closest allowed v to value (at least one stepSize between adjacent values)
+      const closestValue = value + minValueDiff;
+
+      // Change v if closer to value than allowed
+      if (i < index && v > closestValue) {
+        this.values[i] = closestValue;
+      } else if (i > index && v < closestValue) {
+        this.values[i] = closestValue;
       }
     });
 

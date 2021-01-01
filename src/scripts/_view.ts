@@ -291,6 +291,7 @@ export default class RSView extends RSubject implements View {
       // Set value
       this.options.progress = progress;
     } else if (this.options.progress === undefined) {
+      // Default value
       this.options.progress = false;
     }
 
