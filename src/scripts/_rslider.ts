@@ -1,5 +1,4 @@
 import Model from './_interface/Model';
-import Panel from './_interface/Panel';
 import Presenter from './_interface/Presenter';
 import RSModel from './_model';
 import RSPresenter from './_presenter';
@@ -29,12 +28,6 @@ export function create(selector: string, options: SliderOptions = {}) {
 
       return { ...modelOptions, ...viewOptions };
     },
-    // getValues() {
-    //   return this.model.getValues();
-    // },
-    // setValues(values: number[]) {
-    //   this.model.setValues(values);
-    // },
     value(index: number = 0, value: number = null) {
       if (value === null) {
         return this.model.getValue(index);
@@ -47,18 +40,11 @@ export function create(selector: string, options: SliderOptions = {}) {
       }
       return this.model.setValues(v);
     },
-    addPanel() {
-      // const modelOptions = this.model.config();
-      const options = this.config();
-      // Create panel
-      const panel: Panel = new RSPanel(this.el, options);
-      // Add panel as observer, notify
-      this.model.addObserver(panel.update.bind(panel));
+    addModelObserver(o: Function) {
+      this.model.addObserver(o);
+    },
+    notifyModelObservers() {
       this.model.notifyObservers();
-      // Add observer
-      panel.addObserver(this.presenter.setModelValue.bind(presenter));
-
-      return panel;
     },
     addScale() {
       const options = this.config();
@@ -70,4 +56,8 @@ export function create(selector: string, options: SliderOptions = {}) {
   };
 
   return slider;
+}
+
+export function addControlPanel(s: Slider) {
+  return new RSPanel(s);
 }

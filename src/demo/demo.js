@@ -7,8 +7,8 @@ const s1o = {
 };
 
 const s1 = RSlider.create('#foo', s1o);
-const s1p = s1.addPanel();
 const s1s = s1.addScale();
+const s1p = RSlider.addControlPanel(s1);
 
 const s2 = RSlider.create('#bar', { handlerCount: 2 });
 s2.values([40, 90]);
@@ -16,7 +16,7 @@ console.log(s2.values());
 console.log(s2.value(1));
 s2.value(1, 20);
 console.log(s2.values());
-const s2p = s2.addPanel();
+const s2p = RSlider.addControlPanel(s2);
 
 const s3 = RSlider.create('#fizz', { isHorizontal: false });
 

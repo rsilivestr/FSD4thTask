@@ -1,6 +1,7 @@
 import SliderOptions from './_interface/SliderOptions';
 import Panel from './_interface/Panel';
 import RSubject from './_subject';
+import Slider from './_interface/Slider';
 
 export default class RSPanel extends RSubject implements Panel {
   options: SliderOptions;
@@ -14,13 +15,10 @@ export default class RSPanel extends RSubject implements Panel {
     panel: null,
   };
 
-  constructor(container: HTMLElement, o: SliderOptions) {
+  constructor(s: Slider) {
     super();
 
-    this.UI.container = container;
-    this.options = o;
-
-    this._render();
+    this._init(s);
   }
 
   public notifyObservers: (index: number, value: number) => void = (index, value) => {
@@ -34,6 +32,18 @@ export default class RSPanel extends RSubject implements Panel {
     });
 
     return v;
+  }
+
+  private _init(s: Slider) {
+    this.UI.container = s.el;
+    this.options = s.config();
+    // Create and append panel
+    this._render();
+    // Subscribe to model updates
+    s.addModelObserver(this.update.bind(this));
+    s.notifyModelObservers();
+    // Subscribe presenter to panel updates
+    this.addObserver(s.value.bind(s));
   }
 
   private _createInput(parent: HTMLElement, labelText: string): HTMLInputElement {
@@ -62,7 +72,6 @@ export default class RSPanel extends RSubject implements Panel {
 
       input.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-          // const target: HTMLInputElement = <HTMLInputElement>e.target;
           const value = parseInt(this.UI.inputs[i].value, 10);
 
           this.notifyObservers(i, value);

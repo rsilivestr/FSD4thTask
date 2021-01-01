@@ -89,15 +89,13 @@ mySlider.values(values: number[]): number[];
 ### Добавить шкалу значений
 
 ```typescript
-mySlider.addScale(): Object;
+mySlider.addScale(): Scale;
 ```
 
 ### Добавить панель управления
 
-<!-- TODO move panel outside -->
-
 ```typescript
-mySlider.addPanel(): Object;
+RSlider.addControlPanel(mySlider: Slider): Panel;
 ```
 
 ## Архитектура приложения
