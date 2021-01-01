@@ -15,6 +15,66 @@ export default class RSModel extends RSubject implements Model {
     this._initValues(v);
   }
 
+  public notifyObservers: () => void = () => {
+    this.observers.forEach((o) => o(this.values));
+  };
+
+  public config(o?: ModelOptions) {
+    // Set config
+    if (o) return this._configure(o);
+    // Get config
+    return this.options;
+  }
+
+  public setValueByCoord(id: number, coord: number) {
+    // Get coord
+    const normalizedCoord = this._normalizeHandlerCoord(id, coord);
+    // Get value
+    const value = this._coordToValue(normalizedCoord);
+    // Set value
+    this.values[id] = value;
+    // Move other handlers if needed
+    this._updateValues(id, value);
+
+    return normalizedCoord;
+  }
+
+  public setValue(index: number, value: number) {
+    const { minValue, maxValue, stepSize, handlerCount } = this.options;
+    // Get min and max allowed values for this handler index
+    const min = minValue + index * stepSize;
+    const max = maxValue - (handlerCount - index - 1) * stepSize;
+    // Set value
+    let val = 0;
+    if (value < min) {
+      val = min;
+    } else if (value > max) {
+      val = max;
+    } else {
+      val = this._normalizeValue(value);
+    }
+    this.values[index] = val;
+    // Update other values
+    this._updateValues(index, val);
+
+    return this.values;
+  }
+
+  public setValues(v: number[]) {
+    this.values = v;
+
+    return this.values;
+  }
+
+  public getValues() {
+    // Get values array
+    return this.values;
+  }
+
+  public getValue(id: number) {
+    return this.values[id] || null;
+  }
+
   private _isNumber(n: number) {
     return typeof n === 'number' && !isNaN(n);
   }
@@ -84,6 +144,13 @@ export default class RSModel extends RSubject implements Model {
     return this.stepSizePerc;
   }
 
+  private _normalizeValue(value: number): number {
+    const { minValue, stepSize } = this.options;
+    // minValue added to work with negative values
+    const x = value - minValue + stepSize / 2;
+    return minValue + x - (x % stepSize);
+  }
+
   // Return coordinate of the closest step,
   // take into account max value of each handler
   private _normalizeHandlerCoord(index: number, coord: number): number {
@@ -141,61 +208,5 @@ export default class RSModel extends RSubject implements Model {
     });
 
     this.notifyObservers();
-  }
-
-  public config(o?: ModelOptions) {
-    // Set config
-    if (o) return this._configure(o);
-    // Get config
-    return this.options;
-  }
-
-  public setValueByCoord(id: number, coord: number) {
-    // Get coord
-    const normalizedCoord = this._normalizeHandlerCoord(id, coord);
-    // Get value
-    const value = this._coordToValue(normalizedCoord);
-    // Set value
-    this.values[id] = value;
-    // Move other handlers if needed
-    this._updateValues(id, value);
-
-    return normalizedCoord;
-  }
-
-  public setValue(index: number, value: number) {
-    const { minValue, maxValue, stepSize, handlerCount } = this.options;
-    // Get min and max allowed values for this handler index
-    const min = minValue + index * stepSize;
-    const max = maxValue - (handlerCount - index - 1) * stepSize;
-    // Set value
-    let val = 0;
-    if (value < min) {
-      val = min;
-    } else if (value > max) {
-      val = max;
-    } else {
-      val = value;
-    }
-    this.values[index] = val;
-    // Update other values
-    this._updateValues(index, val);
-
-    return this.values;
-  }
-
-  public setValues(v: number[]) {
-    this.values = v;
-
-    return this.values;
-  }
-
-  public getValues() {
-    // Get values array
-    return this.values;
-  }
-
-  public getValue(id: number) {
-    return this.values[id] || null;
   }
 }

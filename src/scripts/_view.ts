@@ -1,13 +1,16 @@
 import Handler from './_interface/Handler';
 import HandlerOptions from './_interface/HandlerOptions';
 import ModelOptions from './_interface/ModelOptions';
-import RSHandler from './_handler';
 import SliderOptions from './_interface/SliderOptions';
 import View from './_interface/View';
 import ViewElements from './_interface/ViewElements';
 import ViewOptions from './_interface/ViewOptions';
 
-export default class RSView implements View {
+import RSHandler from './_handler';
+import RSubject from './_subject';
+import RScale from './_scale';
+
+export default class RSView extends RSubject implements View {
   public container: HTMLElement;
   public options: ViewOptions = {};
   public modelOptions: ModelOptions;
@@ -15,14 +18,74 @@ export default class RSView implements View {
   public trackRect: ClientRect;
   public handlers: Handler[] = [];
   public values: number[] = [];
-  public grabbed: null | HTMLElement = null;
-  public notifyPresenter: Function;
+  private grabbed: HTMLElement = null;
 
   constructor(el: HTMLElement, o: SliderOptions) {
+    super();
     // Save root element
     this.container = el;
     // Set options
     this._configure(o);
+  }
+
+  public notifyObservers: (index: number, value: number) => void = (index, value) => {
+    this.observers.forEach((o) => o(index, value));
+  };
+
+  public render() {
+    if (this.container == null) {
+      throw new Error('There is no element matching provided selector.');
+    }
+    const { handlerCount } = this.modelOptions;
+    // Create & append slider element
+    this.UI.slider = this._elCreateSlider();
+    // Create & append track element
+    this.UI.track = this._elCreateTrack();
+    // Create & append handler elements
+    for (let i = 0; i < handlerCount; i += 1) {
+      const handler = this._addHandler(i);
+      this.handlers[i] = handler;
+    }
+    // Create & append progress element
+    if (this.options.progress) {
+      this.UI.progress = this._elCreateProgress();
+    }
+
+    return this.UI.slider;
+  }
+
+  public setValues(values: number[]): void {
+    this.values = values;
+  }
+
+  public config(o?: ViewOptions) {
+    // Set config
+    if (o) return this._configure(o);
+    // Get config
+    return this.options;
+  }
+
+  public setModelOptions(o: ModelOptions) {
+    return (this.modelOptions = o);
+  }
+
+  public addScale(o: ModelOptions) {
+    const scale = new RScale(this.container, o);
+
+    this.UI.slider.insertAdjacentElement('afterend', scale.getElement());
+
+    return scale;
+  }
+
+  public update() {
+    // Move handlers
+    this._updateHandlers();
+    // Update progress
+    if (this.options.progress) {
+      this._updateProgress();
+    }
+
+    return this.values;
   }
 
   private _getRect() {
@@ -56,13 +119,6 @@ export default class RSView implements View {
     const { minValue, maxValue } = this.modelOptions;
 
     return ((value - minValue) / (maxValue - minValue)) * 100;
-  }
-
-  private _normalizeValue(value: number): number {
-    const { minValue, stepSize } = this.modelOptions;
-    // minValue added to work with negative values
-    const x = value - minValue + stepSize / 2;
-    return minValue + x - (x % stepSize);
   }
 
   private _elCreateSlider(): HTMLElement {
@@ -147,28 +203,6 @@ export default class RSView implements View {
     return handler;
   }
 
-  public render() {
-    if (this.container == null) {
-      throw new Error('There is no element matching provided selector.');
-    }
-    const { handlerCount } = this.modelOptions;
-    // Create & append slider element
-    this.UI.slider = this._elCreateSlider();
-    // Create & append track element
-    this.UI.track = this._elCreateTrack();
-    // Create & append handler elements
-    for (let i = 0; i < handlerCount; i += 1) {
-      const handler = this._addHandler(i);
-      this.handlers[i] = handler;
-    }
-    // Create & append progress element
-    if (this.options.progress) {
-      this.UI.progress = this._elCreateProgress();
-    }
-
-    return this.UI.slider;
-  }
-
   private _grab(handler: HTMLElement): void {
     // Set grabbed handler
     this.grabbed = handler;
@@ -192,19 +226,17 @@ export default class RSView implements View {
     const { minCoord, sliderLength } = this._getRect();
     // Get relative coord in px
     const diff = isHorizontal ? e.clientX - minCoord : minCoord - e.clientY;
-    console.log(diff);
     // Get relative coordinate in percent
     let coord = (diff / sliderLength) * 100;
     if (coord < 0) coord = 0;
     if (coord > 100) coord = 100;
     // Convert coord to value
     const value = this._coordToValue(coord);
-    const normalizedValue = this._normalizeValue(value);
+    // const normalizedValue = this._normalizeValue(value);
 
     // Update model through presenter
     const index = parseInt(this.grabbed.dataset.id, 10);
-    // this.presenter.setModelValue(index, normalizedValue);
-    this.notifyPresenter(index, normalizedValue);
+    this.notifyObservers(index, value);
 
     // Update handlers
     this._updateHandlers();
@@ -263,32 +295,5 @@ export default class RSView implements View {
     }
 
     return this.options;
-  }
-
-  public setValues(values: number[]): void {
-    this.values = values;
-  }
-
-  public config(o?: ViewOptions) {
-    // Set config
-    if (o) return this._configure(o);
-    // Get config
-    return this.options;
-  }
-
-  public setModelOptions(o: ModelOptions) {
-    return (this.modelOptions = o);
-  }
-
-  // Observer
-  public update() {
-    // Move handlers
-    this._updateHandlers();
-    // Update progress
-    if (this.options.progress) {
-      this._updateProgress();
-    }
-
-    return this.values;
   }
 }

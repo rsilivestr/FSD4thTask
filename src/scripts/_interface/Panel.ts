@@ -1,11 +1,11 @@
 import Observer from './Observer';
+import Subject from './Subject';
 
-export default interface Panel extends Observer {
+export default interface Panel extends Subject, Observer {
   UI: {
     container: HTMLElement;
     panel: HTMLElement;
   };
-  notifyPresenter: Function;
   // slider: Slider;
   // modelOptions: ModelOptions;
   // viewOptions: ViewOptions;

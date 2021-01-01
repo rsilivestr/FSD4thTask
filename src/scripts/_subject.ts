@@ -1,8 +1,7 @@
 import Subject from './_interface/Subject';
 
 export default class RSubject implements Subject {
-  private observers: Function[] = [];
-  public values: number[];
+  public observers: Function[] = [];
 
   public addObserver(o: Function) {
     this.observers.push(o);
@@ -16,7 +15,5 @@ export default class RSubject implements Subject {
     return this.observers;
   }
 
-  public notifyObservers(): void {
-    this.observers.forEach((o) => o(this.values));
-  }
+  public notifyObservers: Function;
 }

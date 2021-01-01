@@ -1,4 +1,3 @@
-// import ModelOptions from './interface/ModelOptions';
 import Model from './_interface/Model';
 import Panel from './_interface/Panel';
 import Presenter from './_interface/Presenter';
@@ -11,7 +10,6 @@ import View from './_interface/View';
 
 import '../styles/rslider.sass';
 import RSPanel from './_panel';
-import RScale from './_scale';
 import Scale from './_interface/Scale';
 
 export function create(selector: string, options: SliderOptions = {}) {
@@ -39,16 +37,15 @@ export function create(selector: string, options: SliderOptions = {}) {
       // Add panel as observer, notify
       this.model.addObserver(panel.update.bind(panel));
       this.model.notifyObservers();
-      // Add presenter method
-      panel.notifyPresenter = this.presenter.setModelValue.bind(presenter);
+      // Add observer
+      panel.addObserver(this.presenter.setModelValue.bind(presenter));
 
       return panel;
     },
     addScale() {
       const options = this.config();
-      const scale: Scale = new RScale(this.el, options);
-
-      scale.notifyPresenter = this.presenter.setModelValue.bind(presenter);
+      const scale: Scale = this.view.addScale(options);
+      scale.addObserver(this.presenter.setModelValue.bind(presenter));
 
       return scale;
     },

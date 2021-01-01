@@ -1,10 +1,10 @@
 import Scale from './_interface/Scale';
 import SliderOptions from './_interface/SliderOptions';
+import RSubject from './_subject';
 
-export default class RScale implements Scale {
+export default class RScale extends RSubject implements Scale {
   markValues: number[] = [];
   maxScaleSteps: number = 10;
-  notifyPresenter: Function;
   options: SliderOptions;
   UI: {
     container: HTMLElement;
@@ -17,9 +17,19 @@ export default class RScale implements Scale {
   };
 
   constructor(container: HTMLElement, o: SliderOptions) {
+    super();
+
     this.UI.container = container;
     this.options = o;
     this._render();
+  }
+
+  public notifyObservers: (index: number, value: number) => void = (index, value) => {
+    this.observers.forEach((o) => o(index, value));
+  };
+
+  public getElement(): HTMLElement {
+    return this.UI.scale;
   }
 
   private _calcScaleStep(): number {
@@ -71,7 +81,7 @@ export default class RScale implements Scale {
 
       if (target.classList.contains('rslider-scale__mark')) {
         const value = parseInt(target.textContent, 10);
-        this.notifyPresenter(0, value);
+        this.notifyObservers(0, value);
       }
     });
   }
@@ -83,7 +93,6 @@ export default class RScale implements Scale {
 
     this._populateScale();
 
-    // this.UI.container.appendChild(this.UI.scale);
     const slider = this.UI.container.querySelector('.rslider');
     slider.insertAdjacentElement('afterend', this.UI.scale);
 

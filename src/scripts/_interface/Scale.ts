@@ -1,5 +1,5 @@
-// import Observer from './Observer';
+import Subject from './Subject';
 
-export default interface Scale {
-  notifyPresenter: Function;
+export default interface Scale extends Subject {
+  getElement: () => HTMLElement;
 }

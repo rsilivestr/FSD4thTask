@@ -17,6 +17,36 @@ export default class RSHandler {
     this._init(o);
   }
 
+  public setPosition(coord: number) {
+    if (this.layout === 'horizontal') {
+      this.UI.handler.style.left = `${coord}%`;
+    } else {
+      this.UI.handler.style.bottom = `${coord}%`;
+    }
+  }
+
+  public toggleTooltip() {
+    this.tooltip = !this.tooltip;
+
+    if (this.tooltip) {
+      // Create and append tooltip
+      this.UI.tooltip = this._createTooltip();
+      this.UI.handler.appendChild(this.UI.tooltip);
+    } else {
+      // Remove tooltip element
+      this.UI.tooltip.remove();
+    }
+  }
+
+  public getElement() {
+    return this.UI.handler;
+  }
+
+  public updateValue(value: number) {
+    this.value = value;
+    this._updateTooltip();
+  }
+
   private _init(o: HandlerOptions) {
     // Save config
     this.id = o.id;
@@ -51,35 +81,5 @@ export default class RSHandler {
 
   private _updateTooltip() {
     this.UI.tooltip.textContent = this.value.toString(10);
-  }
-
-  public setPosition(coord: number) {
-    if (this.layout === 'horizontal') {
-      this.UI.handler.style.left = `${coord}%`;
-    } else {
-      this.UI.handler.style.bottom = `${coord}%`;
-    }
-  }
-
-  public toggleTooltip() {
-    this.tooltip = !this.tooltip;
-
-    if (this.tooltip) {
-      // Create and append tooltip
-      this.UI.tooltip = this._createTooltip();
-      this.UI.handler.appendChild(this.UI.tooltip);
-    } else {
-      // Remove tooltip element
-      this.UI.tooltip.remove();
-    }
-  }
-
-  public getElement() {
-    return this.UI.handler;
-  }
-
-  public updateValue(value: number) {
-    this.value = value;
-    this._updateTooltip();
   }
 }

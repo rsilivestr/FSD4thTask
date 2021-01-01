@@ -13,22 +13,6 @@ export default class RSPresenter implements Presenter {
     this._init();
   }
 
-  private _init(): void {
-    this.view.notifyPresenter = this.setModelValue.bind(this);
-
-    // Set view options
-    const modelOptions = this.model.config();
-    this.view.setModelOptions(modelOptions);
-
-    // Render view
-    this.view.render();
-    // Add and notify observer
-    this.model.addObserver(this.update.bind(this));
-    this.model.notifyObservers();
-    // Update view
-    this.view.update();
-  }
-
   public setModelValue(index: number, value: number) {
     return this.model.setValue(index, value);
   }
@@ -40,6 +24,22 @@ export default class RSPresenter implements Presenter {
   public update(v: number[]): void {
     this.view.setValues(v);
 
+    this.view.update();
+  }
+
+  private _init(): void {
+    this.view.addObserver(this.setModelValue.bind(this));
+
+    // Set view options
+    const modelOptions = this.model.config();
+    this.view.setModelOptions(modelOptions);
+
+    // Render view
+    this.view.render();
+    // Add and notify observer
+    this.model.addObserver(this.update.bind(this));
+    this.model.notifyObservers();
+    // Update view
     this.view.update();
   }
 }

@@ -1,8 +1,8 @@
 import SliderOptions from './_interface/SliderOptions';
 import Panel from './_interface/Panel';
+import RSubject from './_subject';
 
-export default class RSPanel implements Panel {
-  notifyPresenter: Function;
+export default class RSPanel extends RSubject implements Panel {
   options: SliderOptions;
   UI: {
     container: HTMLElement;
@@ -15,10 +15,25 @@ export default class RSPanel implements Panel {
   };
 
   constructor(container: HTMLElement, o: SliderOptions) {
+    super();
+
     this.UI.container = container;
     this.options = o;
 
     this._render();
+  }
+
+  public notifyObservers: (index: number, value: number) => void = (index, value) => {
+    this.observers.forEach((o) => o(index, value));
+  };
+
+  public update(v: number[]): number[] {
+    // Update inputs
+    this.UI.inputs.forEach((input, index) => {
+      input.value = v[index].toString();
+    });
+
+    return v;
   }
 
   private _createInput(parent: HTMLElement, labelText: string): HTMLInputElement {
@@ -34,7 +49,7 @@ export default class RSPanel implements Panel {
     return input;
   }
 
-  _render() {
+  private _render() {
     // Create panel element
     this.UI.panel = document.createElement('div');
     this.UI.panel.className = 'rslider-panel';
@@ -50,7 +65,7 @@ export default class RSPanel implements Panel {
           // const target: HTMLInputElement = <HTMLInputElement>e.target;
           const value = parseInt(this.UI.inputs[i].value, 10);
 
-          this.notifyPresenter(i, value);
+          this.notifyObservers(i, value);
         }
       });
 
@@ -59,14 +74,5 @@ export default class RSPanel implements Panel {
 
     // Append to container
     this.UI.container.appendChild(this.UI.panel);
-  }
-
-  update(v: number[]): number[] {
-    // Update inputs
-    this.UI.inputs.forEach((input, index) => {
-      input.value = v[index].toString();
-    });
-
-    return v;
   }
 }
