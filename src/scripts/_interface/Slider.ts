@@ -12,8 +12,10 @@ export default interface Slider {
   readonly presenter: Presenter;
 
   config(o?: SliderOptions): SliderOptions;
-  setValues(values: number[]): void;
-  getValues(): number[];
+  // setValues(values: number[]): void;
+  // getValues(): number[];
+  value(v: number): number;
+  values(v: number[]): number[];
   addPanel(): Panel;
   addScale(): Scale;
 }

@@ -57,10 +57,11 @@ export default class RSModel extends RSubject implements Model {
     // Update other values
     this._updateValues(index, val);
 
-    return this.values;
+    return val;
   }
 
   public setValues(v: number[]) {
+    // TODO add validation
     this.values = v;
 
     return this.values;

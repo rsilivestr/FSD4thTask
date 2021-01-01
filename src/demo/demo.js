@@ -11,7 +11,11 @@ const s1p = s1.addPanel();
 const s1s = s1.addScale();
 
 const s2 = RSlider.create('#bar', { handlerCount: 2 });
-s2.setValues([40, 90]);
+s2.values([40, 90]);
+console.log(s2.values());
+console.log(s2.value(1));
+s2.value(1, 20);
+console.log(s2.values());
 const s2p = s2.addPanel();
 
 const s3 = RSlider.create('#fizz', { isHorizontal: false });

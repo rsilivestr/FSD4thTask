@@ -29,11 +29,23 @@ export function create(selector: string, options: SliderOptions = {}) {
 
       return { ...modelOptions, ...viewOptions };
     },
-    getValues() {
-      return this.model.getValues();
+    // getValues() {
+    //   return this.model.getValues();
+    // },
+    // setValues(values: number[]) {
+    //   this.model.setValues(values);
+    // },
+    value(index: number = 0, value: number = null) {
+      if (value === null) {
+        return this.model.getValue(index);
+      }
+      return this.model.setValue(index, value);
     },
-    setValues(values: number[]) {
-      this.model.setValues(values);
+    values(v: number[] = []) {
+      if (v.length === 0) {
+        return this.model.getValues();
+      }
+      return this.model.setValues(v);
     },
     addPanel() {
       // const modelOptions = this.model.config();

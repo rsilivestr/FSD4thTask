@@ -7,5 +7,5 @@ export default interface Presenter extends Observer {
   view: View;
 
   getValues(): number[];
-  setModelValue(index: number, value: number): number[];
+  setModelValue(index: number, value: number): number;
 }
