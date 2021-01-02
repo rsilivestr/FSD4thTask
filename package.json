@@ -7,10 +7,12 @@
     "clean": "rm -rf ./dist/",
     "rollup:build": "rollup -c",
     "rollup:watch": "rollup -c -w",
-    "build": "npm run clean && npm run rollup:build",
-    "start": "npm run clean && npm run rollup:watch",
+    "build": "run-s clean rollup:build",
+    "start": "run-s clean rollup:watch",
     "lint": "eslint src/**/*.ts --fix",
-    "test": "karma start karma.conf.js"
+    "prettify": "prettier --write '**/*.ts'",
+    "test": "karma start karma.conf.js",
+    "test:once": "karma start karma.conf.js --single-run"
   },
   "repository": {
     "type": "git",
@@ -43,9 +45,11 @@
     "karma-coverage": "^2.0.3",
     "karma-jsdom-launcher": "^8.0.2",
     "karma-mocha": "^2.0.1",
+    "karma-typescript": "^5.2.0",
     "lint-staged": "^10.5.3",
     "mocha": "^8.2.1",
     "node-sass": "^5.0.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "rollup": "^2.34.2",
     "rollup-plugin-copy": "^3.3.0",
@@ -66,7 +70,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "run-s lint prettify test:once"
     }
   },
   "browserslist": [

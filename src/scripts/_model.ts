@@ -7,12 +7,12 @@ export default class RSModel extends RSubject implements Model {
   public values: number[] = [];
   private stepSizePerc: number;
 
-  constructor(o: ModelOptions, v: number[] = []) {
+  constructor(o: ModelOptions = {}) {
     super();
     // Set config
     this._configure(o);
     // Set hander values
-    this._initValues(v);
+    this._initValues();
   }
 
   public notifyObservers: () => void = () => {
@@ -124,17 +124,11 @@ export default class RSModel extends RSubject implements Model {
     return this.options;
   }
 
-  private _initValues(v: number[]) {
-    const len = v.length;
+  private _initValues() {
     const { minValue, stepSize, handlerCount } = this.options;
-    if (len === 0) {
-      // Array is empty: fill each step starting from minValue
-      for (let i = 0; i < handlerCount; i += 1) {
-        this.values[i] = minValue + i * stepSize;
-      }
-    } else {
-      // Set values
-      this.values = v;
+    // Fill each step starting from minValue
+    for (let i = 0; i < handlerCount; i += 1) {
+      this.values[i] = minValue + i * stepSize;
     }
   }
 

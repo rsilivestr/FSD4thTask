@@ -14,15 +14,17 @@ export default {
     {
       file: './dist/js/rslider.js',
       format: 'iife',
-      name: 'RSlider',
       globals: { jquery: '$' },
+      name: 'RSlider',
+      sourcemap: true,
     },
     {
       file: './dist/js/rslider.min.js',
       format: 'iife',
+      globals: { jquery: '$' },
       name: 'RSlider',
       plugins: [terser()],
-      globals: { jquery: '$' },
+      sourcemap: true,
     },
   ],
   plugins: [

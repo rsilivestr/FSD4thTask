@@ -1,25 +1,35 @@
 module.exports = (config) => {
   config.set({
-    frameworks: ['mocha', 'chai'],
-    files: [
-      'node_modules/jquery/dist/jquery.min.js',
-      './dist/js/rslider.js',
-      './test/testSlider.js',
-      './test/*.test.js',
-    ],
-    reporters: ['progress', 'coverage'],
-    preprocessors: {
-      './dist/js/rslider.js': ['coverage'],
-    },
+    autoWatch: true,
+    basePath: '',
+    browsers: ['jsdom'],
+    colors: true,
+    concurrency: Infinity,
     coverageReporter: {
       type: 'text',
     },
-    port: 9876,
-    colors: true,
+    exclude: [
+      'node_modules'
+    ],
+    files: [
+      'src/**/*.ts',
+      'test/**/*.test.ts',
+    ],
+    frameworks: ['chai','mocha','karma-typescript'],
     logLevel: config.LOG_INFO,
-    browsers: ['jsdom'],
-    autoWatch: true,
-    singleRun: false,
-    concurrency: Infinity,
+    port: 9876,
+    preprocessors: {
+      'src/**/*.ts': ['karma-typescript', 'coverage'],
+      'test/**/*.ts': ['karma-typescript'],
+    },
+    reporters: ['progress', 'coverage'],
+    // singleRun: false,
+
+    karmaTypescriptConfig: {
+      experimentalDecorators: true,
+      extend: './tsconfig.json',
+      include: [ './src/**/*.ts', './test/**/*.test.ts' ],
+      module: 'commonjs',
+    }
   });
 };

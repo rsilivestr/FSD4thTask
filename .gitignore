@@ -1,5 +1,6 @@
 .cmessage
 .eslintcache
+.nyc_output
 .vscode
 _test
 dist
