@@ -10,7 +10,6 @@
     "build": "run-s clean rollup:build",
     "start": "run-s clean rollup:watch",
     "lint": "eslint src/**/*.ts --fix",
-    "prettify": "prettier --write '**/*.ts'",
     "test": "karma start karma.conf.js",
     "test:once": "karma start karma.conf.js --single-run"
   },
@@ -25,8 +24,6 @@
   },
   "homepage": "https://github.com/rsilivestr/FSD4hTask#readme",
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.10",
     "@rollup/plugin-typescript": "^8.0.0",
     "@types/chai": "^4.2.14",
     "@types/jquery": "^3.5.5",
@@ -63,14 +60,14 @@
     "jquery": "^3.5.1"
   },
   "lint-staged": {
-    "src/**/*.ts": [
+    "**/*.ts": [
       "eslint --fix",
       "prettier --write"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s lint prettify test:once"
+      "pre-commit": "lint-staged && npm run test:once"
     }
   },
   "browserslist": [

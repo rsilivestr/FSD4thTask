@@ -9,7 +9,7 @@ describe('RSModel', () => {
       expect(m.config()).to.be.an('object');
     });
 
-    it('should have properties', () => {
+    it('Should have properties', () => {
       expect(m.config()).to.have.deep.keys([
         'handlerCount',
         'maxValue',
