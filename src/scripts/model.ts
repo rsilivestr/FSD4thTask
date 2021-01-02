@@ -1,10 +1,10 @@
-import Model from './_interface/Model';
-import ModelOptions from './_interface/ModelOptions';
-import RSubject from './_subject';
+import Model from './interface/Model';
+import ModelOptions from './interface/ModelOptions';
+import RSubject from './subject';
 
 export default class RSModel extends RSubject implements Model {
-  public options: ModelOptions = {};
-  public values: number[] = [];
+  private options: ModelOptions = {};
+  private values: number[] = [];
 
   constructor(o: ModelOptions = {}) {
     super();

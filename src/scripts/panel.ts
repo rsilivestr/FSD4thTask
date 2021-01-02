@@ -1,11 +1,11 @@
-import SliderOptions from './_interface/SliderOptions';
-import Panel from './_interface/Panel';
-import RSubject from './_subject';
-import Slider from './_interface/Slider';
+import SliderOptions from './interface/SliderOptions';
+import Panel from './interface/Panel';
+import RSubject from './subject';
+import Slider from './interface/Slider';
 
 export default class RSPanel extends RSubject implements Panel {
-  options: SliderOptions;
-  UI: {
+  private options: SliderOptions;
+  private UI: {
     container: HTMLElement;
     inputs: HTMLInputElement[];
     panel: HTMLElement;

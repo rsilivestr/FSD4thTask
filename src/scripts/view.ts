@@ -1,23 +1,22 @@
-import Handler from './_interface/Handler';
-import HandlerOptions from './_interface/HandlerOptions';
-import ModelOptions from './_interface/ModelOptions';
-import SliderOptions from './_interface/SliderOptions';
-import View from './_interface/View';
-import ViewElements from './_interface/ViewElements';
-import ViewOptions from './_interface/ViewOptions';
+import Handler from './interface/Handler';
+import HandlerOptions from './interface/HandlerOptions';
+import ModelOptions from './interface/ModelOptions';
+import SliderOptions from './interface/SliderOptions';
+import View from './interface/View';
+import ViewElements from './interface/ViewElements';
+import ViewOptions from './interface/ViewOptions';
 
-import RSHandler from './_handler';
-import RSubject from './_subject';
-import RScale from './_scale';
+import RSHandler from './handler';
+import RSubject from './subject';
+import RScale from './scale';
 
 export default class RSView extends RSubject implements View {
-  public container: HTMLElement;
-  public options: ViewOptions = {};
-  public modelOptions: ModelOptions;
-  public UI: ViewElements = {};
-  public trackRect: ClientRect;
-  public handlers: Handler[] = [];
-  public values: number[] = [];
+  private container: HTMLElement;
+  private options: ViewOptions = {};
+  private modelOptions: ModelOptions;
+  private UI: ViewElements = {};
+  private handlers: Handler[] = [];
+  private values: number[] = [];
   private grabbed: HTMLElement = null;
 
   constructor(el: HTMLElement, o: SliderOptions) {
@@ -142,8 +141,6 @@ export default class RSView extends RSubject implements View {
     track.className = 'rslider__track';
     // Append
     this.UI.slider.appendChild(track);
-    // Save track geometry
-    this.trackRect = track.getBoundingClientRect();
 
     return track;
   }

@@ -1,7 +1,7 @@
-import Subject from './_interface/Subject';
+import Subject from './interface/Subject';
 
 export default class RSubject implements Subject {
-  public observers: Function[] = [];
+  protected observers: Function[] = [];
 
   public addObserver(o: Function) {
     this.observers.push(o);

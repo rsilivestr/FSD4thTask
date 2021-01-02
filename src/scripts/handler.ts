@@ -1,20 +1,24 @@
-import HandlerOptions from './_interface/HandlerOptions';
+import HandlerOptions from './interface/HandlerOptions';
 
 export default class RSHandler {
-  id: number;
-  layout: string;
-  tooltip: boolean;
-  UI: {
+  private id: number;
+  private layout: string;
+  private tooltip: boolean;
+  private UI: {
     handler: HTMLElement;
     tooltip: HTMLElement;
   } = {
     handler: null,
     tooltip: null,
   };
-  value: number;
+  private value: number;
 
   constructor(o: HandlerOptions) {
     this._init(o);
+  }
+
+  public getElement() {
+    return this.UI.handler;
   }
 
   public setPosition(coord: number) {
@@ -38,23 +42,9 @@ export default class RSHandler {
     }
   }
 
-  public getElement() {
-    return this.UI.handler;
-  }
-
   public updateValue(value: number) {
     this.value = value;
     this._updateTooltip();
-  }
-
-  private _init(o: HandlerOptions) {
-    // Save config
-    this.id = o.id;
-    this.layout = o.layout;
-    this.tooltip = o.tooltip;
-    this.value = o.value;
-    // Create handler element
-    this.UI.handler = this._createHandler();
   }
 
   private _createHandler(): HTMLElement {
@@ -77,6 +67,16 @@ export default class RSHandler {
     tooltip.textContent = this.value.toString(10);
 
     return tooltip;
+  }
+
+  private _init(o: HandlerOptions) {
+    // Save config
+    this.id = o.id;
+    this.layout = o.layout;
+    this.tooltip = o.tooltip;
+    this.value = o.value;
+    // Create handler element
+    this.UI.handler = this._createHandler();
   }
 
   private _updateTooltip() {

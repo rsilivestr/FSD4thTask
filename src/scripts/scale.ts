@@ -1,12 +1,12 @@
-import Scale from './_interface/Scale';
-import SliderOptions from './_interface/SliderOptions';
-import RSubject from './_subject';
+import Scale from './interface/Scale';
+import SliderOptions from './interface/SliderOptions';
+import RSubject from './subject';
 
 export default class RScale extends RSubject implements Scale {
-  markValues: number[] = [];
-  maxScaleSteps: number = 10;
-  options: SliderOptions;
-  UI: {
+  private markValues: number[] = [];
+  private maxScaleSteps: number = 10;
+  private options: SliderOptions;
+  private UI: {
     container: HTMLElement;
     scale: HTMLElement;
     marks: HTMLElement[];
@@ -24,13 +24,13 @@ export default class RScale extends RSubject implements Scale {
     this._render();
   }
 
-  public notifyObservers: (index: number, value: number) => void = (index, value) => {
-    this.observers.forEach((o) => o(index, value));
-  };
-
   public getElement(): HTMLElement {
     return this.UI.scale;
   }
+
+  public notifyObservers: (index: number, value: number) => void = (index, value) => {
+    this.observers.forEach((o) => o(index, value));
+  };
 
   private _calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;

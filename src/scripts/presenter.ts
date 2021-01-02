@@ -1,10 +1,10 @@
-import Model from './_interface/Model';
-import Presenter from './_interface/Presenter';
-import View from './_interface/View';
+import Model from './interface/Model';
+import Presenter from './interface/Presenter';
+import View from './interface/View';
 
 export default class RSPresenter implements Presenter {
-  model: Model;
-  view: View;
+  private model: Model;
+  private view: View;
 
   constructor(model: Model, view: View) {
     this.model = model;

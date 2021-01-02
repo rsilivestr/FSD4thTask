@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import RSModel from '../src/scripts/_model';
+import RSModel from '../src/scripts/model';
 
 const m = new RSModel();
 

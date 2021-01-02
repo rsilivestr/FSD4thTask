@@ -1,15 +1,15 @@
-import Model from './_interface/Model';
-import Presenter from './_interface/Presenter';
-import RSModel from './_model';
-import RSPresenter from './_presenter';
-import RSView from './_view';
-import Slider from './_interface/Slider';
-import SliderOptions from './_interface/SliderOptions';
-import View from './_interface/View';
+import Model from './interface/Model';
+import Presenter from './interface/Presenter';
+import RSModel from './model';
+import RSPresenter from './presenter';
+import RSView from './view';
+import Slider from './interface/Slider';
+import SliderOptions from './interface/SliderOptions';
+import View from './interface/View';
 
 import '../styles/rslider.sass';
-import RSPanel from './_panel';
-import Scale from './_interface/Scale';
+import RSPanel from './panel';
+import Scale from './interface/Scale';
 
 export function create(selector: string, options: SliderOptions = {}) {
   const el: HTMLElement = document.querySelector(selector);

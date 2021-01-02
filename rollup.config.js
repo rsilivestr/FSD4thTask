@@ -9,7 +9,7 @@ const production = !process.env.ROLLUP_WATCH;
 const port = 8080;
 
 export default {
-  input: './src/scripts/_rslider.ts',
+  input: './src/scripts/rslider.ts',
   output: [
     {
       file: './dist/js/rslider.js',
