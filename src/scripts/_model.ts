@@ -5,7 +5,6 @@ import RSubject from './_subject';
 export default class RSModel extends RSubject implements Model {
   public options: ModelOptions = {};
   public values: number[] = [];
-  private stepSizePerc: number;
 
   constructor(o: ModelOptions = {}) {
     super();
@@ -26,17 +25,13 @@ export default class RSModel extends RSubject implements Model {
     return this.options;
   }
 
-  public setValueByCoord(id: number, coord: number) {
-    // Get coord
-    const normalizedCoord = this._normalizeHandlerCoord(id, coord);
-    // Get value
-    const value = this._coordToValue(normalizedCoord);
-    // Set value
-    this.values[id] = value;
-    // Move other handlers if needed
-    this._updateValues(id, value);
+  public getValue(index: number) {
+    return this.values[index];
+  }
 
-    return normalizedCoord;
+  public getValues() {
+    // Get values array
+    return this.values;
   }
 
   public setValue(index: number, value: number) {
@@ -65,19 +60,6 @@ export default class RSModel extends RSubject implements Model {
     this.values = v;
 
     return this.values;
-  }
-
-  public getValues() {
-    // Get values array
-    return this.values;
-  }
-
-  public getValue(id: number) {
-    return this.values[id] || null;
-  }
-
-  private _isNumber(n: number) {
-    return typeof n === 'number' && !isNaN(n);
   }
 
   private _configure(o: ModelOptions) {
@@ -132,11 +114,8 @@ export default class RSModel extends RSubject implements Model {
     }
   }
 
-  private _updatePercentStep() {
-    const scaleLength = this.options.maxValue - this.options.minValue;
-    this.stepSizePerc = (this.options.stepSize / scaleLength) * 100;
-
-    return this.stepSizePerc;
+  private _isNumber(n: number) {
+    return typeof n === 'number' && !isNaN(n);
   }
 
   private _normalizeValue(value: number): number {
@@ -144,51 +123,6 @@ export default class RSModel extends RSubject implements Model {
     // minValue added to work with negative values
     const x = value - minValue + stepSize / 2;
     return minValue + x - (x % stepSize);
-  }
-
-  // Return coordinate of the closest step,
-  // take into account max value of each handler
-  private _normalizeHandlerCoord(index: number, coord: number): number {
-    if (typeof index !== 'number' || typeof coord !== 'number') {
-      // throw new Error('RSModel._normalizeHandlerCoord: wrong params');
-      return;
-    }
-
-    const step = Math.abs(this._updatePercentStep());
-    const x = coord + step / 2;
-    const normalizedCoord = x - (x % step);
-
-    const stepsToMax = this.values.length - (index + 1);
-    // min coordinate by index
-    const minIndexCoord = step * index;
-    // if last step is smaller than normal scaleLength (percent) is extended to be multiple of stepSize
-    const scaleLength = Math.abs(this.options.maxValue - this.options.minValue);
-    const correctedLength =
-      100 + ((scaleLength % this.options.stepSize) / scaleLength) * 100;
-    // max coordinate by index
-    const maxIndexCoord = correctedLength - step * stepsToMax;
-
-    // if coordinate exeeds allowed max for index
-    if (normalizedCoord > maxIndexCoord) return maxIndexCoord;
-
-    // if coordinate is less than allowed min for index
-    if (normalizedCoord < minIndexCoord) return minIndexCoord;
-
-    // if coordinate is in allowed range
-    return normalizedCoord;
-  }
-
-  private _coordToValue(coord: number) {
-    const { minValue, maxValue, stepSize } = this.options;
-
-    if (coord < 0) return minValue;
-
-    if (coord > 100) return maxValue;
-
-    const factor = stepSize / this.stepSizePerc;
-    const value = coord * factor + minValue;
-
-    return Math.round(value);
   }
 
   private _updateValues(index: number, value: number) {

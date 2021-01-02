@@ -9,7 +9,6 @@ export default interface Model extends Subject {
   // updateValue(index: number, value: number): number;
   getValue(index: number): number | null;
   getValues(): number[];
-  setValueByCoord(id: number, coord: number): number;
   setValue(index: number, v: number): number;
   setValues(v: number[]): number[];
   // getOptions(): ModelOptions;

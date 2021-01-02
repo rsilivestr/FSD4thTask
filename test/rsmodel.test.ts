@@ -18,7 +18,38 @@ describe('RSModel', () => {
       ]);
     });
   });
-});
 
-// describe('', () => {})
-// it('', () => {});
+  describe('getValue', () => {
+    it('Should return a number for existing values, otherwise undefined', () => {
+      expect(m.getValue(0)).to.be.a('number');
+      // Undefined value is undefined
+      const { handlerCount } = m.config();
+      expect(m.getValue(handlerCount)).to.be.undefined;
+    });
+  });
+
+  describe('getValues', () => {
+    it('Shuold retun a number array', () => {
+      const res = m.getValues();
+      const { handlerCount } = m.config();
+      expect(res).to.be.an('array');
+      expect(res.length).to.equal(handlerCount);
+    });
+  });
+
+  describe('setValue', () => {
+    it('Should return a number', () => {
+      const res = m.setValue(0, 50);
+      expect(res).to.be.a('number');
+      expect(res).to.equal(50);
+    });
+  });
+
+  describe('setValues', () => {
+    it('Should return a number array', () => {
+      const res = m.setValues([80]);
+      expect(res).to.be.an('array');
+      expect(res).to.eql([80]);
+    });
+  });
+});
