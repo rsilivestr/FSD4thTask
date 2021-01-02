@@ -1,0 +1,43 @@
+import { use, expect } from 'chai';
+use(require('chai-dom'));
+
+import RSHandler from '../src/scripts/handler';
+import Handler from '../src/scripts/interface/Handler';
+import HandlerOptions from '../src/scripts/interface/HandlerOptions';
+
+describe('RSHandler', () => {
+  const o: HandlerOptions = {
+    id: 0,
+    layout: 'horizontal',
+    tooltip: true,
+    value: 5,
+  };
+
+  const h: Handler = new RSHandler(o);
+
+  describe('getElement', () => {
+    const result = h.getElement();
+
+    it('Should retun an HTMLElement', () => {
+      expect(result).to.have.class('rslider__handler');
+      // expect(result).to.contain('.rslider__tooltip');
+    });
+  });
+
+  describe('setPosition', () => {
+    const result = h.setPosition(0);
+  });
+
+  describe('toggleTooltip', () => {
+    it('Should turn tooltip on', () => {
+      expect(h.toggleTooltip(true)).to.equal(true);
+      expect(h.getElement()).to.have.descendant('.rslider__tooltip');
+    });
+
+    it('Should hide tooltip as well', () => {
+      expect(h.toggleTooltip(false)).to.equal(false);
+      console.log(h.getElement());
+      expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
+    });
+  });
+});

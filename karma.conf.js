@@ -15,7 +15,7 @@ module.exports = (config) => {
       'src/**/*.ts',
       'test/**/*.test.ts',
     ],
-    frameworks: ['chai','mocha','karma-typescript'],
+    frameworks: ['chai-dom', 'chai', 'mocha', 'karma-typescript'],
     logLevel: config.LOG_INFO,
     port: 9876,
     preprocessors: {

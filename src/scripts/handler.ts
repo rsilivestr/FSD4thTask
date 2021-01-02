@@ -1,6 +1,7 @@
+import Handler from './interface/Handler';
 import HandlerOptions from './interface/HandlerOptions';
 
-export default class RSHandler {
+export default class RSHandler implements Handler {
   private id: number;
   private layout: string;
   private tooltip: boolean;
@@ -29,8 +30,12 @@ export default class RSHandler {
     }
   }
 
-  public toggleTooltip() {
-    this.tooltip = !this.tooltip;
+  public toggleTooltip(value: boolean = null) {
+    if (value === null) {
+      this.tooltip = !this.tooltip;
+    } else {
+      this.tooltip = value;
+    }
 
     if (this.tooltip) {
       // Create and append tooltip
@@ -38,13 +43,17 @@ export default class RSHandler {
       this.UI.handler.appendChild(this.UI.tooltip);
     } else {
       // Remove tooltip element
-      this.UI.tooltip.remove();
+      this.UI.handler.innerHTML = '';
     }
+
+    return this.tooltip;
   }
 
   public updateValue(value: number) {
     this.value = value;
     this._updateTooltip();
+
+    return value;
   }
 
   private _createHandler(): HTMLElement {
