@@ -4,6 +4,7 @@ import RSubject from './subject';
 
 export default class RSModel extends RSubject implements Model {
   private options: ModelOptions = {};
+
   private values: number[] = [];
 
   constructor(o: ModelOptions = {}) {

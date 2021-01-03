@@ -12,11 +12,17 @@ import RSubject from './subject';
 
 export default class RSView extends RSubject implements View {
   private container: HTMLElement;
+
   private options: ViewOptions = {};
+
   private modelOptions: ModelOptions;
+
   private UI: ViewElements = {};
+
   private handlers: Handler[] = [];
+
   private values: number[] = [];
+
   private grabbed: HTMLElement = null;
 
   constructor(el: HTMLElement, o: SliderOptions = {}) {

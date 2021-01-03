@@ -5,6 +5,7 @@ import Slider from './interface/Slider';
 
 export default class RSPanel extends RSubject implements Panel {
   private options: SliderOptions;
+
   private UI: {
     container: HTMLElement;
     inputs: HTMLInputElement[];

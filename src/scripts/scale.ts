@@ -4,8 +4,11 @@ import RSubject from './subject';
 
 export default class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
+
   private maxScaleSteps: number = 10;
+
   private options: SliderOptions;
+
   private UI: {
     container: HTMLElement;
     scale: HTMLElement;

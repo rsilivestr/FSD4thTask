@@ -4,6 +4,7 @@ import View from './interface/View';
 
 export default class RSPresenter implements Presenter {
   private model: Model;
+
   private view: View;
 
   constructor(model: Model, view: View) {

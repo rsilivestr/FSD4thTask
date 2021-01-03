@@ -1,9 +1,10 @@
 import { use, expect } from 'chai';
-use(require('chai-dom'));
 
 import RSHandler from '../src/scripts/handler';
 import Handler from '../src/scripts/interface/Handler';
 import HandlerOptions from '../src/scripts/interface/HandlerOptions';
+
+use(require('chai-dom'));
 
 describe('RSHandler', () => {
   const o: HandlerOptions = {

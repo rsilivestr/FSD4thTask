@@ -3,8 +3,11 @@ import HandlerOptions from './interface/HandlerOptions';
 
 export default class RSHandler implements Handler {
   private id: number;
+
   private layout: string;
+
   private tooltip: boolean;
+
   private UI: {
     handler: HTMLElement;
     tooltip: HTMLElement;
@@ -12,6 +15,7 @@ export default class RSHandler implements Handler {
     handler: null,
     tooltip: null,
   };
+
   private value: number;
 
   constructor(o: HandlerOptions) {
