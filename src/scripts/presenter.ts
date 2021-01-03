@@ -13,12 +13,12 @@ export default class RSPresenter implements Presenter {
     this._init();
   }
 
-  public setModelValue(index: number, value: number) {
-    return this.model.setValue(index, value);
-  }
-
   public getValues() {
     return this.model.getValues();
+  }
+
+  public setModelValue(index: number, value: number) {
+    return this.model.setValue(index, value);
   }
 
   public update(v: number[]): void {

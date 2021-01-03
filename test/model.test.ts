@@ -42,6 +42,7 @@ describe('RSModel', () => {
       const res = m.setValue(0, 50);
       expect(res).to.be.a('number');
       expect(res).to.equal(50);
+      expect(m.setValue(0, 20)).to.equal(20);
     });
   });
 

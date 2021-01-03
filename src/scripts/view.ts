@@ -7,8 +7,8 @@ import ViewElements from './interface/ViewElements';
 import ViewOptions from './interface/ViewOptions';
 
 import RSHandler from './handler';
-import RSubject from './subject';
 import RScale from './scale';
+import RSubject from './subject';
 
 export default class RSView extends RSubject implements View {
   private container: HTMLElement;
@@ -19,7 +19,7 @@ export default class RSView extends RSubject implements View {
   private values: number[] = [];
   private grabbed: HTMLElement = null;
 
-  constructor(el: HTMLElement, o: SliderOptions) {
+  constructor(el: HTMLElement, o: SliderOptions = {}) {
     super();
     // Save root element
     this.container = el;
@@ -161,7 +161,6 @@ export default class RSView extends RSubject implements View {
       this.UI.progress.style.left = `${min.toString()}%`;
       this.UI.progress.style.right = `${max.toString()}%`;
     } else {
-      console.log(456);
       this.UI.progress.style.bottom = `${min.toString()}%`;
       this.UI.progress.style.top = `${max.toString()}%`;
     }

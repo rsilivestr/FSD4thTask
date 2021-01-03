@@ -1,6 +1,10 @@
+import { expect } from 'chai';
+import RSView from '../src/scripts/view';
+const container = document.createElement('div');
+const v = new RSView(container);
 // const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];
 
-// describe('RSView', () => {
+describe('View', () => {});
 //   // can be run only once for now
 //   describe('render(): HTMLElement', () => {});
 

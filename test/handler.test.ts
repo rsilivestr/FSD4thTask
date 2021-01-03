@@ -20,12 +20,11 @@ describe('RSHandler', () => {
 
     it('Should retun an HTMLElement', () => {
       expect(result).to.have.class('rslider__handler');
-      // expect(result).to.contain('.rslider__tooltip');
     });
   });
 
   describe('setPosition', () => {
-    const result = h.setPosition(0);
+    // const result = h.setPosition(0);
   });
 
   describe('toggleTooltip', () => {
@@ -36,7 +35,6 @@ describe('RSHandler', () => {
 
     it('Should hide tooltip as well', () => {
       expect(h.toggleTooltip(false)).to.equal(false);
-      console.log(h.getElement());
       expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
     });
   });

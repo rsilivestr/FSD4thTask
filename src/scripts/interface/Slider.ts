@@ -10,10 +10,10 @@ export default interface Slider {
   readonly view: View;
   readonly presenter: Presenter;
 
-  config(o?: SliderOptions): SliderOptions;
   addModelObserver(o: Function): void;
   addScale(): Scale;
+  config(o?: SliderOptions): SliderOptions;
   notifyModelObservers(): void;
-  value(v: number): number;
-  values(v: number[]): number[];
+  value(i: number, v?: number): number;
+  values(v?: number[]): number[];
 }
