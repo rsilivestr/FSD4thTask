@@ -1,9 +1,8 @@
 import SliderOptions from './interface/SliderOptions';
 import Panel from './interface/Panel';
-import RSubject from './subject';
 import Slider from './interface/Slider';
 
-export default class RSPanel extends RSubject implements Panel {
+export default class RSPanel implements Panel {
   public slider: Slider;
 
   private options: SliderOptions;
@@ -19,14 +18,8 @@ export default class RSPanel extends RSubject implements Panel {
   };
 
   constructor(s: Slider) {
-    super();
-
     this._init(s);
   }
-
-  public notifyObservers: (index: number, value: number) => void = (index, value) => {
-    this.observers.forEach((o) => o(index, value));
-  };
 
   public update(v: number[]): number[] {
     // Update inputs
@@ -46,8 +39,6 @@ export default class RSPanel extends RSubject implements Panel {
     // Subscribe to model updates
     s.addModelObserver(this.update.bind(this));
     s.notifyModelObservers();
-    // Subscribe presenter to panel updates
-    this.addObserver(s.value.bind(s));
   }
 
   private _createInput(labelText: string, isCheckbox: boolean = false): HTMLInputElement {
@@ -82,7 +73,7 @@ export default class RSPanel extends RSubject implements Panel {
         if (e.key === 'Enter') {
           const value = parseInt(input.value, 10);
 
-          this.notifyObservers(i, value);
+          this.slider.setValue(i, value);
         }
       });
 

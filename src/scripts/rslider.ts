@@ -23,27 +23,27 @@ export function create(selector: string, options: SliderOptions = {}) {
     view,
     presenter,
     getConfig() {
-      const mc = this.model.getConfig();
-      const vc = this.view.getConfig();
+      const modelConfig = this.model.getConfig();
+      const viewConfig = this.view.getConfig();
 
-      return { ...mc, ...vc };
+      return { ...modelConfig, ...viewConfig };
     },
     setConfig(o: SliderOptions) {
-      const mc = this.model.setConfig(o);
-      const vc = this.view.setConfig(o);
+      const modelConfig = this.model.setConfig(o);
+      const viewConfig = this.view.setConfig(o);
 
-      return { ...mc, ...vc };
+      return { ...modelConfig, ...viewConfig };
     },
-    value(index: number = 0, value: number = null) {
-      if (value === null) {
-        return this.model.getValue(index);
-      }
+    getValue(index: number = 0) {
+      return this.model.getValue(index);
+    },
+    setValue(index: number, value: number) {
       return this.model.setValue(index, value);
     },
-    values(v: number[] = []) {
-      if (v.length === 0) {
-        return this.model.getValues();
-      }
+    getValues() {
+      return this.model.getValues();
+    },
+    setValues(v: number[] = []) {
       return this.model.setValues(v);
     },
     addModelObserver(o: Function) {

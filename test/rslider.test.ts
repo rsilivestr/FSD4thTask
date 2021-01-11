@@ -22,6 +22,23 @@ describe('RSlider', () => {
     'progress',
   ];
 
+  const DEFAULT_CONFIG = {
+    minValue: -50,
+    maxValue: 50,
+    stepSize: 5,
+    handlerCount: 2,
+    tooltip: true,
+    progress: false,
+  };
+
+  const DEFAULT_VALUES = [10, 40];
+
+  beforeEach(() => {
+    slider.setConfig(DEFAULT_CONFIG);
+
+    slider.setValues(DEFAULT_VALUES);
+  });
+
   describe('getConfig(): SliderOptions', () => {
     it('Should be a function', () => {
       expect(slider.getConfig).to.be.a('function');
@@ -48,24 +65,32 @@ describe('RSlider', () => {
     });
   });
 
-  describe('value(index: number, value?: number): number', () => {
+  describe('getValue(index: number): number', () => {
     it('Should return a number', () => {
-      expect(slider.value(0)).to.be.a('number');
-      expect(slider.value(0)).to.equal(0);
+      expect(slider.getValue(0)).to.be.a('number');
     });
+  });
 
-    it('Should set a value', () => {
-      expect(slider.value(0, 20)).to.equal(20);
+  describe('setValue(index: number, value: number): number', () => {
+    it('Should', () => {
+      expect(slider.setValue(0, 20)).to.equal(20);
     });
   });
 
   describe('values(v?: number[]): number[]', () => {
     it('Should return a number array', () => {
-      expect(slider.values()).to.be.an('array');
+      expect(slider.getValues()).to.be.an('array');
+      expect(slider.getValues()[0]).to.be.a('number');
+    });
+  });
+
+  describe('setValues(v: number[]): number[]', () => {
+    it('Should return an array', () => {
+      expect(slider.getValues()).to.be.an('array');
     });
 
     it('Should set values', () => {
-      expect(slider.values([30])).to.eql([30]);
+      expect(slider.setValues([30])).to.eql([30]);
     });
   });
 

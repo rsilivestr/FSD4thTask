@@ -14,8 +14,9 @@ export default interface Slider {
   addScale(): Scale;
   setConfig(o: SliderOptions): SliderOptions;
   getConfig(): SliderOptions;
-  // config(o?: SliderOptions): SliderOptions;
   notifyModelObservers(): void;
-  value(i: number, v?: number): number;
-  values(v?: number[]): number[];
+  getValue(index?: number): number;
+  setValue(index: number, value: number): number;
+  getValues(): number[];
+  setValues(values?: number[]): number[];
 }
