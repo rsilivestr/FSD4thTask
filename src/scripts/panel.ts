@@ -37,7 +37,7 @@ export default class RSPanel extends RSubject implements Panel {
 
   private _init(s: Slider) {
     this.UI.container = s.el;
-    this.options = s.config();
+    this.options = s.getConfig();
     // Create and append panel
     this._render();
     // Subscribe to model updates

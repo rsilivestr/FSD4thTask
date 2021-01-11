@@ -47,9 +47,9 @@ const mySlider = RSlider.create(selector: string, options: Object);
 ### Задать / узнать настройки
 
 ```typescript
-mySlider.config(options: Object = {}): Object;
+mySlider.setConfig(options: SliderOptions = {}): SliderOptions;
 
-mySlider.config(): Object;
+mySlider.getConfig(): SliderOptions;
 ```
 
 ### Настройки по умолчанию

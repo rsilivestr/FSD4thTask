@@ -12,7 +12,9 @@ export default interface Slider {
 
   addModelObserver(o: Function): void;
   addScale(): Scale;
-  config(o?: SliderOptions): SliderOptions;
+  setConfig(o: SliderOptions): SliderOptions;
+  getConfig(): SliderOptions;
+  // config(o?: SliderOptions): SliderOptions;
   notifyModelObservers(): void;
   value(i: number, v?: number): number;
   values(v?: number[]): number[];

@@ -22,11 +22,17 @@ export function create(selector: string, options: SliderOptions = {}) {
     model,
     view,
     presenter,
-    config(o?: SliderOptions) {
-      const modelOptions = o ? this.model.config(o) : this.model.config();
-      const viewOptions = o ? this.view.config(o) : this.view.config();
+    getConfig() {
+      const mc = this.model.getConfig();
+      const vc = this.view.getConfig();
 
-      return { ...modelOptions, ...viewOptions };
+      return { ...mc, ...vc };
+    },
+    setConfig(o: SliderOptions) {
+      const mc = this.model.setConfig(o);
+      const vc = this.view.setConfig(o);
+
+      return { ...mc, ...vc };
     },
     value(index: number = 0, value: number = null) {
       if (value === null) {
@@ -47,7 +53,7 @@ export function create(selector: string, options: SliderOptions = {}) {
       this.model.notifyObservers();
     },
     addScale() {
-      const options = this.config();
+      const options = this.getConfig();
       const scale: Scale = this.view.addScale(options);
       scale.addObserver(this.presenter.setModelValue.bind(presenter));
 

@@ -32,7 +32,7 @@ export default class RSPresenter implements Presenter {
     this.view.addObserver(this.setModelValue.bind(this));
 
     // Set view options
-    const modelOptions = this.model.config();
+    const modelOptions = this.model.getConfig();
     this.view.setModelOptions(modelOptions);
 
     // Render view

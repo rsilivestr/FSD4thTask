@@ -11,28 +11,40 @@ document.body.appendChild(container);
 const slider = create('#root');
 
 describe('RSlider', () => {
-  describe('config(o?: SliderOptions): SliderOptions', () => {
+  const SLIDER_OPTIONS_KEYS = [
+    'minValue',
+    'maxValue',
+    'stepSize',
+    'handlerCount',
+    'isHorizontal',
+    'handlerRadius',
+    'tooltip',
+    'progress',
+  ];
+
+  describe('getConfig(): SliderOptions', () => {
     it('Should be a function', () => {
-      expect(slider.config).to.be.a('function');
+      expect(slider.getConfig).to.be.a('function');
     });
 
     it('Should return SliderOptions object', () => {
-      expect(slider.config()).to.have.deep.keys([
-        'minValue',
-        'maxValue',
-        'stepSize',
-        'handlerCount',
-        'isHorizontal',
-        'handlerRadius',
-        'tooltip',
-        'progress',
-      ]);
+      expect(slider.getConfig()).to.have.deep.keys(SLIDER_OPTIONS_KEYS);
+    });
+  });
+
+  describe('setConfig(o?: SliderOptions): SliderOptions', () => {
+    it('Should be a function', () => {
+      expect(slider.setConfig).to.be.a('function');
+    });
+
+    it('Should return SliderOptions object', () => {
+      expect(slider.setConfig({ minValue: 0 })).to.have.deep.keys(SLIDER_OPTIONS_KEYS);
     });
 
     it('Should set properties', () => {
       const o: SliderOptions = { stepSize: 4 };
 
-      expect(slider.config(o).stepSize).to.equal(4);
+      expect(slider.setConfig(o).stepSize).to.equal(4);
     });
   });
 

@@ -5,7 +5,8 @@ import ViewOptions from './ViewOptions';
 
 export default interface View extends Subject {
   addScale(o: ModelOptions): Scale;
-  config(o?: ViewOptions): ViewOptions;
+  getConfig(): ViewOptions;
+  setConfig(o: ViewOptions): ViewOptions;
   setModelOptions(o: ModelOptions): ModelOptions;
   setValues(v: number[]): void;
   render(): HTMLElement;

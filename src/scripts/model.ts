@@ -19,11 +19,12 @@ export default class RSModel extends RSubject implements Model {
     this.observers.forEach((o) => o(this.values));
   };
 
-  public config(o?: ModelOptions) {
-    // Set config
-    if (o) return this._configure(o);
-    // Get config
+  public getConfig() {
     return this.options;
+  }
+
+  public setConfig(o?: ModelOptions) {
+    if (o) return this._configure(o);
   }
 
   public getValue(index: number) {

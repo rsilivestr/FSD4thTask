@@ -12,7 +12,7 @@ const p = new Presenter(m, v);
 
 describe('RSPresenter', () => {
   describe('getValues(): number[]', () => {
-    const { handlerCount } = m.config();
+    const { handlerCount } = m.getConfig();
     const result = p.getValues();
 
     it('Should be an array', () => {

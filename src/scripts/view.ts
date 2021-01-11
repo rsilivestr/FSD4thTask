@@ -63,12 +63,20 @@ export default class RSView extends RSubject implements View {
     this.values = values;
   }
 
-  public config(o?: ViewOptions) {
-    // Set config
-    if (o) return this._configure(o);
-    // Get config
+  public getConfig() {
     return this.options;
   }
+
+  public setConfig(o: ViewOptions) {
+    return this._configure(o);
+  }
+
+  // public config(o?: ViewOptions) {
+  //   // Set config
+  //   if (o) return this._configure(o);
+  //   // Get config
+  //   return this.options;
+  // }
 
   public setModelOptions(o: ModelOptions) {
     return (this.modelOptions = o);

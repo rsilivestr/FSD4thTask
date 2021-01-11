@@ -4,13 +4,13 @@ import RSModel from '../src/scripts/model';
 const m = new RSModel();
 
 describe('RSModel', () => {
-  describe('public config', () => {
+  describe('public getConfig', () => {
     it('Should return an object', () => {
-      expect(m.config()).to.be.an('object');
+      expect(m.getConfig()).to.be.an('object');
     });
 
     it('Should have properties', () => {
-      expect(m.config()).to.have.deep.keys([
+      expect(m.getConfig()).to.have.deep.keys([
         'handlerCount',
         'maxValue',
         'minValue',
@@ -23,7 +23,7 @@ describe('RSModel', () => {
     it('Should return a number for existing values, otherwise undefined', () => {
       expect(m.getValue(0)).to.be.a('number');
       // Undefined value is undefined
-      const { handlerCount } = m.config();
+      const { handlerCount } = m.getConfig();
       expect(m.getValue(handlerCount)).to.be.undefined;
     });
   });
@@ -31,7 +31,7 @@ describe('RSModel', () => {
   describe('getValues', () => {
     it('Shuold retun a number array', () => {
       const res = m.getValues();
-      const { handlerCount } = m.config();
+      const { handlerCount } = m.getConfig();
       expect(res).to.be.an('array');
       expect(res.length).to.equal(handlerCount);
     });
