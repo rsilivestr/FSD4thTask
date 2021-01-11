@@ -41,16 +41,21 @@ export default class RSView extends RSubject implements View {
     if (this.container == null) {
       throw new Error('There is no element matching provided selector.');
     }
+
     const { handlerCount } = this.modelOptions;
+
     // Create & append slider element
     this.UI.slider = this._elCreateSlider();
+
     // Create & append track element
     this.UI.track = this._elCreateTrack();
+
     // Create & append handler elements
     for (let i = 0; i < handlerCount; i += 1) {
       const handler = this._addHandler(i);
       this.handlers[i] = handler;
     }
+
     // Create & append progress element
     if (this.options.progress) {
       this.UI.progress = this._elCreateProgress();
@@ -70,13 +75,6 @@ export default class RSView extends RSubject implements View {
   public setConfig(o: ViewOptions) {
     return this._configure(o);
   }
-
-  // public config(o?: ViewOptions) {
-  //   // Set config
-  //   if (o) return this._configure(o);
-  //   // Get config
-  //   return this.options;
-  // }
 
   public setModelOptions(o: ModelOptions) {
     return (this.modelOptions = o);
@@ -190,6 +188,20 @@ export default class RSView extends RSubject implements View {
     return progress;
   }
 
+  private _toggleProgress(progress: boolean): void {
+    // Return if slider is not rendered yet
+    if (this.UI.progress === undefined) return;
+
+    if (progress && !this.UI.progress.parentNode) {
+      // If progress is ON and not yet rendered
+      this.UI.progress = this._elCreateProgress();
+      this._updateProgress();
+    } else if (!progress) {
+      // If progress is OFF - remove element
+      this.UI.progress.remove();
+    }
+  }
+
   private _addHandler(index: number) {
     // Initialize options
     const options: HandlerOptions = {
@@ -270,9 +282,35 @@ export default class RSView extends RSubject implements View {
   // Bind _release method to this
   private _boundRelease: () => void = this._release.bind(this);
 
+  private _updateOrientation(horizontal = true) {
+    // Return if slider is not rendered yet
+    if (!this.UI.slider) return;
+
+    // TODO Update scale too
+
+    if (horizontal) {
+      this.UI.slider.classList.remove('rslider--layout_vertical');
+      this.UI.slider.classList.add('rslider--layout_horizontal');
+    } else {
+      this.UI.slider.classList.add('rslider--layout_vertical');
+      this.UI.slider.classList.remove('rslider--layout_horizontal');
+    }
+
+    if (this.UI.progress) {
+      // Update progress
+      this.UI.progress.removeAttribute('style');
+      this._updateProgress();
+    }
+
+    // Update handlers
+    const layout = horizontal ? 'horizontal' : 'vertical';
+    this.handlers.forEach((h) => h.toggleLayout(layout));
+  }
+
   private _configure(o: ViewOptions) {
     const { isHorizontal, handlerRadius, tooltip, progress } = o;
 
+    // isHorizontal (orientation)
     if (typeof isHorizontal === 'boolean') {
       // Set value
       this.options.isHorizontal = isHorizontal;
@@ -281,6 +319,9 @@ export default class RSView extends RSubject implements View {
       this.options.isHorizontal = true;
     }
 
+    this._updateOrientation(this.options.isHorizontal);
+
+    // Handler radius
     if (typeof handlerRadius === 'number' && !isNaN(handlerRadius)) {
       // Set value
       this.options.handlerRadius = handlerRadius;
@@ -289,6 +330,7 @@ export default class RSView extends RSubject implements View {
       this.options.handlerRadius = 8;
     }
 
+    // Tooltip
     if (typeof tooltip === 'boolean') {
       // Set value
       this.options.tooltip = tooltip;
@@ -297,6 +339,10 @@ export default class RSView extends RSubject implements View {
       this.options.tooltip = true;
     }
 
+    // Update handlers
+    this.handlers.forEach((h) => h.toggleTooltip(this.options.tooltip));
+
+    // Progress
     if (typeof progress === 'boolean') {
       // Set value
       this.options.progress = progress;
@@ -304,6 +350,8 @@ export default class RSView extends RSubject implements View {
       // Default value
       this.options.progress = false;
     }
+
+    this._toggleProgress(this.options.progress);
 
     return this.options;
   }

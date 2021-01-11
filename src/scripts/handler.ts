@@ -2,6 +2,8 @@ import Handler from './interface/Handler';
 import HandlerOptions from './interface/HandlerOptions';
 
 export default class RSHandler implements Handler {
+  private coord: number;
+
   private id: number;
 
   private layout: string;
@@ -27,6 +29,8 @@ export default class RSHandler implements Handler {
   }
 
   public setPosition(coord: number) {
+    this.coord = coord;
+
     if (this.layout === 'horizontal') {
       this.UI.handler.style.left = `${coord}%`;
     } else {
@@ -42,15 +46,28 @@ export default class RSHandler implements Handler {
     }
 
     if (this.tooltip) {
+      // Remove existing tooltip
+      if (this.UI.tooltip) this.UI.tooltip.remove();
       // Create and append tooltip
       this.UI.tooltip = this._createTooltip();
       this.UI.handler.appendChild(this.UI.tooltip);
-    } else {
+    } else if (!this.tooltip) {
+      // If tooltip is OFF
       // Remove tooltip element
-      this.UI.handler.innerHTML = '';
+      this.UI.tooltip.remove();
     }
 
     return this.tooltip;
+  }
+
+  public toggleLayout(layout: 'horizontal' | 'vertical') {
+    this.layout = layout;
+
+    // Remove old inline styles
+    this.UI.handler.removeAttribute('style');
+
+    // Update handler position
+    this.setPosition(this.coord);
   }
 
   public updateValue(value: number) {

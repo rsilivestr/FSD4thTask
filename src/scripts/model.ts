@@ -67,6 +67,7 @@ export default class RSModel extends RSubject implements Model {
   private _configure(o: ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
 
+    // minValue
     if (
       // Number
       this._isNumber(minValue) &&
@@ -80,6 +81,7 @@ export default class RSModel extends RSubject implements Model {
       this.options.minValue = maxValue !== 0 ? 0 : -100;
     }
 
+    // maxValue
     if (
       // Number
       this._isNumber(maxValue) &&
@@ -93,17 +95,35 @@ export default class RSModel extends RSubject implements Model {
       this.options.maxValue = minValue !== 100 ? 100 : 200;
     }
 
+    // stepSize
     if (this._isNumber(stepSize) && stepSize > 0) {
       this.options.stepSize = stepSize;
     } else if (this.options.stepSize === undefined) {
       this.options.stepSize = 10;
     }
 
+    // handlerCount
     if (this._isNumber(handlerCount) && handlerCount > 0) {
       this.options.handlerCount = handlerCount;
     } else if (this.options.handlerCount === undefined) {
       this.options.handlerCount = 1;
     }
+
+    // Update values if out of range after change of min / max
+    this.values.forEach((value, index) => {
+      const { maxValue, minValue } = this.getConfig();
+
+      if (value < minValue) {
+        this.setValue(index, maxValue);
+      }
+
+      if (value > maxValue) {
+        this.setValue(index, maxValue);
+      }
+    });
+
+    // Update view and other observers
+    this.notifyObservers();
 
     return this.options;
   }

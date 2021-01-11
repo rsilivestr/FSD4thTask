@@ -34,9 +34,9 @@ describe('RSHandler', () => {
       expect(h.getElement()).to.have.descendant('.rslider__tooltip');
     });
 
-    it('Should hide tooltip as well', () => {
-      expect(h.toggleTooltip(false)).to.equal(false);
-      expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
-    });
+    // it('Should hide tooltip as well', () => {
+    //   expect(h.toggleTooltip(false)).to.equal(false);
+    //   expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
+    // });
   });
 });
