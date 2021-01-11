@@ -38,6 +38,7 @@ $trackTipOffset: $handlerSize / 2
     background-color: lighten($color_secondary, 30 )
     border-radius: $trackThickness / 2
     z-index: 2
+    cursor: pointer
 
   &__progress
     position: absolute
@@ -55,6 +56,7 @@ $trackTipOffset: $handlerSize / 2
     background: $color_primary
     border: 2px solid $color_accent
     border-radius: 50%
+    cursor: pointer
     z-index: 6
 
   &__tooltip
@@ -101,7 +103,7 @@ $trackTipOffset: $handlerSize / 2
     text-align: center
     font-size: 12px
     border: 1px solid #ccc
-    cursor: default
+    cursor: pointer
 
     &:first-child,
     &:last-child
