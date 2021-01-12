@@ -2,6 +2,8 @@ import Scale from './interface/Scale';
 import SliderOptions from './interface/SliderOptions';
 import RSubject from './subject';
 
+// TODO Update on slider options changes
+
 export default class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
 
@@ -15,7 +17,7 @@ export default class RScale extends RSubject implements Scale {
     marks: HTMLElement[];
   } = {
     container: null,
-    scale: document.createElement('div'),
+    scale: document.createElement('ul'),
     marks: [],
   };
 
@@ -60,7 +62,7 @@ export default class RScale extends RSubject implements Scale {
 
     while (i <= stepNumber) {
       const mark = document.createElement('li');
-      mark.className = 'rslider-scale__mark';
+      mark.className = 'rscale__mark';
       mark.innerText = value.toString(10);
       this.UI.scale.appendChild(mark);
 
@@ -82,7 +84,7 @@ export default class RScale extends RSubject implements Scale {
     this.UI.scale.addEventListener('click', (e) => {
       const target = <HTMLElement>e.target;
 
-      if (target.classList.contains('rslider-scale__mark')) {
+      if (target.classList.contains('rscale__mark')) {
         const value = parseInt(target.textContent, 10);
         this.notifyObservers(0, value);
       }
@@ -92,12 +94,12 @@ export default class RScale extends RSubject implements Scale {
   private _render() {
     const { isHorizontal } = this.options;
     const layout = isHorizontal ? 'horizontal' : 'vertical';
-    this.UI.scale.className = `rslider-scale rslider-scale--layout_${layout}`;
+    this.UI.scale.className = `rslider__scale rscale rscale--layout_${layout}`;
 
     this._populateScale();
 
     const slider = this.UI.container.querySelector('.rslider');
-    slider.insertAdjacentElement('afterend', this.UI.scale);
+    slider.insertAdjacentElement('beforeend', this.UI.scale);
 
     return this.UI.scale;
   }

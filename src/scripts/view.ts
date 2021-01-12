@@ -83,7 +83,7 @@ export default class RSView extends RSubject implements View {
   public addScale(o: ModelOptions) {
     const scale = new RScale(this.container, o);
 
-    this.UI.slider.insertAdjacentElement('afterend', scale.getElement());
+    this.UI.slider.insertAdjacentElement('beforeend', scale.getElement());
 
     return scale;
   }

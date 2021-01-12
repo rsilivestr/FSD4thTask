@@ -15,6 +15,7 @@ const s2p = RSlider.addControlPanel(s2);
 
 const s3 = RSlider.create('#fizz', { isHorizontal: false });
 const s3s = s3.addScale();
+const s3p = RSlider.addControlPanel(s3);
 
 const s4o = {
   minValue: 0,
@@ -26,3 +27,4 @@ const s4o = {
 };
 
 const s4 = RSlider.create('#buzz', s4o);
+const s4p = RSlider.addControlPanel(s4);

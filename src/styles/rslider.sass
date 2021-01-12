@@ -16,11 +16,13 @@ $trackTipOffset: $handlerSize / 2
 
   &--layout_horizontal
     height: $handlerSize
+    margin-bottom: 16px
     max-width: $maxLength
     width: 100%
 
   &--layout_vertical
     height: $maxLength
+    margin-left: 24px
     width: $handlerSize
 
     .rslider__track
@@ -71,6 +73,37 @@ $trackTipOffset: $handlerSize / 2
       align-self: flex-start
       margin-left: 16px
 
+.rscale
+  display: flex
+  justify-content: space-between
+  list-style-type: none
+  margin: 0
+  padding: 0
+
+  &--layout_horizontal
+    flex-flow: row nowrap
+    margin-top: 12px
+    max-width: $maxLength
+    width: 100%
+
+  &--layout_vertical
+    flex-flow: column-reverse nowrap
+    height: $maxLength
+    margin-left: -28px
+    max-width: 32px
+
+  &__mark
+    align-self: flex-end
+    cursor: pointer
+    flex: 1
+    font-size: 12px
+    padding: 4px
+    text-align: center
+
+    &:first-child,
+    &:last-child
+      flex: .75
+
 .rslider-panel
   &__label
     align-items: center
@@ -84,32 +117,3 @@ $trackTipOffset: $handlerSize / 2
     left: 120px
     max-width: 50px
     position: absolute
-
-.rslider-scale
-  display: flex
-  justify-content: space-between
-  list-style-type: none
-  margin: 0
-  padding: 0
-
-  &--layout_horizontal
-    flex-flow: row nowrap
-    max-width: $maxLength
-    width: 100%
-
-  &--layout_vertical
-    flex-flow: column-reverse nowrap
-    height: $maxLength
-    max-width: 32px
-
-  &__mark
-    border: 1px solid #ccc
-    cursor: pointer
-    flex: 1
-    font-size: 12px
-    padding: 4px
-    text-align: center
-
-    &:first-child,
-    &:last-child
-      flex: .75
