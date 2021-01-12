@@ -12,53 +12,65 @@ import RSPanel from './panel';
 import Scale from './interface/Scale';
 
 export function create(selector: string, options: SliderOptions = {}) {
-  const el: HTMLElement = document.querySelector(selector);
+  const observers: Function[] = [];
+
+  const addObserver = (o: Function) => {
+    observers.push(o);
+  };
+
+  const notifyObservers = (values: number[]) => {
+    observers.forEach((o) => o(values));
+  };
+
+  const container: HTMLElement = document.querySelector(selector);
+
   const model: Model = new RSModel(options);
-  const view: View = new RSView(el, options);
+
+  // Notify slider about model changes
+  // Slider then notifies it's own observers (e.g. panel)
+  model.addObserver(notifyObservers);
+
+  const view: View = new RSView(container, options);
+
   const presenter: Presenter = new RSPresenter(model, view);
 
+  // Facade methods
   const slider: Slider = {
-    el,
-    model,
-    view,
-    presenter,
+    getContainer() {
+      return container;
+    },
     getConfig() {
-      const modelConfig = this.model.getConfig();
-      const viewConfig = this.view.getConfig();
+      const modelConfig = model.getConfig();
+      const viewConfig = view.getConfig();
 
       return { ...modelConfig, ...viewConfig };
     },
     setConfig(o: SliderOptions) {
-      const modelConfig = this.model.setConfig(o);
-      const viewConfig = this.view.setConfig(o);
+      const modelConfig = model.setConfig(o);
+      const viewConfig = view.setConfig(o);
 
       return { ...modelConfig, ...viewConfig };
     },
     getValue(index: number = 0) {
-      return this.model.getValue(index);
+      return model.getValue(index);
     },
     setValue(index: number, value: number) {
-      return this.model.setValue(index, value);
+      return model.setValue(index, value);
     },
     getValues() {
-      return this.model.getValues();
+      return model.getValues();
     },
     setValues(v: number[] = []) {
-      return this.model.setValues(v);
-    },
-    addModelObserver(o: Function) {
-      this.model.addObserver(o);
-    },
-    notifyModelObservers() {
-      this.model.notifyObservers();
+      return model.setValues(v);
     },
     addScale() {
       const options = this.getConfig();
-      const scale: Scale = this.view.addScale(options);
-      scale.addObserver(this.presenter.setModelValue.bind(presenter));
+      const scale: Scale = view.addScale(options);
+      scale.addObserver(presenter.setModelValue.bind(presenter));
 
       return scale;
     },
+    addObserver,
   };
 
   return slider;

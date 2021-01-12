@@ -31,14 +31,14 @@ export default class RSPanel implements Panel {
   }
 
   private _init(s: Slider) {
+    // Save slider
     this.slider = s;
-    this.UI.container = s.el;
+    this.UI.container = s.getContainer();
     this.options = s.getConfig();
     // Create and append panel
     this._render();
-    // Subscribe to model updates
-    s.addModelObserver(this.update.bind(this));
-    s.notifyModelObservers();
+    // Subscribe to slider updates
+    this.slider.addObserver(this.update.bind(this));
   }
 
   private _createInput(labelText: string, isCheckbox: boolean = false): HTMLInputElement {
@@ -63,11 +63,13 @@ export default class RSPanel implements Panel {
     this.UI.panel.className = 'rslider-panel';
 
     const { handlerCount } = this.options;
+    const handlerValues = this.slider.getValues();
 
     // Render handler value inputs
     for (let i = 0; i < handlerCount; i += 1) {
       const name = `Handler #${i + 1}`;
       const input = this._createInput(name);
+      input.value = handlerValues[i].toString(10);
 
       input.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
