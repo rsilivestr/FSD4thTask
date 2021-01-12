@@ -15,95 +15,100 @@ $trackTipOffset: $handlerSize / 2
   position: relative
 
   &--layout_horizontal
-    width: 100%
-    max-width: $maxLength
     height: $handlerSize
+    max-width: $maxLength
+    width: 100%
 
   &--layout_vertical
-    width: $handlerSize
     height: $maxLength
+    width: $handlerSize
 
     .rslider__track
-      top: $trackTipOffset
-      right: $trackSideOffset
       bottom: $trackTipOffset
       left: $trackSideOffset
+      right: $trackSideOffset
+      top: $trackTipOffset
 
   &__track
-    position: absolute
-    top: $trackSideOffset
-    right: $trackTipOffset
-    bottom: $trackSideOffset
-    left: $trackTipOffset
     background-color: lighten($color_secondary, 30 )
     border-radius: $trackThickness / 2
-    z-index: 2
+    bottom: $trackSideOffset
     cursor: pointer
+    left: $trackTipOffset
+    position: absolute
+    right: $trackTipOffset
+    top: $trackSideOffset
+    z-index: 2
 
   &__progress
-    position: absolute
-    top: 0
-    right: 0
+    background-color: lighten($color_secondary, 10 )
     bottom: 0
     left: 0
-    background-color: lighten($color_secondary, 10 )
+    position: absolute
+    right: 0
+    top: 0
     z-index: 4
 
   &__handler
-    position: absolute
-    width: $handlerSize
-    height: $handlerSize
-    background: $color_primary
+    background-color: $color_primary
     border: 2px solid $color_accent
     border-radius: 50%
     cursor: pointer
+    display: flex
+    flex-direction: column
+    height: $handlerSize
+    justify-content: center
+    position: absolute
+    width: $handlerSize
     z-index: 6
 
   &__tooltip
     &--horizontal
-      margin-top: -20px
+      align-self: center
+      margin-top: -32px
 
     &--vertical
-      margin: -5px 0 0 20px
+      align-self: flex-start
+      margin-left: 16px
 
 .rslider-panel
   &__label
+    align-items: center
     display: flex
-    position: relative
     height: 34px
     line-height: 34px
     margin-bottom: 6px
-    align-items: center
+    position: relative
 
   &__input
-    position: absolute
     left: 120px
     max-width: 50px
+    position: absolute
 
 .rslider-scale
   display: flex
-  list-style-type: none
   justify-content: space-between
+  list-style-type: none
   margin: 0
   padding: 0
 
   &--layout_horizontal
-    width: 100%
-    max-width: $maxLength
     flex-flow: row nowrap
+    max-width: $maxLength
+    width: 100%
 
   &--layout_vertical
-    max-width: 32px
-    height: $maxLength
     flex-flow: column-reverse nowrap
+    height: $maxLength
+    max-width: 32px
 
   &__mark
-    flex: 1
-    padding: 4px
-    text-align: center
-    font-size: 12px
     border: 1px solid #ccc
     cursor: pointer
+    flex: 1
+    font-size: 12px
+    padding: 4px
+    text-align: center
 
     &:first-child,
     &:last-child
