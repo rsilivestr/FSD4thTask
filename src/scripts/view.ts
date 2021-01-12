@@ -154,6 +154,9 @@ export default class RSView extends RSubject implements View {
     // Append
     this.UI.slider.appendChild(track);
 
+    // Add mousedown listener
+    track.addEventListener('mousedown', this._onTrackClick.bind(this));
+
     return track;
   }
 
@@ -243,18 +246,45 @@ export default class RSView extends RSubject implements View {
     });
   }
 
-  private _drag(e: MouseEvent): void {
+  private _getRelativeCoord(e: MouseEvent): number {
     const { isHorizontal } = this.options;
     const { minCoord, sliderLength } = this._getRect();
-    // Get relative coord in px
+
     const diff = isHorizontal ? e.clientX - minCoord : minCoord - e.clientY;
-    // Get relative coordinate in percent
-    let coord = (diff / sliderLength) * 100;
-    if (coord < 0) coord = 0;
-    if (coord > 100) coord = 100;
+    const coord = (diff / sliderLength) * 100;
+
+    return coord;
+  }
+
+  private _getClosestHandlerIndex(goal: number): number {
+    const closest = this.values.reduce((prev, curr) =>
+      Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+    );
+
+    const index = this.values.indexOf(closest);
+
+    return index;
+  }
+
+  private _onTrackClick(e: MouseEvent): void {
+    // Get click coord, convert to value
+    const coord = this._getRelativeCoord(e);
+    const value = this._coordToValue(coord);
+
+    // Get closest handler
+    const closestIndex = this._getClosestHandlerIndex(value);
+    const handler = this.handlers[closestIndex].getElement();
+
+    // Grab that handler
+    this._grab(handler);
+
+    // Update handler
+    this._moveHander(coord);
+  }
+
+  private _moveHander(coord: number) {
     // Convert coord to value
     const value = this._coordToValue(coord);
-    // const normalizedValue = this._normalizeValue(value);
 
     // Update model through presenter
     const index = parseInt(this.grabbed.dataset.id, 10);
@@ -262,10 +292,18 @@ export default class RSView extends RSubject implements View {
 
     // Update handlers
     this._updateHandlers();
+
     // Update progress bar
     if (this.options.progress) {
       this._updateProgress();
     }
+  }
+
+  private _drag(e: MouseEvent): void {
+    // Get relative coord in px
+    const coord = this._getRelativeCoord(e);
+
+    this._moveHander(coord);
   }
 
   // Bind _drag method to this
