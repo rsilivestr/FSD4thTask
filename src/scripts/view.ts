@@ -3,27 +3,35 @@ import HandlerOptions from './interface/HandlerOptions';
 import ModelOptions from './interface/ModelOptions';
 import SliderOptions from './interface/SliderOptions';
 import View from './interface/View';
-import ViewElements from './interface/ViewElements';
 import ViewOptions from './interface/ViewOptions';
 
 import RSHandler from './handler';
 import RScale from './scale';
 import RSubject from './subject';
 
+type ViewElements = {
+  progress?: HTMLElement;
+  scale?: HTMLElement;
+  slider?: HTMLElement;
+  track?: HTMLElement;
+};
+
 export default class RSView extends RSubject implements View {
   private container: HTMLElement;
 
-  private options: ViewOptions = {};
-
-  private modelOptions: ModelOptions;
-
-  private UI: ViewElements = {};
+  private grabbed: HTMLElement = null;
 
   private handlers: Handler[] = [];
 
-  private values: number[] = [];
+  private modelOptions: ModelOptions;
 
-  private grabbed: HTMLElement = null;
+  private options: ViewOptions = {};
+
+  private scale: RScale;
+
+  private UI: ViewElements = {};
+
+  private values: number[] = [];
 
   constructor(el: HTMLElement, o: SliderOptions = {}) {
     super();
@@ -83,7 +91,14 @@ export default class RSView extends RSubject implements View {
   public addScale(o: ModelOptions) {
     const scale = new RScale(this.container, o);
 
-    this.UI.slider.insertAdjacentElement('beforeend', scale.getElement());
+    // Save to this
+    this.scale = scale;
+
+    const scaleElement = scale.getElement();
+
+    // Append to slider and save to UI object
+    this.UI.scale = scaleElement;
+    this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
 
     return scale;
   }
@@ -192,15 +207,24 @@ export default class RSView extends RSubject implements View {
   }
 
   private _toggleProgress(progress: boolean): void {
-    // Return if slider is not rendered yet
-    if (this.UI.progress === undefined) return;
+    // If slider is not rendered yet
+    if (this.UI.slider === undefined) {
+      return;
+    }
 
-    if (progress && !this.UI.progress.parentNode) {
-      // If progress is ON and not yet rendered
+    // If slider has more than 2 handlers
+    if (this.modelOptions.handlerCount > 2) {
+      // Set to false and return
+      this.options.progress = false;
+      return;
+    }
+
+    if (progress) {
+      // Add progress element
       this.UI.progress = this._elCreateProgress();
       this._updateProgress();
-    } else if (!progress) {
-      // If progress is OFF - remove element
+    } else if (!progress && this.UI.progress) {
+      // Remove element if exists in UI
       this.UI.progress.remove();
     }
   }
@@ -324,8 +348,6 @@ export default class RSView extends RSubject implements View {
     // Return if slider is not rendered yet
     if (!this.UI.slider) return;
 
-    // TODO Update scale too
-
     if (horizontal) {
       this.UI.slider.classList.remove('rslider--layout_vertical');
       this.UI.slider.classList.add('rslider--layout_horizontal');
@@ -338,6 +360,12 @@ export default class RSView extends RSubject implements View {
       // Update progress
       this.UI.progress.removeAttribute('style');
       this._updateProgress();
+    }
+
+    if (this.UI.scale) {
+      // Update scale
+      const layout = horizontal ? 'horizontal' : 'vertical';
+      this.scale.toggleLayout(layout);
     }
 
     // Update handlers

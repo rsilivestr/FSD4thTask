@@ -2,16 +2,18 @@ import SliderOptions from './interface/SliderOptions';
 import Panel from './interface/Panel';
 import Slider from './interface/Slider';
 
-export default class RSPanel implements Panel {
-  public slider: Slider;
+type PanelElements = {
+  container: HTMLElement;
+  inputs: HTMLInputElement[];
+  panel: HTMLElement;
+};
 
+export default class RSPanel implements Panel {
   private options: SliderOptions;
 
-  private UI: {
-    container: HTMLElement;
-    inputs: HTMLInputElement[];
-    panel: HTMLElement;
-  } = {
+  private slider: Slider;
+
+  private UI: PanelElements = {
     container: null,
     inputs: [],
     panel: null,

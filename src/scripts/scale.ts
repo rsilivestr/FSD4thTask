@@ -4,6 +4,12 @@ import RSubject from './subject';
 
 // TODO Update on slider options changes
 
+type ScaleElements = {
+  container: HTMLElement;
+  scale: HTMLElement;
+  marks: HTMLElement[];
+};
+
 export default class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
 
@@ -11,11 +17,7 @@ export default class RScale extends RSubject implements Scale {
 
   private options: SliderOptions;
 
-  private UI: {
-    container: HTMLElement;
-    scale: HTMLElement;
-    marks: HTMLElement[];
-  } = {
+  private UI: ScaleElements = {
     container: null,
     scale: document.createElement('ul'),
     marks: [],
@@ -31,6 +33,13 @@ export default class RScale extends RSubject implements Scale {
 
   public getElement(): HTMLElement {
     return this.UI.scale;
+  }
+
+  public toggleLayout(layout: 'horizontal' | 'vertical') {
+    this.UI.scale.classList.remove('rscale--layout_horizontal');
+    this.UI.scale.classList.remove('rscale--layout_vertical');
+
+    this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
   public notifyObservers: (index: number, value: number) => void = (index, value) => {
@@ -97,9 +106,6 @@ export default class RScale extends RSubject implements Scale {
     this.UI.scale.className = `rslider__scale rscale rscale--layout_${layout}`;
 
     this._populateScale();
-
-    const slider = this.UI.container.querySelector('.rslider');
-    slider.insertAdjacentElement('beforeend', this.UI.scale);
 
     return this.UI.scale;
   }

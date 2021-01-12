@@ -1,6 +1,11 @@
 import Handler from './interface/Handler';
 import HandlerOptions from './interface/HandlerOptions';
 
+type HandlerElements = {
+  handler: HTMLElement;
+  tooltip: HTMLElement;
+};
+
 export default class RSHandler implements Handler {
   private coord: number;
 
@@ -10,10 +15,7 @@ export default class RSHandler implements Handler {
 
   private tooltip: boolean;
 
-  private UI: {
-    handler: HTMLElement;
-    tooltip: HTMLElement;
-  } = {
+  private UI: HandlerElements = {
     handler: null,
     tooltip: null,
   };
