@@ -94,6 +94,8 @@ export default class RScale extends RSubject implements Scale {
       const target = <HTMLElement>e.target;
 
       if (target.classList.contains('rscale__mark')) {
+        // TODO Move closest handler
+
         const value = parseInt(target.textContent, 10);
         this.notifyObservers(0, value);
       }

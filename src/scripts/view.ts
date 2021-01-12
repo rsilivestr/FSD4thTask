@@ -50,8 +50,6 @@ export default class RSView extends RSubject implements View {
       throw new Error('There is no element matching provided selector.');
     }
 
-    const { handlerCount } = this.modelOptions;
-
     // Create & append slider element
     this.UI.slider = this._elCreateSlider();
 
@@ -59,10 +57,7 @@ export default class RSView extends RSubject implements View {
     this.UI.track = this._elCreateTrack();
 
     // Create & append handler elements
-    for (let i = 0; i < handlerCount; i += 1) {
-      const handler = this._addHandler(i);
-      this.handlers[i] = handler;
-    }
+    this._createHandlers();
 
     // Create & append progress element
     if (this.options.progress) {
@@ -104,6 +99,8 @@ export default class RSView extends RSubject implements View {
   }
 
   public update() {
+    // Re-render handlers in case handlerCound changed
+    this._createHandlers();
     // Move handlers
     this._updateHandlers();
     // Update progress
@@ -112,6 +109,23 @@ export default class RSView extends RSubject implements View {
     }
 
     return this.values;
+  }
+
+  private _createHandlers() {
+    // Remove old handlers
+    if (this.handlers.length > 0) {
+      this.handlers.forEach((h) => h.getElement().remove());
+
+      this.handlers = [];
+    }
+
+    // Add new handlers
+    const { handlerCount } = this.modelOptions;
+
+    for (let i = 0; i < handlerCount; i += 1) {
+      const handler = this._addHandler(i);
+      this.handlers[i] = handler;
+    }
   }
 
   private _getRect() {
@@ -219,13 +233,14 @@ export default class RSView extends RSubject implements View {
       return;
     }
 
-    if (progress) {
-      // Add progress element
+    if (progress && !this.UI.progress) {
+      // Create and append
       this.UI.progress = this._elCreateProgress();
       this._updateProgress();
     } else if (!progress && this.UI.progress) {
-      // Remove element if exists in UI
+      // Remove from DOM and this.UI
       this.UI.progress.remove();
+      this.UI.progress = null;
     }
   }
 
@@ -348,6 +363,7 @@ export default class RSView extends RSubject implements View {
     // Return if slider is not rendered yet
     if (!this.UI.slider) return;
 
+    // Toggle classes
     if (horizontal) {
       this.UI.slider.classList.remove('rslider--layout_vertical');
       this.UI.slider.classList.add('rslider--layout_horizontal');
@@ -356,14 +372,14 @@ export default class RSView extends RSubject implements View {
       this.UI.slider.classList.remove('rslider--layout_horizontal');
     }
 
+    // Update progress
     if (this.UI.progress) {
-      // Update progress
       this.UI.progress.removeAttribute('style');
       this._updateProgress();
     }
 
+    // Update scale
     if (this.UI.scale) {
-      // Update scale
       const layout = horizontal ? 'horizontal' : 'vertical';
       this.scale.toggleLayout(layout);
     }

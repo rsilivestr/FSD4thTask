@@ -58,7 +58,7 @@ export default class RSModel extends RSubject implements Model {
   }
 
   public setValues(v: number[]) {
-    // TODO add validation
+    // ? TODO add validation
     this.values = v;
 
     return this.values;
@@ -95,6 +95,8 @@ export default class RSModel extends RSubject implements Model {
       this.options.maxValue = minValue !== 100 ? 100 : 200;
     }
 
+    // TODO Update view values on stepSize change
+
     // stepSize
     if (this._isNumber(stepSize) && stepSize > 0) {
       this.options.stepSize = stepSize;
@@ -103,8 +105,14 @@ export default class RSModel extends RSubject implements Model {
     }
 
     // handlerCount
-    if (this._isNumber(handlerCount) && handlerCount > 0) {
+    if (
+      this._isNumber(handlerCount) &&
+      handlerCount > 0 &&
+      handlerCount !== this.options.handlerCount
+    ) {
       this.options.handlerCount = handlerCount;
+
+      this._initValues();
     } else if (this.options.handlerCount === undefined) {
       this.options.handlerCount = 1;
     }
@@ -130,6 +138,10 @@ export default class RSModel extends RSubject implements Model {
 
   private _initValues() {
     const { minValue, stepSize, handlerCount } = this.options;
+
+    // Reset values (for case when handlerCount was changed)
+    this.values = [];
+
     // Fill each step starting from minValue
     for (let i = 0; i < handlerCount; i += 1) {
       this.values[i] = minValue + i * stepSize;
