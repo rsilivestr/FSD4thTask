@@ -34,9 +34,11 @@ export default class RSModel extends RSubject implements Model {
 
   public setValue(index: number, value: number) {
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
+
     // Get min and max allowed values for this handler index
     const min = minValue + index * stepSize;
     const max = maxValue - (handlerCount - index - 1) * stepSize;
+
     // Set value
     let val = 0;
     if (value < min) {
@@ -47,6 +49,7 @@ export default class RSModel extends RSubject implements Model {
       val = this._normalizeValue(value);
     }
     this.values[index] = val;
+
     // Update other values
     this._updateValues(index, val);
 
@@ -55,6 +58,7 @@ export default class RSModel extends RSubject implements Model {
 
   public setValues(v: number[]) {
     // ? TODO add validation
+
     this.values = v;
 
     return this.values;
@@ -91,10 +95,8 @@ export default class RSModel extends RSubject implements Model {
       this.options.maxValue = minValue !== 100 ? 100 : 200;
     }
 
-    // TODO Update view values on stepSize change
-
     // stepSize
-    if (this._isNumber(stepSize) && stepSize > 0) {
+    if (this._isNumber(stepSize) && stepSize > 0 && stepSize !== this.options.stepSize) {
       this.options.stepSize = stepSize;
     } else if (this.options.stepSize === undefined) {
       this.options.stepSize = 10;
@@ -113,17 +115,9 @@ export default class RSModel extends RSubject implements Model {
       this.options.handlerCount = 1;
     }
 
-    // Update values if out of range after change of min / max
+    // Update values in case min / maxValue or stepSize were changed
     this.values.forEach((value, index) => {
-      const { maxValue, minValue } = this.getConfig();
-
-      if (value < minValue) {
-        this.setValue(index, maxValue);
-      }
-
-      if (value > maxValue) {
-        this.setValue(index, maxValue);
-      }
+      this.setValue(index, value);
     });
 
     // Update view and other observers
@@ -161,6 +155,7 @@ export default class RSModel extends RSubject implements Model {
     this.values.forEach((v, i) => {
       // Minimum difference between value and v
       const minValueDiff = (i - index) * stepSize;
+
       // Closest allowed v to value (at least one stepSize between adjacent values)
       const closestValue = value + minValueDiff;
 

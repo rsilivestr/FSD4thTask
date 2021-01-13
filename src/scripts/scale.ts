@@ -1,8 +1,7 @@
+import ModelOptions from './interface/ModelOptions';
 import Scale from './interface/Scale';
 import SliderOptions from './interface/SliderOptions';
 import RSubject from './subject';
-
-// TODO Update on slider options changes
 
 type ScaleElements = {
   container: HTMLElement;
@@ -44,9 +43,11 @@ export default class RScale extends RSubject implements Scale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  // public notifyObservers: (index: number, value: number) => void = (index, value) => {
-  //   this.observers.forEach((o) => o(index, value));
-  // };
+  public setConfig(o: ModelOptions): void {
+    this.options = o;
+
+    this._populateScale();
+  }
 
   public setValues(v: number[]) {
     this.values = v;

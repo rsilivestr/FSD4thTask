@@ -80,7 +80,13 @@ export default class RSView extends RSubject implements View {
   }
 
   public setModelOptions(o: ModelOptions) {
-    return (this.modelOptions = o);
+    this.modelOptions = o;
+
+    // if (this.scale) {
+    //   this.scale.setConfig({ ...this.options, ...this.modelOptions });
+    // }
+
+    return this.modelOptions;
   }
 
   public addScale(o: ModelOptions) {
@@ -437,6 +443,11 @@ export default class RSView extends RSubject implements View {
     }
 
     this._toggleProgress(this.options.progress);
+
+    // Update scale
+    if (this.scale) {
+      this.scale.setConfig({ ...this.options, ...this.modelOptions });
+    }
 
     return this.options;
   }

@@ -96,6 +96,7 @@ export default class RSHandler implements Handler {
     if (this.tooltip) {
       // Create tooltip element
       this.UI.tooltip = this._createTooltip();
+
       // Append tooltip
       handler.appendChild(this.UI.tooltip);
     }
@@ -117,6 +118,7 @@ export default class RSHandler implements Handler {
     this.layout = o.layout;
     this.tooltip = o.tooltip;
     this.value = o.value;
+
     // Create handler element
     this.UI.handler = this._createHandler();
   }

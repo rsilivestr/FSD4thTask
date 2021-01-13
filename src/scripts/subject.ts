@@ -15,7 +15,7 @@ export default class RSubject implements Subject {
     return this.observers;
   }
 
-  public notifyObservers(...notifyData: any) {
-    this.observers.forEach((o) => o(...notifyData));
+  public notifyObservers(...data: any) {
+    this.observers.forEach((o) => o(...data));
   }
 }

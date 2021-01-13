@@ -53,8 +53,10 @@ export default class RSPanel implements Panel {
     this.slider = s;
     this.UI.container = s.getContainer();
     this.options = s.getConfig();
+
     // Create and append panel
     this._render();
+
     // Subscribe to slider updates
     this.slider.addObserver(this.update.bind(this));
   }
