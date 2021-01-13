@@ -47,16 +47,14 @@ export default class RSHandler implements Handler {
       this.tooltip = value;
     }
 
-    if (this.tooltip) {
-      // Remove existing tooltip
-      if (this.UI.tooltip) this.UI.tooltip.remove();
-      // Create and append tooltip
+    if (this.tooltip && !this.UI.tooltip) {
+      // If ON but does not exist already
       this.UI.tooltip = this._createTooltip();
       this.UI.handler.appendChild(this.UI.tooltip);
-    } else if (!this.tooltip) {
-      // If tooltip is OFF
-      // Remove tooltip element
+    } else if (!this.tooltip && this.UI.tooltip) {
+      // If OFF and already exists
       this.UI.tooltip.remove();
+      this.UI.tooltip = null;
     }
 
     return this.tooltip;
@@ -70,11 +68,22 @@ export default class RSHandler implements Handler {
 
     // Update handler position
     this.setPosition(this.coord);
+
+    // Update tooltip classes
+    if (this.UI.tooltip) {
+      this.UI.tooltip.classList.remove('rslider__tooltip--horizontal');
+      this.UI.tooltip.classList.remove('rslider__tooltip--vertical');
+
+      this.UI.tooltip.classList.add(`rslider__tooltip--${layout}`);
+    }
   }
 
   public updateValue(value: number) {
     this.value = value;
-    this._updateTooltip();
+
+    if (this.tooltip) {
+      this._updateTooltip();
+    }
 
     return value;
   }
@@ -90,6 +99,7 @@ export default class RSHandler implements Handler {
       // Append tooltip
       handler.appendChild(this.UI.tooltip);
     }
+
     return handler;
   }
 

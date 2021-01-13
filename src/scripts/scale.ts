@@ -23,6 +23,8 @@ export default class RScale extends RSubject implements Scale {
     marks: [],
   };
 
+  private values: number[];
+
   constructor(container: HTMLElement, o: SliderOptions) {
     super();
 
@@ -45,6 +47,10 @@ export default class RScale extends RSubject implements Scale {
   public notifyObservers: (index: number, value: number) => void = (index, value) => {
     this.observers.forEach((o) => o(index, value));
   };
+
+  public setValues(v: number[]) {
+    this.values = v;
+  }
 
   private _calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
@@ -89,15 +95,29 @@ export default class RScale extends RSubject implements Scale {
     return this.UI.scale;
   }
 
+  private _getClosestHandlerIndex(goal: number): number {
+    const closest = this.values.reduce((prev, curr) =>
+      Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
+    );
+
+    const index = this.values.indexOf(closest);
+
+    console.log(index);
+
+    return index;
+  }
+
   private _addClickListener() {
     this.UI.scale.addEventListener('click', (e) => {
       const target = <HTMLElement>e.target;
 
       if (target.classList.contains('rscale__mark')) {
-        // TODO Move closest handler
-
         const value = parseInt(target.textContent, 10);
-        this.notifyObservers(0, value);
+
+        // Get closest handler index
+        const index = this._getClosestHandlerIndex(value);
+
+        this.notifyObservers(index, value);
       }
     });
   }

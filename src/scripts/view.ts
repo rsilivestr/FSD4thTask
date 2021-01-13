@@ -69,6 +69,10 @@ export default class RSView extends RSubject implements View {
 
   public setValues(values: number[]): void {
     this.values = values;
+
+    if (this.scale) {
+      this.scale.setValues(values);
+    }
   }
 
   public getConfig() {
@@ -94,6 +98,9 @@ export default class RSView extends RSubject implements View {
     // Append to slider and save to UI object
     this.UI.scale = scaleElement;
     this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
+
+    // Update scale values
+    this.scale.setValues(this.values);
 
     return scale;
   }
