@@ -1,15 +1,14 @@
-import { expect } from 'chai';
+// import { expect } from 'chai';
 
-import { create, addControlPanel } from '../src/scripts/rslider';
+// import { create, addControlPanel } from '../src/scripts/rslider';
 
-const container = document.createElement('div');
-container.id = 'root';
-document.body.appendChild(container);
+// const container = document.createElement('div');
+// document.body.appendChild(container);
 
-const slider = create('#root');
-const panel = addControlPanel(slider);
+// const slider = create(container);
+// const panel = addControlPanel(slider);
 
-describe('RSPanel', () => {
-  // describe('notifyObservers(index: number, value: number) => void', () => {});
-  // describe('update(v: number[]): number[]', () => {});
-});
+// describe('RSPanel', () => {
+//   // describe('notifyObservers(index: number, value: number) => void', () => {});
+//   // describe('update(v: number[]): number[]', () => {});
+// });

@@ -5,10 +5,9 @@ import { create } from '../src/scripts/rslider';
 import RScale from '../src/scripts/scale';
 
 const container = document.createElement('div');
-container.id = 'root';
 document.body.appendChild(container);
 
-const slider = create('#root');
+const slider = create(container);
 
 describe('RSlider', () => {
   const SLIDER_OPTIONS_KEYS = [

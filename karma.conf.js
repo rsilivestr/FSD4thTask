@@ -8,13 +8,8 @@ module.exports = (config) => {
     coverageReporter: {
       type: 'text',
     },
-    exclude: [
-      'node_modules'
-    ],
-    files: [
-      'src/**/*.ts',
-      'test/**/*.test.ts',
-    ],
+    exclude: ['node_modules'],
+    files: ['node_modules/jquery/dist/jquery.min.js', 'src/**/*.ts', 'test/**/*.test.ts'],
     frameworks: ['chai-dom', 'chai', 'mocha', 'karma-typescript'],
     logLevel: config.LOG_INFO,
     port: 9876,
@@ -28,8 +23,8 @@ module.exports = (config) => {
     karmaTypescriptConfig: {
       experimentalDecorators: true,
       extend: './tsconfig.json',
-      include: [ './src/**/*.ts', './test/**/*.test.ts' ],
+      include: ['./src/**/*.ts', './test/**/*.test.ts'],
       module: 'commonjs',
-    }
+    },
   });
 };

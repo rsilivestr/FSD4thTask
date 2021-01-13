@@ -11,7 +11,7 @@ import '../styles/rslider.sass';
 import RSPanel from './panel';
 import Scale from './interface/Scale';
 
-export function create(selector: string, options: SliderOptions = {}) {
+export function create(container: HTMLElement, options: SliderOptions = {}) {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
@@ -21,8 +21,6 @@ export function create(selector: string, options: SliderOptions = {}) {
   const notifyObservers = (values: number[]) => {
     observers.forEach((o) => o(values));
   };
-
-  const container: HTMLElement = document.querySelector(selector);
 
   const model: Model = new RSModel(options);
 
@@ -79,3 +77,16 @@ export function create(selector: string, options: SliderOptions = {}) {
 export function addControlPanel(s: Slider) {
   return new RSPanel(s);
 }
+
+// jq
+$.fn.extend({
+  rslider(options: SliderOptions) {
+    return create(this[0], options);
+  },
+});
+
+$.fn.extend({
+  rspanel(slider: Slider) {
+    return addControlPanel(slider);
+  },
+});
