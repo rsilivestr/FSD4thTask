@@ -44,9 +44,9 @@ export default class RScale extends RSubject implements Scale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public notifyObservers: (index: number, value: number) => void = (index, value) => {
-    this.observers.forEach((o) => o(index, value));
-  };
+  // public notifyObservers: (index: number, value: number) => void = (index, value) => {
+  //   this.observers.forEach((o) => o(index, value));
+  // };
 
   public setValues(v: number[]) {
     this.values = v;
@@ -101,8 +101,6 @@ export default class RScale extends RSubject implements Scale {
     );
 
     const index = this.values.indexOf(closest);
-
-    console.log(index);
 
     return index;
   }

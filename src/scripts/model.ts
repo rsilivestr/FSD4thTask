@@ -15,10 +15,6 @@ export default class RSModel extends RSubject implements Model {
     this._initValues();
   }
 
-  public notifyObservers: () => void = () => {
-    this.observers.forEach((o) => o(this.values));
-  };
-
   public getConfig() {
     return this.options;
   }
@@ -131,7 +127,7 @@ export default class RSModel extends RSubject implements Model {
     });
 
     // Update view and other observers
-    this.notifyObservers();
+    this.notifyObservers(this.values);
 
     return this.options;
   }
@@ -176,6 +172,6 @@ export default class RSModel extends RSubject implements Model {
       }
     });
 
-    this.notifyObservers();
+    this.notifyObservers(this.values);
   }
 }

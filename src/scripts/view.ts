@@ -41,10 +41,6 @@ export default class RSView extends RSubject implements View {
     this._configure(o);
   }
 
-  public notifyObservers: (index: number, value: number) => void = (index, value) => {
-    this.observers.forEach((o) => o(index, value));
-  };
-
   public render() {
     if (this.container == null) {
       throw new Error('There is no element matching provided selector.');
