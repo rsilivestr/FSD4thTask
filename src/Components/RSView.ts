@@ -138,7 +138,7 @@ export default class RSView extends RSubject implements View {
     const handler = this.children.handlers[closestIndex].getElement();
 
     // Grab that handler
-    this._grab(handler);
+    this._grab(e, handler);
 
     // Update handler
     this._moveHandler(coord);
@@ -276,15 +276,16 @@ export default class RSView extends RSubject implements View {
 
   private _elCreateSlider(): HTMLElement {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
+
     // Create element
     const slider = document.createElement('div');
     slider.className = `rslider rslider--layout_${layout}`;
+
     // Append
     this.container.appendChild(slider);
+
     // Prevent dragstart
-    slider.addEventListener('dragstart', (e) => {
-      e.preventDefault();
-    });
+    slider.addEventListener('dragstart', (e) => e.preventDefault());
 
     return slider;
   }
@@ -368,18 +369,17 @@ export default class RSView extends RSubject implements View {
     const handlerElement = handler.getElement();
     this.UI.slider.appendChild(handlerElement);
     // Add event listener
-    handlerElement.addEventListener('mousedown', (e) => {
-      this._grab(handlerElement);
-      // Prevent text selection
-      e.preventDefault();
-    });
+    handlerElement.addEventListener('mousedown', (e) => this._grab(e, handlerElement));
 
     return handler;
   }
 
-  private _grab(handler: HTMLElement): void {
+  private _grab(e: MouseEvent, handler: HTMLElement): void {
+    e.preventDefault();
+
     // Set grabbed handler
     this.UI.activeHandler = handler;
+
     // Add listeners
     document.body.addEventListener('mousemove', this._boundDrag);
     document.body.addEventListener('mouseup', this._boundRelease);
