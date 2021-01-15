@@ -3,16 +3,22 @@ import ModelOptions from './interface/ModelOptions';
 import RSubject from './subject';
 
 export default class RSModel extends RSubject implements Model {
-  private options: ModelOptions = {};
+  private options: ModelOptions = {
+    minValue: null,
+    maxValue: null,
+    stepSize: null,
+    handlerCount: null,
+  };
 
   private values: number[] = [];
 
   constructor(o: ModelOptions = {}) {
     super();
+
     // Set config
     this._configure(o);
     // Set hander values
-    this._initValues();
+    // this._initValues();
   }
 
   public getConfig() {
@@ -77,7 +83,7 @@ export default class RSModel extends RSubject implements Model {
       !(maxValue === undefined && minValue === this.options.maxValue)
     ) {
       this.options.minValue = minValue;
-    } else if (this.options.minValue === undefined) {
+    } else if (this.options.minValue === null) {
       this.options.minValue = maxValue !== 0 ? 0 : -100;
     }
 
@@ -91,14 +97,14 @@ export default class RSModel extends RSubject implements Model {
       !(minValue === undefined && maxValue === this.options.minValue)
     ) {
       this.options.maxValue = maxValue;
-    } else if (this.options.maxValue === undefined) {
+    } else if (this.options.maxValue === null) {
       this.options.maxValue = minValue !== 100 ? 100 : 200;
     }
 
     // stepSize
     if (this._isNumber(stepSize) && stepSize > 0 && stepSize !== this.options.stepSize) {
       this.options.stepSize = stepSize;
-    } else if (this.options.stepSize === undefined) {
+    } else if (this.options.stepSize === null) {
       this.options.stepSize = 10;
     }
 
@@ -111,17 +117,18 @@ export default class RSModel extends RSubject implements Model {
       this.options.handlerCount = handlerCount;
 
       this._initValues();
-    } else if (this.options.handlerCount === undefined) {
+    } else if (this.options.handlerCount === null) {
       this.options.handlerCount = 1;
+
+      this._initValues();
     }
 
     // Update values in case min / maxValue or stepSize were changed
     this.values.forEach((value, index) => {
-      this.setValue(index, value);
+      if (value > maxValue || value < minValue) {
+        this.setValue(index, value);
+      }
     });
-
-    // Update view and other observers
-    this.notifyObservers(this.values);
 
     return this.options;
   }

@@ -28,7 +28,9 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
   // Slider then notifies it's own observers (e.g. panel)
   model.addObserver(notifyObservers);
 
-  const view: View = new RSView(container, options);
+  const modelConfig = model.getConfig();
+
+  const view: View = new RSView(container, { ...options, ...modelConfig });
 
   const presenter: Presenter = new RSPresenter(model, view);
 
@@ -45,7 +47,10 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
     },
     setConfig(o: SliderOptions) {
       const modelConfig = model.setConfig(o);
+
       const viewConfig = view.setConfig(o);
+
+      view.setModelOptions(modelConfig);
 
       return { ...modelConfig, ...viewConfig };
     },
@@ -81,7 +86,7 @@ export function addControlPanel(s: Slider) {
 // jq
 $.fn.extend({
   rslider(options: SliderOptions) {
-    return create(this[0], options);
+    return create((<JQuery>this)[0], options);
   },
 });
 
