@@ -2,7 +2,7 @@
   "name": "fsd4thtask",
   "version": "1.0.0",
   "description": "Full stack development 4th task: range slider plugin",
-  "main": "src/scripts/rslider.ts",
+  "main": "src/index.ts",
   "scripts": {
     "clean": "rm -rf ./dist/",
     "rollup:build": "rollup -c",

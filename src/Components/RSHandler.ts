@@ -1,5 +1,17 @@
-import Handler from './interface/Handler';
-import HandlerOptions from './interface/HandlerOptions';
+export interface Handler {
+  getElement(): HTMLElement;
+  setPosition(coord: number): void;
+  toggleTooltip(value?: boolean): boolean;
+  toggleLayout(layout: 'horizontal' | 'vertical'): void;
+  updateValue(value: number): void;
+}
+
+export type HandlerOptions = {
+  id: number;
+  layout: string;
+  tooltip: boolean;
+  value: number;
+};
 
 type HandlerElements = {
   handler: HTMLElement;

@@ -1,6 +1,10 @@
-import Model from './interface/Model';
-import Presenter from './interface/Presenter';
-import View from './interface/View';
+import { Model } from './RSModel';
+import { View } from './RSView';
+
+export interface Presenter {
+  getValues(): number[];
+  setModelValue(index: number, value: number): number;
+}
 
 export default class RSPresenter implements Presenter {
   private model: Model;

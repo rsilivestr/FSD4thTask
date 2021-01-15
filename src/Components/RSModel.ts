@@ -1,6 +1,20 @@
-import Model from './interface/Model';
-import ModelOptions from './interface/ModelOptions';
-import RSubject from './subject';
+import RSubject, { Subject } from './RSubject';
+
+export interface Model extends Subject {
+  getConfig(): ModelOptions;
+  setConfig(o?: ModelOptions): ModelOptions;
+  getValue(index: number): number | null;
+  getValues(): number[];
+  setValue(index: number, v: number): number;
+  setValues(v: number[]): number[];
+}
+
+export type ModelOptions = {
+  minValue?: number;
+  maxValue?: number;
+  stepSize?: number;
+  handlerCount?: number;
+};
 
 export default class RSModel extends RSubject implements Model {
   private options: ModelOptions = {

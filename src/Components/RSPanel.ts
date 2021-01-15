@@ -1,6 +1,8 @@
-import SliderOptions from './interface/SliderOptions';
-import Panel from './interface/Panel';
-import Slider from './interface/Slider';
+import { Slider, SliderOptions } from './RSlider';
+
+export interface Panel {
+  update(v: number[]): number[];
+}
 
 type PanelElements = {
   configDiv: HTMLDivElement;

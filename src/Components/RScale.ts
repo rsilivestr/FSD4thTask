@@ -1,7 +1,13 @@
-import ModelOptions from './interface/ModelOptions';
-import Scale from './interface/Scale';
-import SliderOptions from './interface/SliderOptions';
-import RSubject from './subject';
+import { ModelOptions } from './RSModel';
+import { SliderOptions } from './RSlider';
+import RSubject, { Subject } from './RSubject';
+
+export interface Scale extends Subject {
+  getElement: () => HTMLElement;
+  toggleLayout: (layout: 'horizontal' | 'vertical') => void;
+  setConfig: (o: ModelOptions) => void;
+  setValues: (v: number[]) => void;
+}
 
 type ScaleElements = {
   container: HTMLElement;

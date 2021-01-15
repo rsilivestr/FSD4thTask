@@ -1,4 +1,8 @@
-import Subject from './interface/Subject';
+export interface Subject {
+  addObserver: (o: Function) => Function[];
+  removeObserver: (o: Function) => Function[];
+  notifyObservers: (...notifyData: any) => void;
+}
 
 export default class RSubject implements Subject {
   protected observers: Function[] = [];

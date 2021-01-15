@@ -1,18 +1,28 @@
-import Handler from './interface/Handler';
-import HandlerOptions from './interface/HandlerOptions';
-import ModelOptions from './interface/ModelOptions';
-import Scale from './interface/Scale';
-import SliderOptions from './interface/SliderOptions';
-import View from './interface/View';
-import ViewOptions from './interface/ViewOptions';
+import { ModelOptions } from './RSModel';
+import { SliderOptions } from './RSlider';
+import RSProgress, { Progress, ProgressCoords } from './RSProgress';
+import RSHandler, { Handler, HandlerOptions } from './RSHandler';
+import RScale, { Scale } from './RScale';
+import RSubject, { Subject } from './RSubject';
+import RSTrack, { Track } from './RSTrack';
 
-import Progress, { IProgress, ProgressCoords } from './progress';
-import RSHandler from './handler';
-import RScale from './scale';
-import RSubject from './subject';
-import Track, { ITrack } from './track';
+export interface View extends Subject {
+  addScale(o: ModelOptions): Scale;
+  getConfig(): ViewOptions;
+  setConfig(o: ViewOptions): ViewOptions;
+  setModelOptions(o: SliderOptions): ModelOptions;
+  setValues(v: number[]): void;
+  update(): number[];
+}
 
-type ViewElements = {
+export type ViewOptions = {
+  isHorizontal?: boolean;
+  handlerRadius?: number;
+  tooltip?: boolean;
+  progress?: boolean;
+};
+
+export type ViewElements = {
   activeHandler: HTMLElement;
   progress?: HTMLElement;
   scale?: HTMLElement;
@@ -22,9 +32,9 @@ type ViewElements = {
 
 type ViewChildren = {
   handlers: Handler[];
-  progress: IProgress;
+  progress: Progress;
   scale: Scale;
-  track: ITrack;
+  track: Track;
 };
 
 export default class RSView extends RSubject implements View {
@@ -219,18 +229,6 @@ export default class RSView extends RSubject implements View {
     }
   }
 
-  private _getRect() {
-    const rect = this.UI.track.getBoundingClientRect();
-
-    const { isHorizontal } = this.options;
-
-    return {
-      sliderLength: isHorizontal ? rect.right - rect.left : rect.bottom - rect.top,
-      minCoord: isHorizontal ? rect.left : rect.bottom,
-      maxCoord: isHorizontal ? rect.right : rect.top,
-    };
-  }
-
   private _correctHandlerCoord(): number {
     // Get track length
     const { trackLength } = this.children.track.getRect();
@@ -268,7 +266,7 @@ export default class RSView extends RSubject implements View {
   }
 
   private _createTrack(): HTMLDivElement {
-    this.children.track = new Track(this.options.isHorizontal);
+    this.children.track = new RSTrack(this.options.isHorizontal);
 
     const trackElement = this.children.track.getElement();
 
@@ -295,7 +293,7 @@ export default class RSView extends RSubject implements View {
     const coords = this._calcProgressCoords();
     const { isHorizontal } = this.options;
 
-    this.children.progress = new Progress(coords, isHorizontal);
+    this.children.progress = new RSProgress(coords, isHorizontal);
 
     this.UI.progress = this.children.progress.getElement();
 

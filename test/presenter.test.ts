@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import Model from '../src/scripts/model';
-import View from '../src/scripts/view';
-import Presenter from '../src/scripts/presenter';
+import Model from '../src/Components/RSModel';
+import View from '../src/Components/RSView';
+import Presenter from '../src/Components/RSPresenter';
 
 const container = document.createElement('div');
 

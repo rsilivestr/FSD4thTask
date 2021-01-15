@@ -1,13 +1,12 @@
-import Subject from './interface/Subject';
-import RSubject from './subject';
+import RSubject, { Subject } from './RSubject';
 
-export interface ITrack extends Subject {
+export interface Track extends Subject {
   getElement: () => HTMLDivElement;
   getRect: () => any;
   toggleLayout: (isHorizontal: boolean) => void;
 }
 
-export default class Track extends RSubject implements ITrack {
+export default class RSTrack extends RSubject implements Track {
   private isHorizontal: boolean;
   private UItrack: HTMLDivElement = document.createElement('div');
 

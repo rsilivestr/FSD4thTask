@@ -1,8 +1,5 @@
 import { use, expect } from 'chai';
-
-import RSHandler from '../src/scripts/handler';
-import Handler from '../src/scripts/interface/Handler';
-import HandlerOptions from '../src/scripts/interface/HandlerOptions';
+import RSHandler, { Handler, HandlerOptions } from '../src/Components/RSHandler';
 
 use(require('chai-dom'));
 

@@ -1,15 +1,33 @@
-import Model from './interface/Model';
-import Presenter from './interface/Presenter';
-import RSModel from './model';
-import RSPresenter from './presenter';
-import RSView from './view';
-import Slider from './interface/Slider';
-import SliderOptions from './interface/SliderOptions';
-import View from './interface/View';
+import RSModel, { Model } from './RSModel';
+import RSPresenter, { Presenter } from './RSPresenter';
+import RSView, { View } from './RSView';
+import RSPanel from './RSPanel';
+import { Scale } from './RScale';
 
 import '../styles/rslider.sass';
-import RSPanel from './panel';
-import Scale from './interface/Scale';
+
+export type SliderOptions = {
+  minValue?: number;
+  maxValue?: number;
+  stepSize?: number;
+  handlerCount?: number;
+  isHorizontal?: boolean;
+  handlerRadius?: number;
+  tooltip?: boolean;
+  progress?: boolean;
+};
+
+export interface Slider {
+  getContainer(): HTMLElement;
+  addScale(): Scale;
+  setConfig(o: SliderOptions): SliderOptions;
+  getConfig(): SliderOptions;
+  getValue(index?: number): number;
+  setValue(index: number, value: number): number;
+  getValues(): number[];
+  setValues(values?: number[]): number[];
+  addObserver(o: Function): void;
+}
 
 export function create(container: HTMLElement, options: SliderOptions = {}) {
   const observers: Function[] = [];
@@ -82,16 +100,3 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
 export function addControlPanel(s: Slider) {
   return new RSPanel(s);
 }
-
-// jq
-$.fn.extend({
-  rslider(options: SliderOptions) {
-    return create((<JQuery>this)[0], options);
-  },
-});
-
-$.fn.extend({
-  rspanel(slider: Slider) {
-    return addControlPanel(slider);
-  },
-});

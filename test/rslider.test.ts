@@ -1,8 +1,7 @@
 import { expect } from 'chai';
-// import SliderOptions from '../src/scripts/interface/SliderOptions';
 
-import { create } from '../src/scripts/rslider';
-import RScale from '../src/scripts/scale';
+import { create } from '../src/Components/RSlider';
+import RScale from '../src/Components/RScale';
 
 describe('RSlider', () => {
   const container = document.createElement('div');
