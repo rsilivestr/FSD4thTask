@@ -1,8 +1,7 @@
 import RSModel, { Model } from './RSModel';
-import RSPresenter, { Presenter } from './RSPresenter';
+import RSPresenter from './RSPresenter';
 import RSView, { View } from './RSView';
 import RSPanel from './RSPanel';
-import { Scale } from './RScale';
 
 import '../styles/rslider.sass';
 
@@ -13,20 +12,23 @@ export type SliderOptions = {
   handlerCount?: number;
   isHorizontal?: boolean;
   handlerRadius?: number;
-  tooltip?: boolean;
-  progress?: boolean;
+  showProgress?: boolean;
+  showScale?: boolean;
+  showTooltip?: boolean;
 };
 
 export interface Slider {
+  addObserver(o: Function): void;
   getContainer(): HTMLElement;
-  addScale(): Scale;
+
   setConfig(o: SliderOptions): SliderOptions;
   getConfig(): SliderOptions;
+
   getValue(index?: number): number;
   setValue(index: number, value: number): number;
+
   getValues(): number[];
   setValues(values?: number[]): number[];
-  addObserver(o: Function): void;
 }
 
 export function create(container: HTMLElement, options: SliderOptions = {}) {
@@ -50,7 +52,7 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
 
   const view: View = new RSView(container, { ...options, ...modelConfig });
 
-  const presenter: Presenter = new RSPresenter(model, view);
+  new RSPresenter(model, view);
 
   // Facade methods
   const slider: Slider = {
@@ -83,13 +85,6 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
     },
     setValues(v: number[] = []) {
       return model.setValues(v);
-    },
-    addScale() {
-      const options = this.getConfig();
-      const scale: Scale = view.addScale(options);
-      scale.addObserver(presenter.setModelValue.bind(presenter));
-
-      return scale;
     },
     addObserver,
   };

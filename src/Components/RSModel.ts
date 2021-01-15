@@ -31,8 +31,6 @@ export default class RSModel extends RSubject implements Model {
 
     // Set config
     this._configure(o);
-    // Set hander values
-    // this._initValues();
   }
 
   public getConfig() {

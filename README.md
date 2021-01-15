@@ -41,7 +41,7 @@ npm test
 ### Создать слайдер
 
 ```typescript
-const mySlider = RSlider.create(selector: string, options: Object);
+const mySlider: RSlider = $(selector: string).rslider(options: SliderOptions);
 ```
 
 ### Задать / узнать настройки
@@ -65,8 +65,9 @@ mySlider.getConfig(): SliderOptions;
   // Настройки отображения
   isHorizontal: true,   // boolean
   handlerRadius: 8,     // number
-  tooltip: true,       // boolean
-  progress: false,      // boolean
+  showProgress: false,  // boolean
+  showScale: true,      // boolean
+  showTooltip: true,    // boolean
 }
 ```
 
@@ -86,16 +87,10 @@ mySlider.values(): number[];
 mySlider.values(values: number[]): number[];
 ```
 
-### Добавить шкалу значений
-
-```typescript
-mySlider.addScale(): Scale;
-```
-
 ### Добавить панель управления
 
 ```typescript
-RSlider.addControlPanel(mySlider: Slider): Panel;
+const myPanel = $().rspanel(mySlider: RSlider): RSPanel;
 ```
 
 ## Архитектура приложения

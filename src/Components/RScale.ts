@@ -95,10 +95,6 @@ export default class RScale extends RSubject implements Scale {
       i += 1;
     }
 
-    if (this.options.handlerCount === 1) {
-      this._addClickListener();
-    }
-
     return this.UI.scale;
   }
 
@@ -112,19 +108,17 @@ export default class RScale extends RSubject implements Scale {
     return index;
   }
 
-  private _addClickListener() {
-    this.UI.scale.addEventListener('click', (e) => {
-      const target = <HTMLElement>e.target;
+  private _onClick(e: MouseEvent) {
+    const target = <HTMLLIElement>e.target;
 
-      if (target.classList.contains('rscale__mark')) {
-        const value = parseInt(target.textContent, 10);
+    if (target.classList.contains('rscale__mark')) {
+      const value = parseInt(target.textContent, 10);
 
-        // Get closest handler index
-        const index = this._getClosestHandlerIndex(value);
+      // Get closest handler index
+      const index = this._getClosestHandlerIndex(value);
 
-        this.notifyObservers(index, value);
-      }
-    });
+      this.notifyObservers(index, value);
+    }
   }
 
   private _render() {
@@ -133,6 +127,8 @@ export default class RScale extends RSubject implements Scale {
     this.UI.scale.className = `rslider__scale rscale rscale--layout_${layout}`;
 
     this._populateScale();
+
+    this.UI.scale.addEventListener('click', (e) => this._onClick(e));
 
     return this.UI.scale;
   }

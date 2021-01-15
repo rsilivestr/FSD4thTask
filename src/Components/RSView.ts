@@ -7,7 +7,6 @@ import RSubject, { Subject } from './RSubject';
 import RSTrack, { Track } from './RSTrack';
 
 export interface View extends Subject {
-  addScale(o: ModelOptions): Scale;
   getConfig(): ViewOptions;
   setConfig(o: ViewOptions): ViewOptions;
   setModelOptions(o: SliderOptions): ModelOptions;
@@ -18,8 +17,9 @@ export interface View extends Subject {
 export type ViewOptions = {
   isHorizontal?: boolean;
   handlerRadius?: number;
-  tooltip?: boolean;
-  progress?: boolean;
+  showProgress?: boolean;
+  showScale?: boolean;
+  showTooltip?: boolean;
 };
 
 export type ViewElements = {
@@ -104,6 +104,7 @@ export default class RSView extends RSubject implements View {
         // Update children
         this.children.scale.setConfig(o);
         this._updateHandlers();
+        this._updateProgress();
       }
       if (stepSize !== mo.stepSize) {
         this.modelOptions.stepSize = stepSize;
@@ -126,24 +127,6 @@ export default class RSView extends RSubject implements View {
     return this.modelOptions;
   }
 
-  public addScale(o: ModelOptions) {
-    const scale = new RScale(this.container, o);
-
-    // Save to this
-    this.children.scale = scale;
-
-    const scaleElement = scale.getElement();
-
-    // Append to slider and save to UI object
-    this.UI.scale = scaleElement;
-    this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
-
-    // Update scale values
-    this.children.scale.setValues(this.values);
-
-    return scale;
-  }
-
   // Invoked on Track mousedown (Observer)
   public onTrackMousedown(e: MouseEvent) {
     // Get click coord, convert to value
@@ -158,7 +141,7 @@ export default class RSView extends RSubject implements View {
     this._grab(handler);
 
     // Update handler
-    this._moveHander(coord);
+    this._moveHandler(coord);
   }
 
   public update() {
@@ -166,11 +149,48 @@ export default class RSView extends RSubject implements View {
     this._updateHandlers();
 
     // Update progress
-    if (this.options.progress) {
+    if (this.options.showProgress) {
       this._updateProgress();
     }
 
     return this.values;
+  }
+
+  private _addScale(o: ModelOptions) {
+    if (!this.children.scale) {
+      const scale = new RScale(this.container, o);
+
+      // Save to this
+      this.children.scale = scale;
+    }
+
+    // Append to slider and save to UI object
+    const scaleElement = this.children.scale.getElement();
+    this.UI.scale = scaleElement;
+    this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
+
+    // Update scale values
+    this.children.scale.setValues(this.values);
+
+    // Send Scale clicks to model through presenter, then model will update view
+    this.children.scale.addObserver(this.notifyObservers.bind(this));
+  }
+
+  private _toggleScale(showScale: boolean) {
+    // If slider is not rendered yet
+    if (!this.UI.slider) {
+      return;
+    }
+
+    if (showScale && !this.UI.scale) {
+      // Add and update scale
+      this._addScale({ ...this.modelOptions, ...this.options });
+      this.children.scale.setValues(this.values);
+    } else if (!showScale && this.UI.scale) {
+      // Remove from DOM and this.UI
+      this.UI.scale.remove();
+      this.UI.scale = null;
+    }
   }
 
   private _areArraysEqual(a: number[], b: number[]) {
@@ -205,8 +225,12 @@ export default class RSView extends RSubject implements View {
     this._createHandlers();
 
     // Create & append progress element
-    if (this.options.progress) {
+    if (this.options.showProgress) {
       this._createProgress();
+    }
+
+    if (this.options.showScale) {
+      this._addScale({ ...this.modelOptions, ...this.options });
     }
 
     return this.UI.slider;
@@ -315,7 +339,7 @@ export default class RSView extends RSubject implements View {
     // If slider has more than 2 handlers
     if (this.modelOptions.handlerCount > 2) {
       // Set to false and return
-      this.options.progress = false;
+      this.options.showProgress = false;
       return;
     }
 
@@ -335,7 +359,7 @@ export default class RSView extends RSubject implements View {
     const options: HandlerOptions = {
       id: index,
       layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
-      tooltip: this.options.tooltip,
+      tooltip: this.options.showTooltip,
       value: 0,
     };
     // Create handler instance
@@ -392,7 +416,7 @@ export default class RSView extends RSubject implements View {
     return index;
   }
 
-  private _moveHander(coord: number) {
+  private _moveHandler(coord: number) {
     // Convert coord to value
     const value = this._coordToValue(coord);
 
@@ -404,7 +428,7 @@ export default class RSView extends RSubject implements View {
     this._updateHandlers();
 
     // Update progress bar
-    if (this.options.progress) {
+    if (this.options.showProgress) {
       this._updateProgress();
     }
   }
@@ -413,7 +437,7 @@ export default class RSView extends RSubject implements View {
     // Get relative coord in px
     const coord = this._getRelativeCoord(e);
 
-    this._moveHander(coord);
+    this._moveHandler(coord);
   }
 
   // Bind _drag method to this
@@ -465,7 +489,7 @@ export default class RSView extends RSubject implements View {
   }
 
   private _configure(o: ViewOptions) {
-    const { isHorizontal, handlerRadius, tooltip, progress } = o;
+    const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
 
     // isHorizontal (orientation)
     if (typeof isHorizontal === 'boolean') {
@@ -489,33 +513,45 @@ export default class RSView extends RSubject implements View {
       this.options.handlerRadius = 8;
     }
 
-    // Tooltip
-    if (typeof tooltip === 'boolean') {
-      // Set value
-      this.options.tooltip = tooltip;
-    } else if (this.options.tooltip === undefined) {
-      // Default value
-      this.options.tooltip = true;
-    }
-
-    // Update handlers
-    this.children.handlers.forEach((h) => h.toggleTooltip(this.options.tooltip));
-
     // Progress
-    if (typeof progress === 'boolean') {
+    if (typeof showProgress === 'boolean') {
       // Set value
-      this.options.progress = progress;
-    } else if (this.options.progress === undefined) {
+      this.options.showProgress = showProgress;
+      this._toggleProgress(this.options.showProgress);
+    } else if (this.options.showProgress === undefined) {
       // Default value
-      this.options.progress = false;
+      this.options.showProgress = false;
+      this._toggleProgress(this.options.showProgress);
     }
 
-    this._toggleProgress(this.options.progress);
+    // Scale
+    if (typeof showScale === 'boolean') {
+      // Set value
+      this.options.showScale = showScale;
 
+      this._toggleScale(this.options.showScale);
+    } else if (this.options.showScale === undefined) {
+      // Default true
+      this.options.showScale = true;
+
+      this._toggleScale(this.options.showScale);
+    }
     // Update scale
     if (this.children.scale) {
       this.children.scale.setConfig({ ...this.options, ...this.modelOptions });
     }
+
+    // Tooltip
+    if (typeof showTooltip === 'boolean') {
+      // Set value
+      this.options.showTooltip = showTooltip;
+    } else if (this.options.showTooltip === undefined) {
+      // Default value
+      this.options.showTooltip = true;
+    }
+
+    // Update handlers
+    this.children.handlers.forEach((h) => h.toggleTooltip(this.options.showTooltip));
 
     return this.options;
   }

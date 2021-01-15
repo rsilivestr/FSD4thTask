@@ -118,48 +118,55 @@ export default class RSPanel implements Panel {
       stepSize,
       handlerCount,
       isHorizontal,
-      tooltip,
-      progress,
+      showProgress,
+      showScale,
+      showTooltip,
     } = this.options;
 
     // Render handler value inputs
     this._renderValueInputs();
 
     // Create min input
-    const minInput = this._createInput(this.UI.configDiv, 'minValue');
+    const minInput = this._createInput(this.UI.configDiv, 'Min value');
     minInput.value = minValue.toString(10);
     minInput.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
         const minValue = parseInt(minInput.value, 10);
 
         this.options = this.slider.setConfig({ minValue });
+
+        minInput.value = this.options.minValue.toString(10);
       }
     });
 
     // Create max input
-    const maxInput = this._createInput(this.UI.configDiv, 'maxValue');
+    const maxInput = this._createInput(this.UI.configDiv, 'Max value');
     maxInput.value = maxValue.toString(10);
     maxInput.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
         const maxValue = parseInt(maxInput.value, 10);
 
         this.options = this.slider.setConfig({ maxValue });
+
+        maxInput.value = this.options.maxValue.toString(10);
       }
     });
 
     // Create step input
-    const stepInput = this._createInput(this.UI.configDiv, 'stepSize');
+    const stepInput = this._createInput(this.UI.configDiv, 'Step size');
     stepInput.value = stepSize.toString(10);
     stepInput.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
         const stepSize = parseInt(stepInput.value, 10);
 
         this.options = this.slider.setConfig({ stepSize });
+
+        stepInput.value = this.options.stepSize.toString(10);
       }
     });
 
     // Create handlerCount input
-    const handlerCountInput = this._createInput(this.UI.configDiv, 'handlerCount');
+    const handlerCountInput = this._createInput(this.UI.configDiv, 'Handler count');
     handlerCountInput.value = handlerCount.toString(10);
     handlerCountInput.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
@@ -168,31 +175,44 @@ export default class RSPanel implements Panel {
         this.options = this.slider.setConfig({ handlerCount });
 
         // If handlerCount > 2 progress is disabled
-        progressInput.checked = this.options.progress;
+        progressInput.checked = this.options.showProgress;
       }
     });
 
     // Create isHorizontal checkbox
-    const isHorizontalInput = this._createInput(this.UI.configDiv, 'isHorizontal', true);
+    const isHorizontalInput = this._createInput(this.UI.configDiv, 'Is horizontal', true);
     isHorizontalInput.checked = isHorizontal;
     isHorizontalInput.addEventListener('change', () => {
       this.options = this.slider.setConfig({ isHorizontal: isHorizontalInput.checked });
-    });
 
-    // Create tooltip checkbox
-    const tooltipInput = this._createInput(this.UI.configDiv, 'tooltip', true);
-    tooltipInput.checked = tooltip;
-    tooltipInput.addEventListener('change', () => {
-      this.options = this.slider.setConfig({ tooltip: tooltipInput.checked });
+      isHorizontalInput.checked = this.options.isHorizontal;
     });
 
     // Create progress checkbox
-    const progressInput = this._createInput(this.UI.configDiv, 'progress', true);
-    progressInput.checked = progress;
+    const progressInput = this._createInput(this.UI.configDiv, 'Show progress', true);
+    progressInput.checked = showProgress;
     progressInput.addEventListener('change', () => {
-      this.options = this.slider.setConfig({ progress: progressInput.checked });
+      this.options = this.slider.setConfig({ showProgress: progressInput.checked });
+
       // Update value validated by slider
-      progressInput.checked = this.options.progress;
+      progressInput.checked = this.options.showProgress;
+    });
+
+    // Create scale checkbox
+    const scaleInput = this._createInput(this.UI.configDiv, 'Show scale', true);
+    scaleInput.checked = showScale;
+    scaleInput.addEventListener('change', () => {
+      this.options = this.slider.setConfig({ showScale: scaleInput.checked });
+
+      // Update value validated by slider
+      scaleInput.checked = this.options.showScale;
+    });
+
+    // Create tooltip checkbox
+    const tooltipInput = this._createInput(this.UI.configDiv, 'Show tooltip', true);
+    tooltipInput.checked = showTooltip;
+    tooltipInput.addEventListener('change', () => {
+      this.options = this.slider.setConfig({ showTooltip: tooltipInput.checked });
     });
 
     // Append to container

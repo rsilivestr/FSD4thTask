@@ -1,7 +1,5 @@
 import { expect } from 'chai';
-
 import { create } from '../src/Components/RSlider';
-import RScale from '../src/Components/RScale';
 
 describe('RSlider', () => {
   const container = document.createElement('div');
@@ -16,8 +14,9 @@ describe('RSlider', () => {
     'handlerCount',
     'isHorizontal',
     'handlerRadius',
-    'tooltip',
-    'progress',
+    'showProgress',
+    'showScale',
+    'showTooltip',
   ];
 
   // const DEFAULT_CONFIG = {
@@ -85,11 +84,5 @@ describe('RSlider', () => {
     // });
     // TODO RSlider "before each" hook for "Should return scale object" FAILED
     // TypeError: Cannot read property 'toString' of undefined at RSHandler._updateTooltip
-  });
-
-  describe('addScale(): Scale', () => {
-    it('Should return scale object', () => {
-      expect(SLIDER.addScale()).to.be.an.instanceOf(RScale);
-    });
   });
 });
