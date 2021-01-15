@@ -1,6 +1,4 @@
-import Observer from './Observer';
-
-export default interface Presenter extends Observer {
+export default interface Presenter {
   getValues(): number[];
   setModelValue(index: number, value: number): number;
 }

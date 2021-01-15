@@ -1,3 +1,3 @@
-import Observer from './Observer';
-
-export default interface Panel extends Observer {}
+export default interface Panel {
+  update(v: number[]): number[];
+}

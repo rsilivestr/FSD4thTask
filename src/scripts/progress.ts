@@ -6,7 +6,7 @@ export interface IProgress {
 
 export type ProgressCoords = [number, number];
 
-export default class Progress {
+export default class Progress implements IProgress {
   private coords: ProgressCoords = [0, 0];
   private isHorizontal: boolean = null;
   private UIprogress: HTMLDivElement = document.createElement('div');

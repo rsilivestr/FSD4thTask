@@ -1,28 +1,30 @@
 import Handler from './interface/Handler';
 import HandlerOptions from './interface/HandlerOptions';
 import ModelOptions from './interface/ModelOptions';
+import Scale from './interface/Scale';
 import SliderOptions from './interface/SliderOptions';
 import View from './interface/View';
 import ViewOptions from './interface/ViewOptions';
 
+import Progress, { IProgress, ProgressCoords } from './progress';
 import RSHandler from './handler';
 import RScale from './scale';
 import RSubject from './subject';
-import Progress, { IProgress, ProgressCoords } from './progress';
+import Track, { ITrack } from './track';
 
 type ViewElements = {
   activeHandler: HTMLElement;
   progress?: HTMLElement;
   scale?: HTMLElement;
   slider?: HTMLElement;
-  track?: HTMLElement;
+  track?: HTMLDivElement;
 };
 
 type ViewChildren = {
   handlers: Handler[];
   progress: IProgress;
-  scale: RScale;
-  // track: Track;
+  scale: Scale;
+  track: ITrack;
 };
 
 export default class RSView extends RSubject implements View {
@@ -30,7 +32,7 @@ export default class RSView extends RSubject implements View {
     handlers: [],
     progress: null,
     scale: null,
-    // track: null,
+    track: null,
   };
 
   private container: HTMLElement;
@@ -132,13 +134,21 @@ export default class RSView extends RSubject implements View {
     return scale;
   }
 
-  private _areArraysEqual(a: number[], b: number[]) {
-    return (
-      a.length === b.length &&
-      a.every((value, index) => {
-        value === b[index];
-      })
-    );
+  // Invoked on Track mousedown (Observer)
+  public onTrackMousedown(e: MouseEvent) {
+    // Get click coord, convert to value
+    const coord = this._getRelativeCoord(e);
+    const value = this._coordToValue(coord);
+
+    // Get closest handler
+    const closestIndex = this._getClosestHandlerIndex(value);
+    const handler = this.children.handlers[closestIndex].getElement();
+
+    // Grab that handler
+    this._grab(handler);
+
+    // Update handler
+    this._moveHander(coord);
   }
 
   public update() {
@@ -151,6 +161,15 @@ export default class RSView extends RSubject implements View {
     }
 
     return this.values;
+  }
+
+  private _areArraysEqual(a: number[], b: number[]) {
+    return (
+      a.length === b.length &&
+      a.every((value, index) => {
+        value === b[index];
+      })
+    );
   }
 
   private _init(o: SliderOptions): void {
@@ -170,7 +189,7 @@ export default class RSView extends RSubject implements View {
     this.UI.slider = this._elCreateSlider();
 
     // Create & append track element
-    this.UI.track = this._elCreateTrack();
+    this.UI.track = this._createTrack();
 
     // Create & append handler elements
     this._createHandlers();
@@ -214,10 +233,10 @@ export default class RSView extends RSubject implements View {
 
   private _correctHandlerCoord(): number {
     // Get track length
-    const { sliderLength } = this._getRect();
+    const { trackLength } = this.children.track.getRect();
     const r = this.options.handlerRadius;
 
-    return 1 - (2 * r) / sliderLength;
+    return 1 - (2 * r) / trackLength;
   }
 
   private _coordToValue(coord: number): number {
@@ -248,17 +267,16 @@ export default class RSView extends RSubject implements View {
     return slider;
   }
 
-  private _elCreateTrack(): HTMLElement {
-    // Create element
-    const track = document.createElement('div');
-    track.className = 'rslider__track';
-    // Append
-    this.UI.slider.appendChild(track);
+  private _createTrack(): HTMLDivElement {
+    this.children.track = new Track(this.options.isHorizontal);
 
-    // Add mousedown listener
-    track.addEventListener('mousedown', this._onTrackClick.bind(this));
+    const trackElement = this.children.track.getElement();
 
-    return track;
+    this.UI.slider.appendChild(trackElement);
+
+    this.children.track.addObserver(this.onTrackMousedown.bind(this));
+
+    return trackElement;
   }
 
   private _calcProgressCoords(): ProgressCoords {
@@ -358,10 +376,10 @@ export default class RSView extends RSubject implements View {
 
   private _getRelativeCoord(e: MouseEvent): number {
     const { isHorizontal } = this.options;
-    const { minCoord, sliderLength } = this._getRect();
+    const { trackMin, trackLength } = this.children.track.getRect();
 
-    const diff = isHorizontal ? e.clientX - minCoord : minCoord - e.clientY;
-    const coord = (diff / sliderLength) * 100;
+    const diff = isHorizontal ? e.clientX - trackMin : trackMin - e.clientY;
+    const coord = (diff / trackLength) * 100;
 
     return coord;
   }
@@ -374,22 +392,6 @@ export default class RSView extends RSubject implements View {
     const index = this.values.indexOf(closest);
 
     return index;
-  }
-
-  private _onTrackClick(e: MouseEvent): void {
-    // Get click coord, convert to value
-    const coord = this._getRelativeCoord(e);
-    const value = this._coordToValue(coord);
-
-    // Get closest handler
-    const closestIndex = this._getClosestHandlerIndex(value);
-    const handler = this.children.handlers[closestIndex].getElement();
-
-    // Grab that handler
-    this._grab(handler);
-
-    // Update handler
-    this._moveHander(coord);
   }
 
   private _moveHander(coord: number) {
@@ -443,6 +445,9 @@ export default class RSView extends RSubject implements View {
       this.UI.slider.classList.remove('rslider--layout_horizontal');
     }
 
+    // Update track
+    this.children.track.toggleLayout(this.options.isHorizontal);
+
     // Update progress
     if (this.UI.progress) {
       this.children.progress.toggleHorizontal(this.options.isHorizontal);
@@ -468,12 +473,14 @@ export default class RSView extends RSubject implements View {
     if (typeof isHorizontal === 'boolean') {
       // Set value
       this.options.isHorizontal = isHorizontal;
+
+      this._updateOrientation(this.options.isHorizontal);
     } else if (this.options.isHorizontal === undefined) {
       // Default value
       this.options.isHorizontal = true;
-    }
 
-    this._updateOrientation(this.options.isHorizontal);
+      this._updateOrientation(this.options.isHorizontal);
+    }
 
     // Handler radius
     if (typeof handlerRadius === 'number' && !isNaN(handlerRadius)) {
