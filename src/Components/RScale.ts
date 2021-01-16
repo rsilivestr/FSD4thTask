@@ -1,8 +1,7 @@
-import { ModelOptions } from './RSModel';
-import { SliderOptions } from './RSlider';
-import RSubject, { Subject } from './RSubject';
+import { Subject, ModelOptions, SliderOptions } from './interfaces';
+import RSubject from './RSubject';
 
-export interface Scale extends Subject {
+interface Scale extends Subject {
   getElement: () => HTMLElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
   setConfig: (o: ModelOptions) => void;
@@ -15,7 +14,7 @@ type ScaleElements = {
   marks: HTMLElement[];
 };
 
-export default class RScale extends RSubject implements Scale {
+class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
 
   private maxScaleSteps: number = 10;
@@ -133,3 +132,5 @@ export default class RScale extends RSubject implements Scale {
     return this.UI.scale;
   }
 }
+
+export default RScale;

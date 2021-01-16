@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // import { expect } from 'chai';
 
 // import { create, addControlPanel } from '../src/scripts/rslider';

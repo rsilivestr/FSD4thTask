@@ -1,20 +1,21 @@
-import { ModelOptions } from './RSModel';
-import { SliderOptions } from './RSlider';
-import RSProgress, { Progress, ProgressCoords } from './RSProgress';
-import RSHandler, { Handler, HandlerOptions } from './RSHandler';
-import RScale, { Scale } from './RScale';
-import RSubject, { Subject } from './RSubject';
-import RSTrack, { Track } from './RSTrack';
+import {
+  ModelOptions,
+  SliderOptions,
+  Progress,
+  ProgressCoords,
+  Handler,
+  HandlerOptions,
+  Scale,
+  Subject,
+  Track,
+} from './interfaces';
+import RSProgress from './RSProgress';
+import RSHandler from './RSHandler';
+import RScale from './RScale';
+import RSubject from './RSubject';
+import RSTrack from './RSTrack';
 
-export interface View extends Subject {
-  getConfig(): ViewOptions;
-  setConfig(o: ViewOptions): ViewOptions;
-  setModelOptions(o: SliderOptions): ModelOptions;
-  setValues(v: number[]): void;
-  update(): number[];
-}
-
-export type ViewOptions = {
+type ViewOptions = {
   isHorizontal?: boolean;
   handlerRadius?: number;
   showProgress?: boolean;
@@ -22,7 +23,15 @@ export type ViewOptions = {
   showTooltip?: boolean;
 };
 
-export type ViewElements = {
+interface View extends Subject {
+  getConfig(): ViewOptions;
+  setConfig(o: ViewOptions): ViewOptions;
+  setModelOptions(o: SliderOptions): ModelOptions;
+  setValues(v: number[]): void;
+  update(): number[];
+}
+
+type ViewElements = {
   activeHandler: HTMLElement;
   progress?: HTMLElement;
   scale?: HTMLElement;
@@ -37,7 +46,7 @@ type ViewChildren = {
   track: Track;
 };
 
-export default class RSView extends RSubject implements View {
+class RSView extends RSubject implements View {
   private children: ViewChildren = {
     handlers: [],
     progress: null,
@@ -73,8 +82,6 @@ export default class RSView extends RSubject implements View {
   }
 
   public setValues(values: number[]): void {
-    if (this._areArraysEqual(values, this.values)) return;
-
     this.values = values;
 
     if (this.children.scale) {
@@ -121,7 +128,12 @@ export default class RSView extends RSubject implements View {
       }
     } else {
       // First time
-      this.modelOptions = { minValue, maxValue, stepSize, handlerCount };
+      this.modelOptions = {
+        minValue,
+        maxValue,
+        stepSize,
+        handlerCount,
+      };
     }
 
     return this.modelOptions;
@@ -187,19 +199,11 @@ export default class RSView extends RSubject implements View {
       this._addScale({ ...this.modelOptions, ...this.options });
       this.children.scale.setValues(this.values);
     } else if (!showScale && this.UI.scale) {
-      // Remove from DOM and this.UI
+      // Remove element from DOM and this.UI, remove Scale instance from chidlren
       this.UI.scale.remove();
       this.UI.scale = null;
+      this.children.scale = null;
     }
-  }
-
-  private _areArraysEqual(a: number[], b: number[]) {
-    return (
-      a.length === b.length &&
-      a.every((value, index) => {
-        value === b[index];
-      })
-    );
   }
 
   private _init(o: SliderOptions): void {
@@ -352,6 +356,7 @@ export default class RSView extends RSubject implements View {
       // Remove from DOM and this.UI
       this.UI.progress.remove();
       this.UI.progress = null;
+      this.children.progress = null;
     }
   }
 
@@ -505,7 +510,7 @@ export default class RSView extends RSubject implements View {
     }
 
     // Handler radius
-    if (typeof handlerRadius === 'number' && !isNaN(handlerRadius)) {
+    if (typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius)) {
       // Set value
       this.options.handlerRadius = handlerRadius;
     } else if (this.options.handlerRadius === undefined) {
@@ -556,3 +561,5 @@ export default class RSView extends RSubject implements View {
     return this.options;
   }
 }
+
+export default RSView;

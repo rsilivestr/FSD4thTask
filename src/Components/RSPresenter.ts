@@ -1,12 +1,12 @@
-import { Model } from './RSModel';
-import { View } from './RSView';
+import { Model, View } from './interfaces';
 
-export interface Presenter {
+interface Presenter {
+  init(): void;
   getValues(): number[];
   setModelValue(index: number, value: number): number;
 }
 
-export default class RSPresenter implements Presenter {
+class RSPresenter implements Presenter {
   private model: Model;
 
   private view: View;
@@ -14,8 +14,18 @@ export default class RSPresenter implements Presenter {
   constructor(model: Model, view: View) {
     this.model = model;
     this.view = view;
+  }
 
-    this._init();
+  public init() {
+    this.view.addObserver(this.setModelValue.bind(this));
+
+    // Add and notify observer
+    this.model.addObserver(this.update.bind(this));
+
+    // ? TODO add public model notify method to call withous params
+
+    const modelValues = this.model.getValues();
+    this.model.notifyObservers(modelValues);
   }
 
   public getValues() {
@@ -31,16 +41,6 @@ export default class RSPresenter implements Presenter {
   public update(v: number[]): void {
     this.view.setValues(v);
   }
-
-  private _init(): void {
-    this.view.addObserver(this.setModelValue.bind(this));
-
-    // Add and notify observer
-    this.model.addObserver(this.update.bind(this));
-
-    // ? TODO add public model notify method to call withous params
-
-    const modelValues = this.model.getValues();
-    this.model.notifyObservers(modelValues);
-  }
 }
+
+export default RSPresenter;

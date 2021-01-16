@@ -3,7 +3,13 @@
     "browser": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/eslint-recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "eslint-config-airbnb",
+    "plugin:import/typescript"
+    // "eslint-config-prettier"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -13,9 +19,24 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "eslint-plugin-prettier"],
   "rules": {
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+    "no-underscore-dangle": "off",
+    "implicit-arrow-linebreak": ["error", "below"],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "ts": "never"
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "999.999.999"
+    }
   }
 }

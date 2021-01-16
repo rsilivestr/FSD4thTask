@@ -1,10 +1,6 @@
-export interface Subject {
-  addObserver: (o: Function) => Function[];
-  removeObserver: (o: Function) => Function[];
-  notifyObservers: (...notifyData: any) => void;
-}
+import { Subject } from './interfaces';
 
-export default class RSubject implements Subject {
+class RSubject implements Subject {
   protected observers: Function[] = [];
 
   public addObserver(o: Function) {
@@ -23,3 +19,5 @@ export default class RSubject implements Subject {
     this.observers.forEach((o) => o(...data));
   }
 }
+
+export default RSubject;

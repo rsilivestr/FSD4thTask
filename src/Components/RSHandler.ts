@@ -1,24 +1,6 @@
-export interface Handler {
-  getElement(): HTMLElement;
-  setPosition(coord: number): void;
-  toggleTooltip(value?: boolean): boolean;
-  toggleLayout(layout: 'horizontal' | 'vertical'): void;
-  updateValue(value: number): void;
-}
+import { Handler, HandlerOptions, HandlerElements } from './interfaces';
 
-export type HandlerOptions = {
-  id: number;
-  layout: string;
-  tooltip: boolean;
-  value: number;
-};
-
-type HandlerElements = {
-  handler: HTMLElement;
-  tooltip: HTMLElement;
-};
-
-export default class RSHandler implements Handler {
+class RSHandler implements Handler {
   private coord: number;
 
   private id: number;
@@ -139,3 +121,5 @@ export default class RSHandler implements Handler {
     this.UI.tooltip.textContent = this.value.toString(10);
   }
 }
+
+export default RSHandler;

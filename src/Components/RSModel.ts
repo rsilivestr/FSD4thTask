@@ -1,22 +1,7 @@
-import RSubject, { Subject } from './RSubject';
+import { ModelOptions, Model } from './interfaces';
+import RSubject from './RSubject';
 
-export interface Model extends Subject {
-  getConfig(): ModelOptions;
-  setConfig(o?: ModelOptions): ModelOptions;
-  getValue(index: number): number | null;
-  getValues(): number[];
-  setValue(index: number, v: number): number;
-  setValues(v: number[]): number[];
-}
-
-export type ModelOptions = {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-};
-
-export default class RSModel extends RSubject implements Model {
+class RSModel extends RSubject implements Model {
   private options: ModelOptions = {
     minValue: null,
     maxValue: null,
@@ -38,7 +23,7 @@ export default class RSModel extends RSubject implements Model {
   }
 
   public setConfig(o?: ModelOptions) {
-    if (o) return this._configure(o);
+    return this._configure(o);
   }
 
   public getValue(index: number) {
@@ -88,7 +73,7 @@ export default class RSModel extends RSubject implements Model {
     // minValue
     if (
       // Number
-      this._isNumber(minValue) &&
+      RSModel._isNumber(minValue) &&
       // which is not equal to min
       minValue !== maxValue &&
       // and, if no new max provided, not equal to existing max
@@ -102,7 +87,7 @@ export default class RSModel extends RSubject implements Model {
     // maxValue
     if (
       // Number
-      this._isNumber(maxValue) &&
+      RSModel._isNumber(maxValue) &&
       // which is not equal to min
       maxValue !== minValue &&
       // and, if no new min provided, not equal to existing min
@@ -114,7 +99,11 @@ export default class RSModel extends RSubject implements Model {
     }
 
     // stepSize
-    if (this._isNumber(stepSize) && stepSize > 0 && stepSize !== this.options.stepSize) {
+    if (
+      RSModel._isNumber(stepSize) &&
+      stepSize > 0 &&
+      stepSize !== this.options.stepSize
+    ) {
       this.options.stepSize = stepSize;
     } else if (this.options.stepSize === null) {
       this.options.stepSize = 10;
@@ -122,7 +111,7 @@ export default class RSModel extends RSubject implements Model {
 
     // handlerCount
     if (
-      this._isNumber(handlerCount) &&
+      RSModel._isNumber(handlerCount) &&
       handlerCount > 0 &&
       handlerCount !== this.options.handlerCount
     ) {
@@ -157,8 +146,8 @@ export default class RSModel extends RSubject implements Model {
     }
   }
 
-  private _isNumber(n: number) {
-    return typeof n === 'number' && !isNaN(n);
+  static _isNumber(n: number) {
+    return typeof n === 'number' && !Number.isNaN(n);
   }
 
   private _normalizeValue(value: number): number {
@@ -189,3 +178,5 @@ export default class RSModel extends RSubject implements Model {
     this.notifyObservers(this.values);
   }
 }
+
+export default RSModel;

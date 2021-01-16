@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { expect } from 'chai';
 import RSModel from '../src/Components/RSModel';
 
@@ -24,6 +25,7 @@ describe('RSModel', () => {
       expect(m.getValue(0)).to.be.a('number');
       // Undefined value is undefined
       const { handlerCount } = m.getConfig();
+      // eslint-disable-next-line no-unused-expressions
       expect(m.getValue(handlerCount)).to.be.undefined;
     });
   });

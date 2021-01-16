@@ -1,6 +1,6 @@
-import RSModel, { Model } from './RSModel';
+import RSModel from './RSModel';
 import RSPresenter from './RSPresenter';
-import RSView, { View } from './RSView';
+import RSView from './RSView';
 import RSPanel from './RSPanel';
 
 import '../styles/rslider.sass';
@@ -31,7 +31,7 @@ export interface Slider {
   setValues(values?: number[]): number[];
 }
 
-export function create(container: HTMLElement, options: SliderOptions = {}) {
+const create = (container: HTMLElement, options: SliderOptions = {}) => {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
@@ -42,7 +42,7 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
     observers.forEach((o) => o(values));
   };
 
-  const model: Model = new RSModel(options);
+  const model = new RSModel(options);
 
   // Notify slider about model changes
   // Slider then notifies it's own observers (e.g. panel)
@@ -50,9 +50,10 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
 
   const modelConfig = model.getConfig();
 
-  const view: View = new RSView(container, { ...options, ...modelConfig });
+  const view = new RSView(container, { ...options, ...modelConfig });
 
-  new RSPresenter(model, view);
+  const presenter = new RSPresenter(model, view);
+  presenter.init();
 
   // Facade methods
   const slider: Slider = {
@@ -60,19 +61,18 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
       return container;
     },
     getConfig() {
-      const modelConfig = model.getConfig();
-      const viewConfig = view.getConfig();
+      const mConfig = model.getConfig();
+      const vConfig = view.getConfig();
 
-      return { ...modelConfig, ...viewConfig };
+      return { ...mConfig, ...vConfig };
     },
     setConfig(o: SliderOptions) {
-      const modelConfig = model.setConfig(o);
+      const mConfig = model.setConfig(o);
+      const vConfig = view.setConfig(o);
 
-      const viewConfig = view.setConfig(o);
+      view.setModelOptions(mConfig);
 
-      view.setModelOptions(modelConfig);
-
-      return { ...modelConfig, ...viewConfig };
+      return { ...mConfig, ...vConfig };
     },
     getValue(index: number = 0) {
       return model.getValue(index);
@@ -90,8 +90,8 @@ export function create(container: HTMLElement, options: SliderOptions = {}) {
   };
 
   return slider;
-}
+};
 
-export function addControlPanel(s: Slider) {
-  return new RSPanel(s);
-}
+const addControlPanel = (s: Slider) => new RSPanel(s);
+
+export { create, addControlPanel };

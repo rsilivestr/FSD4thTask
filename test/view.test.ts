@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // import { expect } from 'chai';
 // import RSView from '../src/scripts/view';
 // const container = document.createElement('div');

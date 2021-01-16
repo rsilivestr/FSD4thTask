@@ -1,13 +1,9 @@
-import RSubject, { Subject } from './RSubject';
+import { Track } from './interfaces';
+import RSubject from './RSubject';
 
-export interface Track extends Subject {
-  getElement: () => HTMLDivElement;
-  getRect: () => any;
-  toggleLayout: (isHorizontal: boolean) => void;
-}
-
-export default class RSTrack extends RSubject implements Track {
+class RSTrack extends RSubject implements Track {
   private isHorizontal: boolean;
+
   private UItrack: HTMLDivElement = document.createElement('div');
 
   constructor(isHorizontal: boolean) {
@@ -51,3 +47,5 @@ export default class RSTrack extends RSubject implements Track {
     return this.UItrack;
   }
 }
+
+export default RSTrack;

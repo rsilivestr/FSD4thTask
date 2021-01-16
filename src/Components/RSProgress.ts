@@ -1,14 +1,10 @@
-export interface Progress {
-  getElement: () => HTMLDivElement;
-  setCoords: (coords: ProgressCoords) => void;
-  toggleHorizontal: (isHorizontal: boolean) => void;
-}
+import { Progress, ProgressCoords } from './interfaces';
 
-export type ProgressCoords = [number, number];
-
-export default class RSProgress implements Progress {
+class RSProgress implements Progress {
   private coords: ProgressCoords = [0, 0];
+
   private isHorizontal: boolean = null;
+
   private UIprogress: HTMLDivElement = document.createElement('div');
 
   constructor(coords: ProgressCoords, isHorizontal: boolean) {
@@ -52,3 +48,5 @@ export default class RSProgress implements Progress {
     }
   }
 }
+
+export default RSProgress;

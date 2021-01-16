@@ -1,5 +1,5 @@
+/* eslint-disable no-undef */
 import { expect } from 'chai';
-
 import Model from '../src/Components/RSModel';
 import View from '../src/Components/RSView';
 import Presenter from '../src/Components/RSPresenter';

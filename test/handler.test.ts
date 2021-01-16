@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
 import { use, expect } from 'chai';
-import RSHandler, { Handler, HandlerOptions } from '../src/Components/RSHandler';
+import { Handler, HandlerOptions } from '../src/Components/interfaces';
+import RSHandler from '../src/Components/RSHandler';
 
 use(require('chai-dom'));
 
