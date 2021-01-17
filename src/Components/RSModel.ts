@@ -2,11 +2,13 @@ import { ModelOptions, Model } from './interfaces';
 import RSubject from './RSubject';
 
 class RSModel extends RSubject implements Model {
+  private directionMod: 1 | -1 = 1;
+
   private options: ModelOptions = {
-    minValue: null,
-    maxValue: null,
-    stepSize: null,
-    handlerCount: null,
+    minValue: 0,
+    maxValue: 100,
+    stepSize: 10,
+    handlerCount: 1,
   };
 
   private values: number[] = [];
@@ -14,8 +16,10 @@ class RSModel extends RSubject implements Model {
   constructor(o: ModelOptions = {}) {
     super();
 
+    this._initValues();
     // Set config
     this._configure(o);
+    // this._configure(o);
   }
 
   public getConfig() {
@@ -24,6 +28,7 @@ class RSModel extends RSubject implements Model {
 
   public setConfig(o?: ModelOptions) {
     return this._configure(o);
+    // return this._configure(o);
   }
 
   public getValue(index: number) {
@@ -39,18 +44,19 @@ class RSModel extends RSubject implements Model {
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
 
     // Get min and max allowed values for this handler index
-    const min = minValue + index * stepSize;
-    const max = maxValue - (handlerCount - index - 1) * stepSize;
+    const min = minValue + index * stepSize * this.directionMod;
+    const max = maxValue - (handlerCount - index - 1) * stepSize * this.directionMod;
 
     // Set value
     let val = 0;
-    if (value < min) {
+    if (value * this.directionMod < min * this.directionMod) {
       val = min;
-    } else if (value > max) {
+    } else if (value * this.directionMod > max * this.directionMod) {
       val = max;
     } else {
       val = this._normalizeValue(value);
     }
+
     this.values[index] = val;
 
     // Update other values
@@ -67,69 +73,140 @@ class RSModel extends RSubject implements Model {
     return this.values;
   }
 
-  private _configure(o: ModelOptions) {
+  private _configureMinValue(newMinValue: number) {
+    const { maxValue, stepSize, handlerCount } = this.options;
+    const minLength = stepSize * handlerCount;
+
+    if (Math.abs(maxValue - newMinValue) >= minLength) {
+      this.options.minValue = newMinValue;
+
+      // Update values
+      if (this.values) {
+        this.values.forEach((value, index) => this.setValue(index, value));
+      }
+    }
+  }
+
+  private _configureMaxValue(newMaxValue: number) {
+    const { minValue, stepSize, handlerCount } = this.options;
+    const minLength = stepSize * handlerCount;
+
+    if (Math.abs(newMaxValue - minValue) >= minLength) {
+      this.options.maxValue = newMaxValue;
+
+      // Update values
+      if (this.values) {
+        this.values.forEach((value, index) => this.setValue(index, value));
+      }
+    }
+  }
+
+  private _configureStepSize(newStepSize: number) {
+    const { minValue, maxValue, handlerCount } = this.options;
+    const sliderLength = Math.abs(maxValue - minValue);
+
+    if (newStepSize > 0 && newStepSize <= sliderLength / handlerCount) {
+      this.options.stepSize = newStepSize;
+
+      if (this.values) {
+        this.values.forEach((value, index) => this.setValue(index, value));
+      }
+    }
+  }
+
+  private _configureHandlerCount(newHandlerCount: number) {
+    const { minValue, maxValue, stepSize } = this.options;
+    const sliderLength = Math.abs(maxValue - minValue);
+    const maxHandlerCount = Math.floor(sliderLength / stepSize);
+
+    // Should be > 0 and lte maxHandlerCount
+    if (newHandlerCount > 0 && newHandlerCount <= maxHandlerCount) {
+      this.options.handlerCount = newHandlerCount;
+
+      // Reset values when handerCount changes
+      if (this.values.length !== newHandlerCount) this._initValues();
+    }
+  }
+
+  private _configureSingleOption(key: string, value: number) {
+    switch (key) {
+      case 'minValue':
+        this._configureMinValue(value);
+        break;
+      case 'maxValue':
+        this._configureMaxValue(value);
+        break;
+      case 'stepSize':
+        this._configureStepSize(value);
+        break;
+      case 'handlerCount':
+        this._configureHandlerCount(value);
+        break;
+      default:
+    }
+  }
+
+  private _configureFourOptions(o: ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
 
-    // minValue
-    if (
-      // Number
-      RSModel._isNumber(minValue) &&
-      // which is not equal to min
-      minValue !== maxValue &&
-      // and, if no new max provided, not equal to existing max
-      !(maxValue === undefined && minValue === this.options.maxValue)
-    ) {
-      this.options.minValue = minValue;
-    } else if (this.options.minValue === null) {
-      this.options.minValue = maxValue !== 0 ? 0 : -100;
-    }
+    if (stepSize === 0 || handlerCount === 0) return;
 
-    // maxValue
-    if (
-      // Number
-      RSModel._isNumber(maxValue) &&
-      // which is not equal to min
-      maxValue !== minValue &&
-      // and, if no new min provided, not equal to existing min
-      !(minValue === undefined && maxValue === this.options.minValue)
-    ) {
-      this.options.maxValue = maxValue;
-    } else if (this.options.maxValue === null) {
-      this.options.maxValue = minValue !== 100 ? 100 : 200;
-    }
+    const sliderLength = Math.abs(maxValue - minValue);
+    const maxStepSize = sliderLength / handlerCount;
 
-    // stepSize
-    if (
-      RSModel._isNumber(stepSize) &&
-      stepSize > 0 &&
-      stepSize !== this.options.stepSize
-    ) {
-      this.options.stepSize = stepSize;
-    } else if (this.options.stepSize === null) {
-      this.options.stepSize = 10;
-    }
+    if (stepSize > maxStepSize) return;
 
-    // handlerCount
-    if (
-      RSModel._isNumber(handlerCount) &&
-      handlerCount > 0 &&
-      handlerCount !== this.options.handlerCount
-    ) {
-      this.options.handlerCount = handlerCount;
+    // All good
+    this.options = {
+      minValue,
+      maxValue,
+      stepSize,
+      handlerCount,
+    };
 
-      this._initValues();
-    } else if (this.options.handlerCount === null) {
-      this.options.handlerCount = 1;
+    // Reset values when handerCount changes
+    if (this.values.length !== handlerCount) this._initValues();
 
-      this._initValues();
-    }
+    // Update values to be in range and match stepSize
+    this.values.forEach((value, index) => this.setValue(index, value));
+  }
 
-    // Update values in case min / maxValue or stepSize were changed
-    this.values.forEach((value, index) => {
-      if (value > maxValue || value < minValue) {
-        this.setValue(index, value);
+  private _configure(o: ModelOptions) {
+    const validOptions: ModelOptions = {};
+
+    // Strip non-numeric entries, save to new object
+    // Mutating existing object will break view configuration
+    Object.keys(o).forEach((key) => {
+      if (RSModel._isNumber(o[key])) {
+        validOptions[key] = o[key];
       }
     });
+
+    const keys = Object.keys(validOptions);
+    const len = keys.length;
+    const firstKey = keys[0];
+    const firstValue = validOptions[firstKey];
+
+    // Allow either 1 or 4 options just yet
+    switch (len) {
+      case 1:
+        this._configureSingleOption(firstKey, firstValue);
+        break;
+      // case 2:
+      //   break;
+      // case 3:
+      //   break;
+      case 4:
+        this._configureFourOptions(validOptions);
+        break;
+      default:
+        return this.options;
+    }
+
+    // Configure scale direction modifier
+    this.directionMod = this.options.maxValue > this.options.minValue ? 1 : -1;
+
+    this.notifyObservers(this.values);
 
     return this.options;
   }
@@ -147,14 +224,16 @@ class RSModel extends RSubject implements Model {
   }
 
   static _isNumber(n: number) {
-    return typeof n === 'number' && !Number.isNaN(n);
+    return !Number.isNaN(n) && Number.isFinite(n);
   }
 
+  // Converts value multiple of stepSize
   private _normalizeValue(value: number): number {
     const { minValue, stepSize } = this.options;
-    // minValue added to work with negative values
-    const x = value - minValue + stepSize / 2;
-    return minValue + x - (x % stepSize);
+
+    const x = value - minValue + (stepSize / 2) * this.directionMod;
+
+    return Math.round(minValue + x - (x % stepSize));
   }
 
   private _updateValues(index: number, value: number) {
@@ -162,15 +241,15 @@ class RSModel extends RSubject implements Model {
 
     this.values.forEach((v, i) => {
       // Minimum difference between value and v
-      const minValueDiff = (i - index) * stepSize;
+      const minValueDiff = (i - index) * stepSize * this.directionMod;
 
       // Closest allowed v to value (at least one stepSize between adjacent values)
       const closestValue = value + minValueDiff;
 
       // Change v if closer to value than allowed
-      if (i < index && v > closestValue) {
+      if (i < index && v * this.directionMod > closestValue * this.directionMod) {
         this.values[i] = closestValue;
-      } else if (i > index && v < closestValue) {
+      } else if (i > index && v * this.directionMod < closestValue * this.directionMod) {
         this.values[i] = closestValue;
       }
     });

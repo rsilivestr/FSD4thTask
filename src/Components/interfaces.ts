@@ -34,6 +34,7 @@ export interface Slider {
 
 // Model
 export type ModelOptions = {
+  [key: string]: any;
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -92,6 +93,21 @@ export interface Track extends Subject {
 }
 
 // Main view
+export type ViewChildren = {
+  handlers: Handler[];
+  progress: Progress;
+  scale: Scale;
+  track: Track;
+};
+
+export type ViewElements = {
+  activeHandler: HTMLElement;
+  progress?: HTMLElement;
+  scale?: HTMLElement;
+  slider?: HTMLElement;
+  track?: HTMLDivElement;
+};
+
 export type ViewOptions = {
   isHorizontal?: boolean;
   handlerRadius?: number;
@@ -123,6 +139,7 @@ export type PanelElements = {
   configDiv: HTMLDivElement;
   container: HTMLElement;
   valueInputs: HTMLInputElement[];
+  configInputs: { [key: string]: HTMLInputElement };
   panel: HTMLElement;
   valuesDiv: HTMLDivElement;
 };

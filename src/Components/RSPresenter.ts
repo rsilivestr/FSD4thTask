@@ -39,6 +39,8 @@ class RSPresenter implements Presenter {
 
   // Invoked on model change (Observer)
   public update(v: number[]): void {
+    const conf = this.model.getConfig();
+    this.view.setModelOptions(conf);
     this.view.setValues(v);
   }
 }

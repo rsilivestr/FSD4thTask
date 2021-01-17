@@ -70,8 +70,6 @@ const create = (container: HTMLElement, options: SliderOptions = {}) => {
       const mConfig = model.setConfig(o);
       const vConfig = view.setConfig(o);
 
-      view.setModelOptions(mConfig);
-
       return { ...mConfig, ...vConfig };
     },
     getValue(index: number = 0) {

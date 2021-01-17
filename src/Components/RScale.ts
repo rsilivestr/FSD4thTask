@@ -60,14 +60,16 @@ class RScale extends RSubject implements Scale {
 
   private _calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
-    const stepNumber = (maxValue - minValue) / stepSize;
+    const stepNumber = Math.abs((maxValue - minValue) / stepSize);
 
     if (stepNumber > this.maxScaleSteps) {
       // More steps than scale can hold
-      return stepSize * Math.ceil(stepNumber / this.maxScaleSteps);
+      const step = stepSize * Math.ceil(stepNumber / this.maxScaleSteps);
+
+      return maxValue > minValue ? step : -step;
     }
 
-    return stepSize;
+    return maxValue > minValue ? stepSize : -stepSize;
   }
 
   private _populateScale(): HTMLElement {

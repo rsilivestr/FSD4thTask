@@ -9,6 +9,7 @@ class RSPanel implements Panel {
     configDiv: document.createElement('div'),
     container: null,
     valueInputs: [],
+    configInputs: {},
     panel: document.createElement('div'),
     valuesDiv: document.createElement('div'),
   };
@@ -117,7 +118,7 @@ class RSPanel implements Panel {
       const stepSize = parseInt(input.value, 10);
 
       this.options = this.slider.setConfig({ stepSize });
-      input.value = this.options.maxValue.toString(10);
+      input.value = this.options.stepSize.toString(10);
     }
   }
 
@@ -127,7 +128,10 @@ class RSPanel implements Panel {
       const handlerCount = parseInt(input.value, 10);
 
       this.options = this.slider.setConfig({ handlerCount });
-      input.value = this.options.maxValue.toString(10);
+      input.value = this.options.handlerCount.toString(10);
+
+      // Update showProgress input
+      this.UI.configInputs.showProgress.checked = this.options.showProgress;
     }
   }
 
@@ -167,56 +171,80 @@ class RSPanel implements Panel {
     const { minValue } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Min value');
     input.value = minValue.toString(10);
+
     input.addEventListener('keydown', (e) => this._setMinValue(e));
+
+    this.UI.configInputs.minValue = input;
   }
 
   private _createMaxValueInput() {
     const { maxValue } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Max value');
     input.value = maxValue.toString(10);
+
     input.addEventListener('keydown', (e) => this._setMaxValue(e));
+
+    this.UI.configInputs.maxValue = input;
   }
 
   private _createStepSizeInput() {
     const { stepSize } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Step size');
     input.value = stepSize.toString(10);
+
     input.addEventListener('keydown', (e) => this._setStepSize(e));
+
+    this.UI.configInputs.stepSize = input;
   }
 
   _createHandlerCountInput() {
     const { handlerCount } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Handler count');
     input.value = handlerCount.toString(10);
+
     input.addEventListener('keydown', (e) => this._setHandlerCount(e));
+
+    this.UI.configInputs.handlerCount = input;
   }
 
   _createIsHorizontalInput() {
     const { isHorizontal } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Is horizontal', true);
     input.checked = isHorizontal;
+
     input.addEventListener('change', (e) => this._setIsHorizontal(e));
+
+    this.UI.configInputs.isHorizontal = input;
   }
 
   _createShowProgressInput() {
     const { showProgress } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show progress', true);
     input.checked = showProgress;
+
     input.addEventListener('change', (e) => this._setShowProgress(e));
+
+    this.UI.configInputs.showProgress = input;
   }
 
   _createShowScaleInput() {
     const { showScale } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show scale', true);
     input.checked = showScale;
+
     input.addEventListener('change', (e) => this._setShowScale(e));
+
+    this.UI.configInputs.showScale = input;
   }
 
   _createShowTooltipInput() {
     const { showTooltip } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show tooltip', true);
     input.checked = showTooltip;
+
     input.addEventListener('change', (e) => this._setShowTooltip(e));
+
+    this.UI.configInputs.showTooltip = input;
   }
 
   private _render() {

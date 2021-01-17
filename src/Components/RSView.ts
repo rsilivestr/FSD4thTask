@@ -1,50 +1,19 @@
 import {
-  ModelOptions,
-  SliderOptions,
-  Progress,
-  ProgressCoords,
   Handler,
   HandlerOptions,
-  Scale,
-  Subject,
-  Track,
+  ModelOptions,
+  ProgressCoords,
+  SliderOptions,
+  View,
+  ViewChildren,
+  ViewElements,
+  ViewOptions,
 } from './interfaces';
 import RSProgress from './RSProgress';
 import RSHandler from './RSHandler';
 import RScale from './RScale';
 import RSubject from './RSubject';
 import RSTrack from './RSTrack';
-
-type ViewOptions = {
-  isHorizontal?: boolean;
-  handlerRadius?: number;
-  showProgress?: boolean;
-  showScale?: boolean;
-  showTooltip?: boolean;
-};
-
-interface View extends Subject {
-  getConfig(): ViewOptions;
-  setConfig(o: ViewOptions): ViewOptions;
-  setModelOptions(o: SliderOptions): ModelOptions;
-  setValues(v: number[]): void;
-  update(): number[];
-}
-
-type ViewElements = {
-  activeHandler: HTMLElement;
-  progress?: HTMLElement;
-  scale?: HTMLElement;
-  slider?: HTMLElement;
-  track?: HTMLDivElement;
-};
-
-type ViewChildren = {
-  handlers: Handler[];
-  progress: Progress;
-  scale: Scale;
-  track: Track;
-};
 
 class RSView extends RSubject implements View {
   private children: ViewChildren = {
@@ -101,8 +70,10 @@ class RSView extends RSubject implements View {
 
   public setModelOptions(o: SliderOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
+
     if (this.modelOptions) {
       const mo = this.modelOptions;
+
       // Re-render on options change:
       if (minValue !== mo.minValue || maxValue !== mo.maxValue) {
         this.modelOptions.minValue = minValue;
@@ -111,20 +82,27 @@ class RSView extends RSubject implements View {
         // Update children
         this.children.scale.setConfig(o);
         this._updateHandlers();
-        this._updateProgress();
+        if (this.options.showProgress) {
+          this._updateProgress();
+        }
       }
+
       if (stepSize !== mo.stepSize) {
         this.modelOptions.stepSize = stepSize;
 
         // Update children
         this.children.scale.setConfig(o);
       }
+
       if (handlerCount !== mo.handlerCount) {
         this.modelOptions.handlerCount = handlerCount;
 
+        if (handlerCount > 2) {
+          this._toggleProgress(false);
+        }
+
         // Update children
         this._createHandlers();
-        this.update();
       }
     } else {
       // First time
@@ -345,6 +323,13 @@ class RSView extends RSubject implements View {
     if (this.modelOptions.handlerCount > 2) {
       // Set to false and return
       this.options.showProgress = false;
+
+      if (this.UI.progress) {
+        this.UI.progress.remove();
+        this.UI.progress = null;
+        this.children.progress = null;
+      }
+
       return;
     }
 
@@ -388,6 +373,7 @@ class RSView extends RSubject implements View {
     // Add listeners
     document.body.addEventListener('mousemove', this._boundDrag);
     document.body.addEventListener('mouseup', this._boundRelease);
+    document.body.addEventListener('mouseleave', this._boundRelease);
   }
 
   private _updateHandlers() {
@@ -476,7 +462,7 @@ class RSView extends RSubject implements View {
     this.children.track.toggleLayout(this.options.isHorizontal);
 
     // Update progress
-    if (this.UI.progress) {
+    if (this.options.showProgress) {
       this.children.progress.toggleHorizontal(this.options.isHorizontal);
 
       this._updateProgress();
