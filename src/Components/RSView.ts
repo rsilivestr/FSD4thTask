@@ -25,6 +25,8 @@ class RSView extends RSubject implements View {
 
   private container: HTMLElement;
 
+  private grabOffset: number = 0;
+
   private modelOptions: ModelOptions;
 
   private options: ViewOptions = {};
@@ -245,7 +247,6 @@ class RSView extends RSubject implements View {
 
   private _coordToValue(coord: number): number {
     const { minValue, maxValue } = this.modelOptions;
-    // const factor = this._correctHandlerCoord() * 100;
 
     return minValue + (maxValue - minValue) * (coord / 100);
   }
@@ -364,11 +365,23 @@ class RSView extends RSubject implements View {
     return handler;
   }
 
+  private _setGrabbedOffset(e: MouseEvent): void {
+    const { isHorizontal, handlerRadius } = this.options;
+
+    const handlerRect = this.UI.activeHandler.getBoundingClientRect();
+    const handlerCoord = isHorizontal ? handlerRect.left : handlerRect.bottom;
+    const clickCoord = isHorizontal ? e.clientX : e.clientY;
+
+    this.grabOffset = handlerRadius + handlerCoord - clickCoord;
+  }
+
   private _grab(e: MouseEvent, handler: HTMLElement): void {
     e.preventDefault();
 
     // Set grabbed handler
     this.UI.activeHandler = handler;
+
+    this._setGrabbedOffset(e);
 
     // Add listeners
     document.body.addEventListener('mousemove', this._boundDrag);
@@ -392,7 +405,7 @@ class RSView extends RSubject implements View {
     const { trackMin, trackLength } = this.children.track.getRect();
 
     const diff = isHorizontal ? e.clientX - trackMin : trackMin - e.clientY;
-    const coord = (diff / trackLength) * 100;
+    const coord = ((diff + this.grabOffset) / trackLength) * 100;
 
     return coord;
   }

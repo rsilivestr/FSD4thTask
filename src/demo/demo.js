@@ -1,6 +1,6 @@
 const s1o = {
-  minValue: -50,
-  maxValue: 50,
+  minValue: 5000,
+  maxValue: 10000,
   stepSize: 10,
   handlerCount: 1,
   progress: true,
@@ -19,7 +19,7 @@ const s1o = {
 
 const s4o = {
   minValue: 0,
-  maxValue: 100,
+  maxValue: -100,
   stepSize: 10,
   handlerCount: 4,
   isHorizontal: false,

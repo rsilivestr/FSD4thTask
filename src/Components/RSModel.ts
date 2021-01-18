@@ -73,12 +73,18 @@ class RSModel extends RSubject implements Model {
     return this.values;
   }
 
+  private _configureDirection() {
+    this.directionMod = this.options.maxValue > this.options.minValue ? 1 : -1;
+  }
+
   private _configureMinValue(newMinValue: number) {
     const { maxValue, stepSize, handlerCount } = this.options;
     const minLength = stepSize * handlerCount;
 
     if (Math.abs(maxValue - newMinValue) >= minLength) {
       this.options.minValue = newMinValue;
+
+      this._configureDirection();
 
       // Update values
       if (this.values) {
@@ -93,6 +99,8 @@ class RSModel extends RSubject implements Model {
 
     if (Math.abs(newMaxValue - minValue) >= minLength) {
       this.options.maxValue = newMaxValue;
+
+      this._configureDirection();
 
       // Update values
       if (this.values) {
@@ -164,6 +172,8 @@ class RSModel extends RSubject implements Model {
       handlerCount,
     };
 
+    this._configureDirection();
+
     // Reset values when handerCount changes
     if (this.values.length !== handlerCount) this._initValues();
 
@@ -204,7 +214,7 @@ class RSModel extends RSubject implements Model {
     }
 
     // Configure scale direction modifier
-    this.directionMod = this.options.maxValue > this.options.minValue ? 1 : -1;
+    // this.directionMod = this.options.maxValue > this.options.minValue ? 1 : -1;
 
     this.notifyObservers(this.values);
 
