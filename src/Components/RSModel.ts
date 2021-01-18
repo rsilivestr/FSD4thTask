@@ -41,7 +41,13 @@ class RSModel extends RSubject implements Model {
   }
 
   public setValue(index: number, value: number) {
+    if (!RSModel._isNumber(index) || !RSModel._isNumber(value))
+      throw new Error('Value and index should be numeric');
+
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
+
+    if (index < 0 || index >= handlerCount)
+      throw new Error('There is no value with such index');
 
     // Get min and max allowed values for this handler index
     const min = minValue + index * stepSize * this.directionMod;
@@ -212,9 +218,6 @@ class RSModel extends RSubject implements Model {
       default:
         return this.options;
     }
-
-    // Configure scale direction modifier
-    // this.directionMod = this.options.maxValue > this.options.minValue ? 1 : -1;
 
     this.notifyObservers(this.values);
 
