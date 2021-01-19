@@ -1,6 +1,6 @@
 const s1o = {
-  minValue: 5000,
-  maxValue: 10000,
+  minValue: 500,
+  maxValue: 1000,
   stepSize: 10,
   handlerCount: 1,
   progress: true,
@@ -22,6 +22,7 @@ const s4o = {
   maxValue: -100,
   stepSize: 10,
   handlerCount: 4,
+  allowReversedValues: true,
   isHorizontal: false,
   showTooltip: false,
 };
@@ -30,14 +31,12 @@ const s4o = {
 // const s4p = RSlider.addControlPanel(s4);
 
 const s1 = $('#foo').rslider(s1o);
-// const s1s = s1.addScale();
 const s1p = $().rspanel(s1);
 
 const s2 = $('#bar').rslider({ handlerCount: 2, showProgress: true });
 const s2p = $().rspanel(s2);
 
 const s3 = $('#fizz').rslider({ isHorizontal: false });
-// const s3s = s3.addScale();
 const s3p = $().rspanel(s3);
 
 const s4 = $('#buzz').rslider(s4o);

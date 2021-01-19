@@ -2,12 +2,19 @@
 import { expect } from 'chai';
 import RSModel from '../src/Components/RSModel';
 
-const CONFIG_KEYS = ['handlerCount', 'maxValue', 'minValue', 'stepSize'];
+const CONFIG_KEYS = [
+  'handlerCount',
+  'maxValue',
+  'minValue',
+  'stepSize',
+  'allowReversedValues',
+];
 const DEFAULT_CONFIG = {
   minValue: 0,
   maxValue: 100,
   stepSize: 10,
   handlerCount: 1,
+  allowReversedValues: false,
 };
 
 const m = new RSModel();
@@ -66,8 +73,9 @@ describe('RSModel', () => {
         stepSize: 5,
         handlerCount: 2,
       };
+      const { allowReversedValues } = m.getConfig();
 
-      expect(m.setConfig(conf)).to.eql(conf);
+      expect(m.setConfig(conf)).to.eql({ ...conf, allowReversedValues });
     });
 
     it('Should be able to set minValue < maxValue', () => {

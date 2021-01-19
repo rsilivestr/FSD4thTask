@@ -9,6 +9,7 @@ class RSModel extends RSubject implements Model {
     maxValue: 100,
     stepSize: 10,
     handlerCount: 1,
+    allowReversedValues: false,
   };
 
   private values: number[] = [];
@@ -162,6 +163,9 @@ class RSModel extends RSubject implements Model {
 
   private _configureFourOptions(o: ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
+    const { allowReversedValues } = this.options;
+
+    if (!allowReversedValues && minValue > maxValue) return;
 
     if (stepSize === 0 || handlerCount === 0) return;
 
@@ -176,6 +180,7 @@ class RSModel extends RSubject implements Model {
       maxValue,
       stepSize,
       handlerCount,
+      allowReversedValues,
     };
 
     this._configureDirection();
@@ -189,6 +194,11 @@ class RSModel extends RSubject implements Model {
 
   private _configure(o: ModelOptions) {
     const validOptions: ModelOptions = {};
+
+    const { allowReversedValues } = o;
+    if (typeof allowReversedValues === 'boolean') {
+      this.options.allowReversedValues = allowReversedValues;
+    }
 
     // Strip non-numeric entries, save to new object
     // Mutating existing object will break view configuration
@@ -206,7 +216,7 @@ class RSModel extends RSubject implements Model {
     // Allow either 1 or 4 options just yet
     switch (len) {
       case 1:
-        this._configureSingleOption(firstKey, firstValue);
+        this._configureSingleOption(firstKey, firstValue as number);
         break;
       // case 2:
       //   break;
@@ -236,7 +246,7 @@ class RSModel extends RSubject implements Model {
     }
   }
 
-  static _isNumber(n: number) {
+  static _isNumber(n: any) {
     return !Number.isNaN(n) && Number.isFinite(n);
   }
 

@@ -11,6 +11,7 @@ export type SliderOptions = {
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
+  allowReversedValues?: boolean;
   isHorizontal?: boolean;
   handlerRadius?: number;
   showProgress?: boolean;
@@ -34,11 +35,12 @@ export interface Slider {
 
 // Model
 export type ModelOptions = {
-  [key: string]: any;
+  [key: string]: number | boolean;
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
+  allowReversedValues?: boolean;
 };
 
 export interface Model extends Subject {

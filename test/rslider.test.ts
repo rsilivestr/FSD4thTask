@@ -8,11 +8,12 @@ describe('RSlider', () => {
 
   const SLIDER = create(container);
 
-  const SLIDER_OPTIONS_KEYS = [
+  const CONFIG_KEYS = [
     'minValue',
     'maxValue',
     'stepSize',
     'handlerCount',
+    'allowReversedValues',
     'isHorizontal',
     'handlerRadius',
     'showProgress',
@@ -42,7 +43,7 @@ describe('RSlider', () => {
       expect(SLIDER.getConfig).to.be.a('function');
     });
     it('Should return SliderOptions object', () => {
-      expect(SLIDER.getConfig()).to.have.deep.keys(SLIDER_OPTIONS_KEYS);
+      expect(SLIDER.getConfig()).to.have.deep.keys(CONFIG_KEYS);
     });
   });
 
@@ -52,7 +53,7 @@ describe('RSlider', () => {
     });
 
     it('Should return SliderOptions object', () => {
-      expect(SLIDER.setConfig({ minValue: 0 })).to.have.deep.keys(SLIDER_OPTIONS_KEYS);
+      expect(SLIDER.setConfig({ minValue: 0 })).to.have.deep.keys(CONFIG_KEYS);
     });
   });
 

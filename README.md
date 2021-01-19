@@ -61,6 +61,8 @@ mySlider.getConfig(): SliderOptions;
   maxValue: 50,         // number
   stepSize: 20,         // number
   handlerCount: 1,      // number
+  // Allow minValue to be greater than maxValue (reverse slider direction)
+  allowReversedValues: false // boolean
 
   // Настройки отображения
   isHorizontal: true,   // boolean
