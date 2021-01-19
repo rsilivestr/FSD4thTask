@@ -132,6 +132,9 @@ class RSView extends RSubject implements View {
     // Grab that handler
     this._grab(e, handler);
 
+    // Reset offset
+    this.grabOffset = 0;
+
     // Update handler
     this._moveHandler(coord);
   }
