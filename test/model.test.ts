@@ -79,7 +79,9 @@ describe('RSModel', () => {
     });
 
     it('Should be able to set minValue < maxValue', () => {
-      expect(m.setConfig({ maxValue: -100 }).maxValue).to.equal(-100);
+      expect(
+        m.setConfig({ allowReversedValues: true, maxValue: -100 }).maxValue
+      ).to.equal(-100);
     });
   });
 

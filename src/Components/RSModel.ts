@@ -85,8 +85,10 @@ class RSModel extends RSubject implements Model {
   }
 
   private _configureMinValue(newMinValue: number) {
-    const { maxValue, stepSize, handlerCount } = this.options;
+    const { maxValue, stepSize, handlerCount, allowReversedValues } = this.options;
     const minLength = stepSize * handlerCount;
+
+    if (!allowReversedValues && newMinValue > maxValue) return;
 
     if (Math.abs(maxValue - newMinValue) >= minLength) {
       this.options.minValue = newMinValue;
@@ -101,8 +103,10 @@ class RSModel extends RSubject implements Model {
   }
 
   private _configureMaxValue(newMaxValue: number) {
-    const { minValue, stepSize, handlerCount } = this.options;
+    const { minValue, stepSize, handlerCount, allowReversedValues } = this.options;
     const minLength = stepSize * handlerCount;
+
+    if (!allowReversedValues && minValue > newMaxValue) return;
 
     if (Math.abs(newMaxValue - minValue) >= minLength) {
       this.options.maxValue = newMaxValue;
