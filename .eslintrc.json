@@ -8,7 +8,6 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "eslint-config-airbnb",
     "plugin:import/typescript"
-    // "eslint-config-prettier"
   ],
   "globals": {
     "Atomics": "readonly",

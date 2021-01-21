@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import RScale from '../src/Components/RScale';
+import RScale from '../src/components/RScale';
 
 describe('RScale(container: HTMLElement, o: SliderOptions)', () => {
   const CONTAINER = document.createElement('div');

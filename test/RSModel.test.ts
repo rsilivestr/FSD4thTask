@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import RSModel from '../src/Components/RSModel';
+import RSModel from '../src/components/RSModel';
 
 const CONFIG_KEYS = [
   'handlerCount',

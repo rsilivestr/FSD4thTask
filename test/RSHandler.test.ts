@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { use, expect } from 'chai';
-import { Handler, HandlerOptions } from '../src/Components/interfaces';
-import RSHandler from '../src/Components/RSHandler';
+import { Handler, HandlerOptions } from '../src/components/interfaces';
+import RSHandler from '../src/components/RSHandler';
 
 use(require('chai-dom'));
 
@@ -21,7 +21,30 @@ describe('RSHandler', () => {
     });
   });
 
-  // describe('setPosition(coord: number): void', () => {});
+  describe('setPosition(coord: number): void', () => {
+    it('Should update style attribute', () => {
+      const el = h.getElement();
+
+      [10, 22, 36.6].forEach((percent) => {
+        h.setPosition(percent);
+
+        expect(el).to.have.attr('style');
+        expect(el.style.left).to.equal(`${percent}%`);
+      });
+    });
+
+    it('Should update style attribute for vertical layout too', () => {
+      const el = h.getElement();
+      h.toggleLayout('vertical');
+
+      [3.14, 61, 7].forEach((percent) => {
+        h.setPosition(percent);
+
+        expect(el).to.have.attr('style');
+        expect(el.style.bottom).to.equal(`${percent}%`);
+      });
+    });
+  });
 
   describe('toggleTooltip', () => {
     it('Should turn tooltip on', () => {

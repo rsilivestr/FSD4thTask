@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import Model from '../src/Components/RSModel';
-import View from '../src/Components/RSView';
-import Presenter from '../src/Components/RSPresenter';
+import Model from '../src/components/RSModel';
+import View from '../src/components/RSView';
+import Presenter from '../src/components/RSPresenter';
 
 const container = document.createElement('div');
 
