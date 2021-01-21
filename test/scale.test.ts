@@ -8,11 +8,7 @@ describe('RScale(container: HTMLElement, o: SliderOptions)', () => {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
-    // handlerCount: 1,
     isHorizontal: true,
-    // showScale: true,
-    // showProgress: true,
-    // showTooltip: true,
   };
 
   const SCALE = new RScale(CONTAINER, CONFIG);

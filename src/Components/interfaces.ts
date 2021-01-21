@@ -91,7 +91,6 @@ export interface Scale extends Subject {
   getElement: () => HTMLUListElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
   setConfig: (o: ModelOptions) => void;
-  setValues: (v: number[]) => void;
 }
 
 export interface Track extends Subject {

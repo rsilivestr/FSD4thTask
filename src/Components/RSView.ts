@@ -55,10 +55,6 @@ class RSView extends RSubject implements View {
   public setValues(values: number[]): void {
     this.values = values;
 
-    if (this.children.scale) {
-      this.children.scale.setValues(values);
-    }
-
     this.update();
   }
 
@@ -119,6 +115,12 @@ class RSView extends RSubject implements View {
     return this.modelOptions;
   }
 
+  public onScaleClick(value: number): void {
+    const index = this._getClosestHandlerIndex(value);
+
+    this.notifyObservers(index, value);
+  }
+
   // Invoked on Track mousedown (Observer)
   public onTrackMousedown(e: MouseEvent) {
     // Get click coord, convert to value
@@ -126,8 +128,8 @@ class RSView extends RSubject implements View {
     const value = this._coordToValue(coord);
 
     // Get closest handler
-    const closestIndex = this._getClosestHandlerIndex(value);
-    const handler = this.children.handlers[closestIndex].getElement();
+    const index = this._getClosestHandlerIndex(value);
+    const handler = this.children.handlers[index].getElement();
 
     // Grab that handler
     this._grab(e, handler);
@@ -164,11 +166,8 @@ class RSView extends RSubject implements View {
     this.UI.scale = scaleElement;
     this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
 
-    // Update scale values
-    this.children.scale.setValues(this.values);
-
     // Send Scale clicks to model through presenter, then model will update view
-    this.children.scale.addObserver(this.notifyObservers.bind(this));
+    this.children.scale.addObserver(this.onScaleClick.bind(this));
   }
 
   private _toggleScale(showScale: boolean) {
@@ -180,7 +179,6 @@ class RSView extends RSubject implements View {
     if (showScale && !this.UI.scale) {
       // Add and update scale
       this._addScale({ ...this.modelOptions, ...this.options });
-      this.children.scale.setValues(this.values);
     } else if (!showScale && this.UI.scale) {
       // Remove element from DOM and this.UI, remove Scale instance from chidlren
       this.UI.scale.remove();

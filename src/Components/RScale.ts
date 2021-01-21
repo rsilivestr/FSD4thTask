@@ -4,7 +4,7 @@ import RSubject from './RSubject';
 class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
 
-  private maxScaleSteps: number = 10;
+  private stepCountLimit: number = 10;
 
   private options: SliderOptions;
 
@@ -13,8 +13,6 @@ class RScale extends RSubject implements Scale {
     scale: document.createElement('ul'),
     marks: [],
   };
-
-  private values: number[];
 
   constructor(container: HTMLElement, o: SliderOptions) {
     super();
@@ -41,17 +39,13 @@ class RScale extends RSubject implements Scale {
     this._populateScale();
   }
 
-  public setValues(v: number[]) {
-    this.values = v;
-  }
-
   private _calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
     const stepNumber = Math.abs((maxValue - minValue) / stepSize);
 
-    if (stepNumber > this.maxScaleSteps) {
+    if (stepNumber > this.stepCountLimit) {
       // More steps than scale can hold
-      const step = stepSize * Math.ceil(stepNumber / this.maxScaleSteps);
+      const step = stepSize * Math.ceil(stepNumber / this.stepCountLimit);
 
       return maxValue > minValue ? step : -step;
     }
@@ -86,16 +80,6 @@ class RScale extends RSubject implements Scale {
     return this.UI.scale;
   }
 
-  private _getClosestHandlerIndex(goal: number): number {
-    const closest = this.values.reduce((prev, curr) =>
-      Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev
-    );
-
-    const index = this.values.indexOf(closest);
-
-    return index;
-  }
-
   private _onClick(e: MouseEvent) {
     const target = <HTMLLIElement>e.target;
 
@@ -103,9 +87,9 @@ class RScale extends RSubject implements Scale {
       const value = parseInt(target.textContent, 10);
 
       // Get closest handler index
-      const index = this._getClosestHandlerIndex(value);
+      // const index = this._getClosestHandlerIndex(value);
 
-      this.notifyObservers(index, value);
+      this.notifyObservers(value);
     }
   }
 
