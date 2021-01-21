@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // import { expect } from 'chai';
-// import RSView from '../src/scripts/view';
+// import RSView from '../src/Components/RSView';
 // const container = document.createElement('div');
 // const v = new RSView(container);
 // // const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];

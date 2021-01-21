@@ -5,7 +5,7 @@ class RSProgress implements Progress {
 
   private isHorizontal: boolean = null;
 
-  private UIprogress: HTMLDivElement = document.createElement('div');
+  private UIprogress: HTMLElement = document.createElement('div');
 
   constructor(coords: ProgressCoords, isHorizontal: boolean) {
     this.UIprogress.className = 'rslider__progress';
@@ -15,7 +15,7 @@ class RSProgress implements Progress {
     this.toggleHorizontal(isHorizontal);
   }
 
-  public getElement(): HTMLDivElement {
+  public getElement(): HTMLElement {
     return this.UIprogress;
   }
 

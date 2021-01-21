@@ -1,18 +1,5 @@
-import { Subject, ModelOptions, SliderOptions } from './interfaces';
+import { ModelOptions, Scale, ScaleElements, SliderOptions } from './interfaces';
 import RSubject from './RSubject';
-
-interface Scale extends Subject {
-  getElement: () => HTMLElement;
-  toggleLayout: (layout: 'horizontal' | 'vertical') => void;
-  setConfig: (o: ModelOptions) => void;
-  setValues: (v: number[]) => void;
-}
-
-type ScaleElements = {
-  container: HTMLElement;
-  scale: HTMLElement;
-  marks: HTMLElement[];
-};
 
 class RScale extends RSubject implements Scale {
   private markValues: number[] = [];
@@ -37,11 +24,11 @@ class RScale extends RSubject implements Scale {
     this._render();
   }
 
-  public getElement(): HTMLElement {
+  public getElement(): HTMLUListElement {
     return this.UI.scale;
   }
 
-  public toggleLayout(layout: 'horizontal' | 'vertical') {
+  public toggleLayout(layout: 'horizontal' | 'vertical'): void {
     this.UI.scale.classList.remove('rscale--layout_horizontal');
     this.UI.scale.classList.remove('rscale--layout_vertical');
 
@@ -72,7 +59,7 @@ class RScale extends RSubject implements Scale {
     return maxValue > minValue ? stepSize : -stepSize;
   }
 
-  private _populateScale(): HTMLElement {
+  private _populateScale(): HTMLUListElement {
     this.UI.scale.textContent = '';
 
     const { minValue, maxValue } = this.options;
@@ -86,7 +73,7 @@ class RScale extends RSubject implements Scale {
     while (i <= stepNumber) {
       const mark = document.createElement('li');
       mark.className = 'rscale__mark';
-      mark.innerText = value.toString(10);
+      mark.textContent = value.toString(10);
       this.UI.scale.appendChild(mark);
 
       this.UI.marks.push(mark);

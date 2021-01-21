@@ -78,7 +78,18 @@ describe('RSModel', () => {
       expect(m.setConfig(conf)).to.eql({ ...conf, allowReversedValues });
     });
 
-    it('Should be able to set minValue < maxValue', () => {
+    it('Should not be able to set minValue = maxValue and vice versa', () => {
+      const { minValue, maxValue } = m.getConfig();
+
+      expect(m.setConfig({ maxValue: minValue }).maxValue).to.not.equal(minValue);
+      expect(m.setConfig({ minValue: maxValue }).minValue).to.not.equal(maxValue);
+    });
+
+    it('Should not be able to set minValue < maxValue if allowReversedValues is OFF', () => {
+      expect(m.setConfig({ maxValue: -100 }).maxValue).to.equal(100);
+    });
+
+    it('Should be able to set minValue < maxValue if allowReversedValues is ON', () => {
       expect(
         m.setConfig({ allowReversedValues: true, maxValue: -100 }).maxValue
       ).to.equal(-100);

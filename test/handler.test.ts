@@ -15,17 +15,13 @@ describe('RSHandler', () => {
 
   const h: Handler = new RSHandler(o);
 
-  describe('getElement', () => {
-    const result = h.getElement();
-
+  describe('getElement(): HTMLElement', () => {
     it('Should retun an HTMLElement', () => {
-      expect(result).to.have.class('rslider__handler');
+      expect(h.getElement()).to.have.class('rslider__handler');
     });
   });
 
-  describe('setPosition', () => {
-    // const result = h.setPosition(0);
-  });
+  // describe('setPosition(coord: number): void', () => {});
 
   describe('toggleTooltip', () => {
     it('Should turn tooltip on', () => {
@@ -33,9 +29,29 @@ describe('RSHandler', () => {
       expect(h.getElement()).to.have.descendant('.rslider__tooltip');
     });
 
-    // it('Should hide tooltip as well', () => {
-    //   expect(h.toggleTooltip(false)).to.equal(false);
-    //   expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
-    // });
+    it('Should hide tooltip as well', () => {
+      expect(h.toggleTooltip(false)).to.equal(false);
+      expect(h.getElement()).not.to.have.descendant('.rslider__tooltip');
+    });
+
+    it('Should toggle tooltip if no value provided', () => {
+      h.toggleTooltip(true);
+
+      expect(h.toggleTooltip()).to.equal(false);
+      expect(h.toggleTooltip()).to.equal(true);
+    });
   });
+
+  describe('toggleLayout', () => {
+    it('Should change tooltip classes', () => {
+      const el = h.getElement();
+
+      ['horizontal', 'vertical'].forEach((layout) => {
+        h.toggleLayout(layout as 'horizontal' | 'vertical');
+        expect(el).to.have.descendant(`.rslider__tooltip--${layout}`);
+      });
+    });
+  });
+
+  describe('updateValue(value: number): void', () => {});
 });

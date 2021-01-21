@@ -276,7 +276,7 @@ class RSView extends RSubject implements View {
     return slider;
   }
 
-  private _createTrack(): HTMLDivElement {
+  private _createTrack(): HTMLElement {
     this.children.track = new RSTrack(this.options.isHorizontal);
 
     const trackElement = this.children.track.getElement();

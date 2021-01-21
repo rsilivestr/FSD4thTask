@@ -76,20 +76,26 @@ export type HandlerElements = {
 export type ProgressCoords = [number, number];
 
 export interface Progress {
-  getElement: () => HTMLDivElement;
+  getElement: () => HTMLElement;
   setCoords: (coords: ProgressCoords) => void;
   toggleHorizontal: (isHorizontal: boolean) => void;
 }
 
+export type ScaleElements = {
+  container: HTMLElement;
+  scale: HTMLUListElement;
+  marks: HTMLLIElement[];
+};
+
 export interface Scale extends Subject {
-  getElement: () => HTMLElement;
+  getElement: () => HTMLUListElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
   setConfig: (o: ModelOptions) => void;
   setValues: (v: number[]) => void;
 }
 
 export interface Track extends Subject {
-  getElement: () => HTMLDivElement;
+  getElement: () => HTMLElement;
   getRect: () => any;
   toggleLayout: (isHorizontal: boolean) => void;
 }
@@ -105,9 +111,9 @@ export type ViewChildren = {
 export type ViewElements = {
   activeHandler: HTMLElement;
   progress?: HTMLElement;
-  scale?: HTMLElement;
+  scale?: HTMLUListElement;
   slider?: HTMLElement;
-  track?: HTMLDivElement;
+  track?: HTMLElement;
 };
 
 export type ViewOptions = {
@@ -138,10 +144,10 @@ export interface Panel {
 }
 
 export type PanelElements = {
-  configDiv: HTMLDivElement;
+  configDiv: HTMLElement;
   container: HTMLElement;
   valueInputs: HTMLInputElement[];
   configInputs: { [key: string]: HTMLInputElement };
   panel: HTMLElement;
-  valuesDiv: HTMLDivElement;
+  valuesDiv: HTMLElement;
 };

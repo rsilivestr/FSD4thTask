@@ -20,11 +20,11 @@ class RSHandler implements Handler {
     this._init(o);
   }
 
-  public getElement() {
+  public getElement(): HTMLElement {
     return this.UI.handler;
   }
 
-  public setPosition(coord: number) {
+  public setPosition(coord: number): void {
     this.coord = coord;
 
     if (this.layout === 'horizontal') {
@@ -34,7 +34,7 @@ class RSHandler implements Handler {
     }
   }
 
-  public toggleTooltip(value: boolean = null) {
+  public toggleTooltip(value: boolean = null): boolean {
     if (value === null) {
       this.tooltip = !this.tooltip;
     } else {
@@ -54,7 +54,7 @@ class RSHandler implements Handler {
     return this.tooltip;
   }
 
-  public toggleLayout(layout: 'horizontal' | 'vertical') {
+  public toggleLayout(layout: 'horizontal' | 'vertical'): void {
     this.layout = layout;
 
     // Remove old inline styles
@@ -72,7 +72,7 @@ class RSHandler implements Handler {
     }
   }
 
-  public updateValue(value: number) {
+  public updateValue(value: number): number {
     this.value = value;
 
     if (this.tooltip) {
@@ -106,7 +106,7 @@ class RSHandler implements Handler {
     return tooltip;
   }
 
-  private _init(o: HandlerOptions) {
+  private _init(o: HandlerOptions): void {
     // Save config
     this.id = o.id;
     this.layout = o.layout;
@@ -117,7 +117,7 @@ class RSHandler implements Handler {
     this.UI.handler = this._createHandler();
   }
 
-  private _updateTooltip() {
+  private _updateTooltip(): void {
     this.UI.tooltip.textContent = this.value.toString(10);
   }
 }

@@ -4,7 +4,7 @@ import RSubject from './RSubject';
 class RSTrack extends RSubject implements Track {
   private isHorizontal: boolean;
 
-  private UItrack: HTMLDivElement = document.createElement('div');
+  private UItrack: HTMLElement = document.createElement('div');
 
   constructor(isHorizontal: boolean) {
     super();
@@ -12,7 +12,7 @@ class RSTrack extends RSubject implements Track {
     this._create(isHorizontal);
   }
 
-  public getElement(): HTMLDivElement {
+  public getElement(): HTMLElement {
     return this.UItrack;
   }
 

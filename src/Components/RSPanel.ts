@@ -18,6 +18,26 @@ class RSPanel implements Panel {
     this._init(s);
   }
 
+  static _createInput(
+    parent: HTMLElement,
+    labelText: string,
+    isCheckbox: boolean = false
+  ): HTMLInputElement {
+    const label = document.createElement('label');
+    label.className = 'rslider-panel__label';
+    label.textContent = labelText;
+    parent.appendChild(label);
+
+    const input = document.createElement('input');
+    input.className = 'rslider-panel__input';
+    if (isCheckbox) {
+      input.type = 'checkbox';
+    }
+    label.appendChild(input);
+
+    return input;
+  }
+
   public update(values: number[]) {
     this.options = this.slider.getConfig();
 
@@ -49,27 +69,7 @@ class RSPanel implements Panel {
     this.slider.addObserver(this.update.bind(this));
   }
 
-  static _createInput(
-    parent: HTMLDivElement,
-    labelText: string,
-    isCheckbox: boolean = false
-  ): HTMLInputElement {
-    const label = document.createElement('label');
-    label.className = 'rslider-panel__label';
-    label.textContent = labelText;
-    parent.appendChild(label);
-
-    const input = document.createElement('input');
-    input.className = 'rslider-panel__input';
-    if (isCheckbox) {
-      input.type = 'checkbox';
-    }
-    label.appendChild(input);
-
-    return input;
-  }
-
-  _onValueInputChange(e: KeyboardEvent, valueIndex: number) {
+  private _onValueInputChange(e: KeyboardEvent, valueIndex: number) {
     if (e.key === 'Enter') {
       const value = parseInt((<HTMLInputElement>e.target).value, 10);
 

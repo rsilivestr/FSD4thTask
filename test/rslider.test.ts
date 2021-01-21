@@ -21,23 +21,6 @@ describe('RSlider', () => {
     'showTooltip',
   ];
 
-  // const DEFAULT_CONFIG = {
-  //   minValue: -50,
-  //   maxValue: 50,
-  //   stepSize: 5,
-  //   handlerCount: 2,
-  //   tooltip: true,
-  //   progress: true,
-  // };
-
-  // const DEFAULT_VALUES = [10, 40];
-
-  // beforeEach(() => {
-  //   SLIDER.setConfig(DEFAULT_CONFIG);
-
-  //   SLIDER.setValues(DEFAULT_VALUES);
-  // });
-
   describe('getConfig(): SliderOptions', () => {
     it('Should be a function', () => {
       expect(SLIDER.getConfig).to.be.a('function');
@@ -81,10 +64,8 @@ describe('RSlider', () => {
       expect(SLIDER.getValues()).to.be.an('array');
     });
 
-    // it('Should set values', () => {
-    //   expect(slider.setValues([30])).to.eql([30]);
-    // });
-    // TODO RSlider "before each" hook for "Should return scale object" FAILED
-    // TypeError: Cannot read property 'toString' of undefined at RSHandler._updateTooltip
+    it('Should set values', () => {
+      expect(SLIDER.setValues([30])).to.eql([30]);
+    });
   });
 });
