@@ -9,7 +9,7 @@ const CONFIG_KEYS = [
   'stepSize',
   'allowReversedValues',
 ];
-const DEFAULT_CONFIG = {
+const CONFIG_DEFAULTS = {
   minValue: 0,
   maxValue: 100,
   stepSize: 10,
@@ -21,7 +21,7 @@ const m = new RSModel();
 
 describe('RSModel', () => {
   beforeEach(() => {
-    m.setConfig(DEFAULT_CONFIG);
+    m.setConfig(CONFIG_DEFAULTS);
   });
 
   describe('getConfig(): ModelOptions', () => {
@@ -47,23 +47,23 @@ describe('RSModel', () => {
     });
 
     it('Should not work with 2 or 3 options', () => {
-      expect(m.setConfig({ minValue: 20, maxValue: 120 })).to.eql(DEFAULT_CONFIG);
-      expect(m.setConfig({ minValue: 20, stepSize: 20 })).to.eql(DEFAULT_CONFIG);
-      expect(m.setConfig({ minValue: 20, handlerCount: 3 })).to.eql(DEFAULT_CONFIG);
+      expect(m.setConfig({ minValue: 20, maxValue: 120 })).to.eql(CONFIG_DEFAULTS);
+      expect(m.setConfig({ minValue: 20, stepSize: 20 })).to.eql(CONFIG_DEFAULTS);
+      expect(m.setConfig({ minValue: 20, handlerCount: 3 })).to.eql(CONFIG_DEFAULTS);
       expect(
         m.setConfig({
           minValue: 20,
           maxValue: 120,
           stepSize: 5,
         })
-      ).to.eql(DEFAULT_CONFIG);
+      ).to.eql(CONFIG_DEFAULTS);
       expect(
         m.setConfig({
           minValue: 20,
           maxValue: 120,
           handlerCount: 4,
         })
-      ).to.eql(DEFAULT_CONFIG);
+      ).to.eql(CONFIG_DEFAULTS);
     });
 
     it('Should work with all four options provided', () => {

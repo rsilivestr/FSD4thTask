@@ -128,7 +128,6 @@ export interface View extends Subject {
   setConfig(o: ViewOptions): ViewOptions;
   setModelOptions(o: SliderOptions): ModelOptions;
   setValues(v: number[]): void;
-  update(): number[];
 }
 
 // Presenter

@@ -1,117 +1,85 @@
 /* eslint-disable no-undef */
-// import { expect } from 'chai';
-// import RSView from '../src/сomponents/RSView';
-// const container = document.createElement('div');
-// const v = new RSView(container);
-// // const viewOptionsKeys = ['isHorizontal', 'handlerRadius', 'showTooltip'];
+import { expect } from 'chai';
+import RSView from '../src/components/RSView';
 
-// describe('View', () => {});
-// //   // can be run only once for now
-// //   describe('render(): HTMLElement', () => {});
+describe('RSView(container: HTMLElement, o: SliderOptions)', () => {
+  const container = document.createElement('div');
+  const VIEW = new RSView(container);
 
-// //   describe('getRect(): Rect', () => {
-// //     const rect = testView.getRect();
-// //     const rectKeys = ['sliderLength', 'minCoord', 'maxCoord'];
+  const CONFIG_DEFAULTS = {
+    isHorizontal: true,
+    handlerRadius: 8,
+    showProgress: true,
+    showScale: true,
+    showTooltip: true,
+  };
 
-// //     it('Should return an object', () => {
-// //       expect(rect).to.be.an('object');
-// //     });
+  const CONFIG_KEYS = [
+    'isHorizontal',
+    'handlerRadius',
+    'showProgress',
+    'showScale',
+    'showTooltip',
+  ];
 
-// //     it('Result should contain certain keys', () => {
-// //       expect(rect).to.have.deep.keys(rectKeys);
-// //     });
+  const MODEL_KEYS = [
+    'minValue',
+    'maxValue',
+    'stepSize',
+    'handlerCount',
+    'allowReversedValues',
+  ];
 
-// //     it('Result should contain numeric values', () => {
-// //       rectKeys.forEach((key) => {
-// //         expect(rect[key]).to.be.a('number');
-// //       });
-// //     });
-// //   });
+  beforeEach(() => {
+    VIEW.setConfig(CONFIG_DEFAULTS);
+  });
 
-// //   describe('update(values: number[]): void', () => {});
+  describe('setValues(values: number[]): void ', () => {});
 
-// //   describe('setTooltip(value: boolean): void', () => {});
+  describe('getConfig(): ViewOptions', () => {
+    it('Should return config object', () => {
+      const res = VIEW.getConfig();
 
-// //   describe('getOptions(): ViewOptions', () => {
-// //     it('should return ViewOptions object', () => {
-// //       const res = testView.getOptions();
+      expect(res).to.have.deep.keys(CONFIG_KEYS);
+      expect(res).to.eql(CONFIG_DEFAULTS);
+    });
+  });
 
-// //       expect(res).to.have.deep.keys(viewOptionsKeys);
+  describe('setConfig(o: ViewOptions): ViewOptions', () => {
+    it('Should return ViewOptions object', () => {
+      expect(VIEW.setConfig({})).to.have.deep.keys(CONFIG_KEYS);
+    });
 
-// //       expect(res.isHorizontal).to.be.a('boolean');
-// //       expect(res.handlerRadius).to.be.a('number');
-// //       expect(res.showTooltip).to.be.a('boolean');
-// //     });
-// //   });
+    it('Should return changed config values', () => {
+      const conf = {
+        isHorizontal: false,
+        handlerRadius: 8,
+        showProgress: false,
+        showScale: true,
+        showTooltip: false,
+      };
 
-// //   describe('setOptions(options: ViewOptions): ViewOptions', () => {
-// //     const fn = testView.setOptions.bind(testView);
+      expect(VIEW.setConfig(conf)).to.eql(conf);
+    });
+  });
 
-// //     it('should return ViewOptions object', () => {
-// //       const res = fn();
+  describe('setModelOptions(o: SliderOptions): ModelOptions', () => {
+    it('Should return ModelOptions object', () => {
+      const conf = {
+        minValue: 10,
+        maxValue: 30,
+        stepSize: 5,
+        handlerCount: 2,
+        allowReversedValue: false,
+      };
 
-// //       expect(res).to.have.deep.keys(viewOptionsKeys);
+      const res = VIEW.setModelOptions(conf);
 
-// //       expect(res.isHorizontal).to.be.a('boolean');
-// //       expect(res.handlerRadius).to.be.a('number');
-// //       expect(res.showTooltip).to.be.a('boolean');
-// //     });
+      expect(res).to.have.deep.keys(MODEL_KEYS);
+    });
+  });
 
-// //     it('should set isHorizontal: boolean option', () => {
-// //       expect(fn({ isHorizontal: true }).isHorizontal).to.equal(true);
-// //       expect(fn({ isHorizontal: false }).isHorizontal).to.equal(false);
-// //     });
+  // describe('onScaleClick(value: number): void', () => {});
 
-// //     it('should set handlerRadius: number option', () => {
-// //       for (let i = 0; i < 6; i += 1) {
-// //         const radius = Math.ceil(Math.random() * 20);
-
-// //         const res = fn({ handlerRadius: radius }).handlerRadius;
-
-// //         expect(res).to.equal(radius);
-// //       }
-// //     });
-
-// //     it('should set showTooltip: boolean option', () => {
-// //       expect(fn({ showTooltip: true }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: false }).showTooltip).to.equal(false);
-// //     });
-
-// //     it('should ignore invalid (non-boolean) isHorizontal value', () => {
-// //       fn({ isHorizontal: true });
-
-// //       expect(fn({ showTooltip: 'false' }).isHorizontal).to.equal(true);
-// //       expect(fn({ showTooltip: 0 }).isHorizontal).to.equal(true);
-// //       expect(fn({ showTooltip: NaN }).isHorizontal).to.equal(true);
-// //       expect(fn({ showTooltip: null }).isHorizontal).to.equal(true);
-// //       expect(fn({ showTooltip: '' }).isHorizontal).to.equal(true);
-// //     });
-
-// //     it('should ignore invalid (non-numeric) handlerRadius values', () => {
-// //       fn({ handlerRadius: 21 });
-
-// //       expect(fn({ handlerRadius: '22' }).handlerRadius).to.equal(21);
-// //       expect(fn({ handlerRadius: '' }).handlerRadius).to.equal(21);
-// //       expect(fn({ handlerRadius: true }).handlerRadius).to.equal(21);
-// //       expect(fn({ handlerRadius: NaN }).handlerRadius).to.equal(21);
-// //       expect(fn({ handlerRadius: null }).handlerRadius).to.equal(21);
-// //     });
-
-// //     it('should ignore invalid (non-boolean) showTooltip values', () => {
-// //       fn({ showTooltip: true });
-
-// //       expect(fn({ showTooltip: 'false' }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: 0 }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: NaN }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: null }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: [false] }).showTooltip).to.equal(true);
-// //       expect(fn({ showTooltip: { value: false } }).showTooltip).to.equal(true);
-// //     });
-// //   });
-
-// //   describe('getContainer()', () => {
-// //     it('should return container element', () => {
-// //       expect(testView.getContainer()).to.equal(testContainer);
-// //     });
-// //   });
-// // });
+  // describe('onTrackMousedown(e: MouseEvent): void', () => {});
+});

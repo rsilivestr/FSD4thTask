@@ -55,10 +55,10 @@ class RSView extends RSubject implements View {
   public setValues(values: number[]): void {
     this.values = values;
 
-    this.update();
+    this._update();
   }
 
-  public getConfig() {
+  public getConfig(): ViewOptions {
     return this.options;
   }
 
@@ -66,11 +66,12 @@ class RSView extends RSubject implements View {
     return this._configure(o);
   }
 
-  public setModelOptions(o: SliderOptions) {
-    const { minValue, maxValue, stepSize, handlerCount } = o;
+  public setModelOptions(o: SliderOptions): ModelOptions {
+    const { minValue, maxValue, stepSize, handlerCount, allowReversedValues } = o;
 
     if (this.modelOptions) {
       const mo = this.modelOptions;
+      this.modelOptions.allowReversedValues = allowReversedValues;
 
       // Re-render on options change:
       if (minValue !== mo.minValue || maxValue !== mo.maxValue) {
@@ -109,6 +110,7 @@ class RSView extends RSubject implements View {
         maxValue,
         stepSize,
         handlerCount,
+        allowReversedValues,
       };
     }
 
@@ -122,7 +124,7 @@ class RSView extends RSubject implements View {
   }
 
   // Invoked on Track mousedown (Observer)
-  public onTrackMousedown(e: MouseEvent) {
+  public onTrackMousedown(e: MouseEvent): void {
     // Get click coord, convert to value
     const coord = this._getRelativeCoord(e);
     const value = this._coordToValue(coord);
@@ -141,7 +143,7 @@ class RSView extends RSubject implements View {
     this._moveHandler(coord);
   }
 
-  public update() {
+  private _update(): void {
     // Move handlers
     this._updateHandlers();
 
@@ -149,8 +151,6 @@ class RSView extends RSubject implements View {
     if (this.options.showProgress) {
       this._updateProgress();
     }
-
-    return this.values;
   }
 
   private _addScale(o: ModelOptions) {
