@@ -2,34 +2,9 @@ import RSModel from './RSModel';
 import RSPresenter from './RSPresenter';
 import RSView from './RSView';
 import RSPanel from './RSPanel';
+import { SliderOptions, Slider } from './interfaces';
 
 import '../styles/rslider.sass';
-
-export type SliderOptions = {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-  isHorizontal?: boolean;
-  handlerRadius?: number;
-  showProgress?: boolean;
-  showScale?: boolean;
-  showTooltip?: boolean;
-};
-
-export interface Slider {
-  addObserver(o: Function): void;
-  getContainer(): HTMLElement;
-
-  setConfig(o: SliderOptions): SliderOptions;
-  getConfig(): SliderOptions;
-
-  getValue(index?: number): number;
-  setValue(index: number, value: number): number;
-
-  getValues(): number[];
-  setValues(values?: number[]): number[];
-}
 
 const create = (container: HTMLElement, options: SliderOptions = {}) => {
   const observers: Function[] = [];

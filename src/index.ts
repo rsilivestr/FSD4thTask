@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-import { Slider, SliderOptions, create, addControlPanel } from './components/RSlider';
+import { Slider, SliderOptions } from './components/interfaces';
+import { create, addControlPanel } from './components/RSlider';
 
 $.fn.extend({
   rslider(options: SliderOptions) {
