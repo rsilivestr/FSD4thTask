@@ -3,6 +3,7 @@ module.exports = (config) => {
     autoWatch: true,
     basePath: '',
     browsers: ['jsdom'],
+    browserNoActivityTimeout: 999999,
     colors: true,
     concurrency: Infinity,
     coverageReporter: {
@@ -18,13 +19,11 @@ module.exports = (config) => {
       'test/**/*.ts': ['karma-typescript'],
     },
     reporters: ['progress', 'coverage'],
-    // singleRun: false,
-
     karmaTypescriptConfig: {
-      experimentalDecorators: true,
-      extend: './tsconfig.json',
       include: ['./src/**/*.ts', './test/**/*.test.ts'],
-      module: 'commonjs',
+      compilerOptions: {
+        esModuleInterop: true,
+      },
     },
   });
 };
