@@ -34,7 +34,8 @@ class RScale extends RSubject implements Scale {
   }
 
   public setConfig(o: ModelOptions): void {
-    this.options = o;
+    // Overwrite current config, can recieve partial config object
+    this.options = { ...this.options, ...o };
 
     this._populateScale();
   }
@@ -85,9 +86,6 @@ class RScale extends RSubject implements Scale {
 
     if (target.classList.contains('rscale__mark')) {
       const value = parseInt(target.textContent, 10);
-
-      // Get closest handler index
-      // const index = this._getClosestHandlerIndex(value);
 
       this.notifyObservers(value);
     }
