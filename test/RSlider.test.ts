@@ -3,28 +3,34 @@ import { expect } from 'chai';
 import { create } from '../src/components/RSlider';
 
 describe('RSlider', () => {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
+  const CONTAINER = document.createElement('div');
 
-  const SLIDER = create(container);
+  const DEFAULT_CONFIG = {
+    minValue: 0,
+    maxValue: 100,
+    stepSize: 10,
+    handlerCount: 1,
+    allowReversedValues: false,
+    isHorizontal: true,
+    handlerRadius: 8,
+    showProgress: true,
+    showScale: true,
+    showTooltip: true,
+  };
 
-  const CONFIG_KEYS = [
-    'minValue',
-    'maxValue',
-    'stepSize',
-    'handlerCount',
-    'allowReversedValues',
-    'isHorizontal',
-    'handlerRadius',
-    'showProgress',
-    'showScale',
-    'showTooltip',
-  ];
+  const CONFIG_KEYS = Object.keys(DEFAULT_CONFIG);
+
+  const SLIDER = create(CONTAINER, DEFAULT_CONFIG);
+
+  beforeEach(() => {
+    SLIDER.setConfig(DEFAULT_CONFIG);
+  });
 
   describe('getConfig(): SliderOptions', () => {
     it('Should be a function', () => {
       expect(SLIDER.getConfig).to.be.a('function');
     });
+
     it('Should return SliderOptions object', () => {
       expect(SLIDER.getConfig()).to.have.deep.keys(CONFIG_KEYS);
     });
@@ -47,15 +53,34 @@ describe('RSlider', () => {
   });
 
   describe('setValue(index: number, value: number): number', () => {
-    it('Should', () => {
+    it('Should return set value', () => {
       expect(SLIDER.setValue(0, 20)).to.equal(20);
+    });
+
+    it('Should set and return minValue if new value is less than minValue', () => {
+      const { minValue } = DEFAULT_CONFIG;
+      const value = minValue - 999;
+
+      expect(SLIDER.setValue(0, value)).to.equal(minValue);
+    });
+
+    it('Should set and return maxValue if new value is greater than maxValue', () => {
+      const { maxValue } = DEFAULT_CONFIG;
+      const value = maxValue + 999;
+
+      expect(SLIDER.setValue(0, value)).to.equal(maxValue);
     });
   });
 
   describe('getValues(): number[]', () => {
-    it('Should return a number array', () => {
+    it('Should return an array', () => {
       expect(SLIDER.getValues()).to.be.an('array');
-      expect(SLIDER.getValues()[0]).to.be.a('number');
+    });
+
+    it('Should return a number array', () => {
+      SLIDER.getValues().forEach((value) => {
+        expect(value).to.be.a('number');
+      });
     });
   });
 
@@ -64,8 +89,11 @@ describe('RSlider', () => {
       expect(SLIDER.getValues()).to.be.an('array');
     });
 
-    it('Should set values', () => {
-      expect(SLIDER.setValues([30])).to.eql([30]);
+    it('Should set provided values', () => {
+      const valuesArray = [30];
+      SLIDER.setValues(valuesArray);
+
+      expect(SLIDER.getValues()).to.eql(valuesArray);
     });
   });
 });
