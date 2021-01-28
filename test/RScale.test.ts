@@ -36,21 +36,25 @@ describe('RScale(container: HTMLElement, o: SliderOptions)', () => {
   describe('public toggleLayout(layout: "horizontal" | "vertical"): void', () => {
     it('Should add vertical layout modifier to rscale when layout is set to vertical', () => {
       SCALE.toggleLayout('vertical');
+
       expect(ELEMENT).to.have.class('rscale--layout_vertical');
     });
 
     it('Should remove horizontal layout modifier from rscale when layout is set to vertical', () => {
       SCALE.toggleLayout('vertical');
+
       expect(ELEMENT).to.not.have.class('rscale--layout_horizontal');
     });
 
     it('Should add horizontal layout modifier from rscale when layout is set to horizontal', () => {
       SCALE.toggleLayout('horizontal');
+
       expect(ELEMENT).to.have.class('rscale--layout_horizontal');
     });
 
     it('Should remove vertical layout modifier from rscale when layout is set to horizontal', () => {
       SCALE.toggleLayout('horizontal');
+
       expect(ELEMENT).to.not.have.class('rscale--layout_vertical');
     });
   });

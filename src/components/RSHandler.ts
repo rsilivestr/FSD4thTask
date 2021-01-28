@@ -72,14 +72,12 @@ class RSHandler implements Handler {
     }
   }
 
-  public updateValue(value: number): number {
+  public updateValue(value: number): void {
     this.value = value;
 
     if (this.tooltip) {
       this._updateTooltip();
     }
-
-    return value;
   }
 
   private _createHandler(): HTMLElement {
