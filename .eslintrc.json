@@ -7,6 +7,7 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "eslint-config-airbnb",
+    "prettier",
     "plugin:import/typescript"
   ],
   "globals": {
@@ -23,7 +24,7 @@
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "no-underscore-dangle": "off",
-    "implicit-arrow-linebreak": ["error", "below"],
+    "implicit-arrow-linebreak": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
