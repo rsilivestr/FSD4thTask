@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import {
   Handler,
   HandlerOptions,
@@ -31,7 +32,6 @@ class RSView extends RSubject implements View {
 
   private options: ViewOptions = {};
 
-  // UI elements
   private UI: ViewElements = {
     activeHandler: null,
     progress: null,
@@ -40,13 +40,11 @@ class RSView extends RSubject implements View {
     track: null,
   };
 
-  // Current values
   private values: number[] = [];
 
   constructor(container: HTMLElement, o: SliderOptions = {}) {
     super();
 
-    // Save root element
     this.container = container;
 
     this._init(o);
@@ -78,7 +76,6 @@ class RSView extends RSubject implements View {
         this.modelOptions.minValue = minValue;
         this.modelOptions.maxValue = maxValue;
 
-        // Update children
         this.children.scale.setConfig(o);
         this._updateHandlers();
         if (this.options.showProgress) {
@@ -89,7 +86,6 @@ class RSView extends RSubject implements View {
       if (stepSize !== mo.stepSize) {
         this.modelOptions.stepSize = stepSize;
 
-        // Update children
         this.children.scale.setConfig(o);
       }
 
@@ -100,7 +96,6 @@ class RSView extends RSubject implements View {
           this._toggleProgress(false);
         }
 
-        // Update children
         this._createHandlers();
       }
     } else {
@@ -125,29 +120,22 @@ class RSView extends RSubject implements View {
 
   // Invoked on Track mousedown (Observer)
   public onTrackMousedown(e: MouseEvent): void {
-    // Get click coord, convert to value
     const coord = this._getRelativeCoord(e);
     const value = this._coordToValue(coord);
 
-    // Get closest handler
     const index = this._getClosestHandlerIndex(value);
     const handler = this.children.handlers[index].getElement();
 
-    // Grab that handler
     this._grab(e, handler);
 
-    // Reset offset
     this.grabOffset = 0;
 
-    // Update handler
     this._moveHandler(coord);
   }
 
   private _update(): void {
-    // Move handlers
     this._updateHandlers();
 
-    // Update progress
     if (this.options.showProgress) {
       this._updateProgress();
     }
@@ -156,12 +144,9 @@ class RSView extends RSubject implements View {
   private _addScale(o: ModelOptions) {
     if (!this.children.scale) {
       const scale = new RScale(this.container, o);
-
-      // Save to this
       this.children.scale = scale;
     }
 
-    // Append to slider and save to UI object
     const scaleElement = this.children.scale.getElement();
     this.UI.scale = scaleElement;
     this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
@@ -177,10 +162,8 @@ class RSView extends RSubject implements View {
     }
 
     if (showScale && !this.UI.scale) {
-      // Add and update scale
       this._addScale({ ...this.modelOptions, ...this.options });
     } else if (!showScale && this.UI.scale) {
-      // Remove element from DOM and this.UI, remove Scale instance from chidlren
       this.UI.scale.remove();
       this.UI.scale = null;
       this.children.scale = null;
@@ -200,16 +183,11 @@ class RSView extends RSubject implements View {
       throw new Error('There is no element matching provided selector.');
     }
 
-    // Create & append slider element
     this.UI.slider = this._elCreateSlider();
-
-    // Create & append track element
     this.UI.track = this._createTrack();
 
-    // Create & append handler elements
     this._createHandlers();
 
-    // Create & append progress element
     if (this.options.showProgress) {
       this._createProgress();
     }
@@ -222,14 +200,12 @@ class RSView extends RSubject implements View {
   }
 
   private _createHandlers() {
-    // Remove old handlers
     if (this.children.handlers.length > 0) {
       this.children.handlers.forEach((h) => h.getElement().remove());
 
       this.children.handlers = [];
     }
 
-    // Add new handlers
     const { handlerCount } = this.modelOptions;
 
     for (let i = 0; i < handlerCount; i += 1) {
@@ -239,7 +215,6 @@ class RSView extends RSubject implements View {
   }
 
   private _correctHandlerCoord(): number {
-    // Get track length
     const { trackLength } = this.children.track.getRect();
     const r = this.options.handlerRadius;
 
@@ -261,11 +236,9 @@ class RSView extends RSubject implements View {
   private _elCreateSlider(): HTMLElement {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
-    // Create element
     const slider = document.createElement('div');
     slider.className = `rslider rslider--layout_${layout}`;
 
-    // Append
     this.container.appendChild(slider);
 
     // Prevent dragstart
@@ -321,9 +294,7 @@ class RSView extends RSubject implements View {
       return;
     }
 
-    // If slider has more than 2 handlers
     if (this.modelOptions.handlerCount > 2) {
-      // Set to false and return
       this.options.showProgress = false;
 
       if (this.UI.progress) {
@@ -336,11 +307,9 @@ class RSView extends RSubject implements View {
     }
 
     if (progress && !this.UI.progress) {
-      // Create and update progress
       this._createProgress();
       this._updateProgress();
     } else if (!progress && this.UI.progress) {
-      // Remove from DOM and this.UI
       this.UI.progress.remove();
       this.UI.progress = null;
       this.children.progress = null;
@@ -348,19 +317,18 @@ class RSView extends RSubject implements View {
   }
 
   private _addHandler(index: number) {
-    // Initialize options
     const options: HandlerOptions = {
       id: index,
       layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
       tooltip: this.options.showTooltip,
       value: 0,
     };
-    // Create handler instance
+
     const handler: Handler = new RSHandler(options);
-    // Append to slider
     const handlerElement = handler.getElement();
+
     this.UI.slider.appendChild(handlerElement);
-    // Add event listener
+
     handlerElement.addEventListener('mousedown', (e) => this._grab(e, handlerElement));
 
     return handler;
@@ -385,9 +353,9 @@ class RSView extends RSubject implements View {
     this._setGrabbedOffset(e);
 
     // Add listeners
-    document.body.addEventListener('mousemove', this._boundDrag);
-    document.body.addEventListener('mouseup', this._boundRelease);
-    document.body.addEventListener('mouseleave', this._boundRelease);
+    document.body.addEventListener('mousemove', this._drag);
+    document.body.addEventListener('mouseup', this._release);
+    document.body.addEventListener('mouseleave', this._release);
   }
 
   private _updateHandlers() {
@@ -422,48 +390,37 @@ class RSView extends RSubject implements View {
   }
 
   private _moveHandler(coord: number) {
-    // Convert coord to value
     const value = this._coordToValue(coord);
 
     // Update model through presenter
     const index = parseInt(this.UI.activeHandler.dataset.id, 10);
     this.notifyObservers(index, value);
 
-    // Update handlers
     this._updateHandlers();
 
-    // Update progress bar
     if (this.options.showProgress) {
       this._updateProgress();
     }
   }
 
+  @boundMethod
   private _drag(e: MouseEvent): void {
-    // Get relative coord in px
     const coord = this._getRelativeCoord(e);
 
     this._moveHandler(coord);
   }
 
-  // Bind _drag method to this
-  private _boundDrag: (e: MouseEvent) => void = this._drag.bind(this);
-
+  @boundMethod
   private _release(): void {
-    // Unset grabbed handler
     this.UI.activeHandler = null;
-    // Remove listeners
-    document.body.removeEventListener('mousemove', this._boundDrag);
-    document.body.removeEventListener('mouseup', this._boundRelease);
+
+    document.body.removeEventListener('mousemove', this._drag);
+    document.body.removeEventListener('mouseup', this._release);
   }
 
-  // Bind _release method to this
-  private _boundRelease: () => void = this._release.bind(this);
-
   private _updateOrientation(horizontal = true) {
-    // Return if slider is not rendered yet
     if (!this.UI.slider) return;
 
-    // Toggle classes
     if (horizontal) {
       this.UI.slider.classList.remove('rslider--layout_vertical');
       this.UI.slider.classList.add('rslider--layout_horizontal');
@@ -472,23 +429,19 @@ class RSView extends RSubject implements View {
       this.UI.slider.classList.remove('rslider--layout_horizontal');
     }
 
-    // Update track
     this.children.track.toggleLayout(this.options.isHorizontal);
 
-    // Update progress
     if (this.options.showProgress) {
       this.children.progress.toggleHorizontal(this.options.isHorizontal);
 
       this._updateProgress();
     }
 
-    // Update scale
     if (this.UI.scale) {
       const layout = horizontal ? 'horizontal' : 'vertical';
       this.children.scale.toggleLayout(layout);
     }
 
-    // Update handlers
     const layout = horizontal ? 'horizontal' : 'vertical';
     this.children.handlers.forEach((h) => h.toggleLayout(layout));
   }
@@ -496,66 +449,50 @@ class RSView extends RSubject implements View {
   private _configure(o: ViewOptions) {
     const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
 
-    // isHorizontal (orientation)
     if (typeof isHorizontal === 'boolean') {
-      // Set value
       this.options.isHorizontal = isHorizontal;
 
       this._updateOrientation(this.options.isHorizontal);
     } else if (this.options.isHorizontal === undefined) {
-      // Default value
       this.options.isHorizontal = true;
 
       this._updateOrientation(this.options.isHorizontal);
     }
 
-    // Handler radius
     if (typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius)) {
-      // Set value
       this.options.handlerRadius = handlerRadius;
     } else if (this.options.handlerRadius === undefined) {
-      // Default value
       this.options.handlerRadius = 8;
     }
 
-    // Progress
     if (typeof showProgress === 'boolean') {
-      // Set value
       this.options.showProgress = showProgress;
       this._toggleProgress(this.options.showProgress);
     } else if (this.options.showProgress === undefined) {
-      // Default value
       this.options.showProgress = false;
       this._toggleProgress(this.options.showProgress);
     }
 
-    // Scale
     if (typeof showScale === 'boolean') {
-      // Set value
       this.options.showScale = showScale;
 
       this._toggleScale(this.options.showScale);
     } else if (this.options.showScale === undefined) {
-      // Default true
       this.options.showScale = true;
 
       this._toggleScale(this.options.showScale);
     }
-    // Update scale
+
     if (this.children.scale) {
       this.children.scale.setConfig({ ...this.options, ...this.modelOptions });
     }
 
-    // Tooltip
     if (typeof showTooltip === 'boolean') {
-      // Set value
       this.options.showTooltip = showTooltip;
     } else if (this.options.showTooltip === undefined) {
-      // Default value
       this.options.showTooltip = true;
     }
 
-    // Update handlers
     this.children.handlers.forEach((h) => h.toggleTooltip(this.options.showTooltip));
 
     return this.options;

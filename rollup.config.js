@@ -4,6 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 const production = !process.env.ROLLUP_WATCH;
 const port = 8080;
@@ -36,6 +37,7 @@ export default {
         { src: './src/demo/*.html', dest: './dist/' },
       ],
     }),
+    nodeResolve(),
     sass({
       output: './dist/css/rslider.css',
     }),

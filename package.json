@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/rsilivestr/FSD4hTask#readme",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.0",
+    "@types/autobind-decorator": "^2.1.0",
     "@types/chai": "^4.2.15",
     "@types/chai-dom": "^0.0.10",
     "@types/jquery": "^3.5.5",
@@ -68,6 +70,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "autobind-decorator": "^2.4.0",
     "jquery": "^3.5.1"
   },
   "lint-staged": {

@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import { Track } from './interfaces';
 import RSubject from './RSubject';
 
@@ -30,6 +31,7 @@ class RSTrack extends RSubject implements Track {
     this.isHorizontal = isHorizontal;
   }
 
+  @boundMethod
   private _onMousedown(e: MouseEvent) {
     // Prevent text selection
     e.preventDefault();
@@ -42,7 +44,7 @@ class RSTrack extends RSubject implements Track {
 
     this.toggleLayout(isHorizontal);
 
-    this.UItrack.addEventListener('mousedown', (e) => this._onMousedown(e));
+    this.UItrack.addEventListener('mousedown', this._onMousedown);
 
     return this.UItrack;
   }

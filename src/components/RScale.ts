@@ -1,3 +1,5 @@
+import { boundMethod } from 'autobind-decorator';
+
 import { ModelOptions, Scale, ScaleElements, SliderOptions } from './interfaces';
 import RSubject from './RSubject';
 
@@ -81,6 +83,7 @@ class RScale extends RSubject implements Scale {
     return this.UI.scale;
   }
 
+  @boundMethod
   private _onClick(e: MouseEvent) {
     const target = <HTMLLIElement>e.target;
 
@@ -98,7 +101,7 @@ class RScale extends RSubject implements Scale {
 
     this._populateScale();
 
-    this.UI.scale.addEventListener('click', (e) => this._onClick(e));
+    this.UI.scale.addEventListener('click', this._onClick);
 
     return this.UI.scale;
   }
