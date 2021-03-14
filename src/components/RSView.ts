@@ -71,8 +71,8 @@ class RSView extends RSubject implements View {
       const mo = this.modelOptions;
       this.modelOptions.allowReversedValues = allowReversedValues;
 
-      // Re-render on options change:
-      if (minValue !== mo.minValue || maxValue !== mo.maxValue) {
+      const optionsWereChanged = minValue !== mo.minValue || maxValue !== mo.maxValue;
+      if (optionsWereChanged) {
         this.modelOptions.minValue = minValue;
         this.modelOptions.maxValue = maxValue;
 
@@ -99,7 +99,6 @@ class RSView extends RSubject implements View {
         this._createHandlers();
       }
     } else {
-      // First time
       this.modelOptions = {
         minValue,
         maxValue,
@@ -118,7 +117,6 @@ class RSView extends RSubject implements View {
     this.notifyObservers(index, value);
   }
 
-  // Invoked on Track mousedown (Observer)
   public onTrackMousedown(e: MouseEvent): void {
     const coord = this._getRelativeCoord(e);
     const value = this._coordToValue(coord);
@@ -151,15 +149,11 @@ class RSView extends RSubject implements View {
     this.UI.scale = scaleElement;
     this.UI.slider.insertAdjacentElement('beforeend', scaleElement);
 
-    // Send Scale clicks to model through presenter, then model will update view
     this.children.scale.addObserver(this.onScaleClick.bind(this));
   }
 
   private _toggleScale(showScale: boolean) {
-    // If slider is not rendered yet
-    if (!this.UI.slider) {
-      return;
-    }
+    if (!this.UI.slider) return;
 
     if (showScale && !this.UI.scale) {
       this._addScale({ ...this.modelOptions, ...this.options });
@@ -179,7 +173,7 @@ class RSView extends RSubject implements View {
   }
 
   private _render() {
-    if (this.container == null) {
+    if (this.container === null) {
       throw new Error('There is no element matching provided selector.');
     }
 
@@ -289,10 +283,7 @@ class RSView extends RSubject implements View {
   }
 
   private _toggleProgress(progress: boolean): void {
-    // If slider is not rendered yet
-    if (!this.UI.slider) {
-      return;
-    }
+    if (!this.UI.slider) return;
 
     if (this.modelOptions.handlerCount > 2) {
       this.options.showProgress = false;
@@ -347,12 +338,10 @@ class RSView extends RSubject implements View {
   private _grab(e: MouseEvent, handler: HTMLElement): void {
     e.preventDefault();
 
-    // Set grabbed handler
     this.UI.activeHandler = handler;
 
     this._setGrabbedOffset(e);
 
-    // Add listeners
     document.body.addEventListener('mousemove', this._drag);
     document.body.addEventListener('mouseup', this._release);
     document.body.addEventListener('mouseleave', this._release);
@@ -361,9 +350,7 @@ class RSView extends RSubject implements View {
   private _updateHandlers() {
     this.children.handlers.forEach((handler, index) => {
       const value = this.values[index];
-
       const coord = this._valueToCoord(value) * this._correctHandlerCoord();
-      // Update handler position and value
       handler.setPosition(coord);
       handler.updateValue(value);
     });
@@ -459,7 +446,9 @@ class RSView extends RSubject implements View {
       this._updateOrientation(this.options.isHorizontal);
     }
 
-    if (typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius)) {
+    const isHandlerRadiusValid =
+      typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius);
+    if (isHandlerRadiusValid) {
       this.options.handlerRadius = handlerRadius;
     } else if (this.options.handlerRadius === undefined) {
       this.options.handlerRadius = 8;

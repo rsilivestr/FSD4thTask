@@ -16,11 +16,11 @@ class RScale extends RSubject implements Scale {
     marks: [],
   };
 
-  constructor(container: HTMLElement, o: SliderOptions) {
+  constructor(container: HTMLElement, options: SliderOptions) {
     super();
 
     this.UI.container = container;
-    this.options = o;
+    this.options = options;
     this._render();
   }
 
@@ -35,9 +35,9 @@ class RScale extends RSubject implements Scale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public setConfig(o: ModelOptions): void {
+  public setConfig(newOptions: ModelOptions): void {
     // Overwrite current config, can recieve partial config object
-    this.options = { ...this.options, ...o };
+    this.options = { ...this.options, ...newOptions };
 
     this._populateScale();
   }
@@ -87,11 +87,11 @@ class RScale extends RSubject implements Scale {
   private _onClick(e: MouseEvent) {
     const target = <HTMLLIElement>e.target;
 
-    if (target.classList.contains('rscale__mark')) {
-      const value = parseInt(target.textContent, 10);
+    if (!target.classList.contains('rscale__mark')) return;
 
-      this.notifyObservers(value);
-    }
+    const value = parseInt(target.textContent, 10);
+
+    this.notifyObservers(value);
   }
 
   private _render() {
