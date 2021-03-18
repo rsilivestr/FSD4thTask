@@ -77,16 +77,16 @@ mySlider.getConfig(): SliderOptions;
 
 ```typescript
 // Узнать одно значение
-mySlider.value(index: number): number;
+mySlider.getValue(index: number): number;
 
 // Задать одно значение
-mySlider.value(index: number, value: number): number;
+mySlider.setValue(index: number, value: number): number;
 
 // Узнать значения
-mySlider.values(): number[];
+mySlider.getValues(): number[];
 
 // Задать значения
-mySlider.values(values: number[]): number[];
+mySlider.setValues(values: number[]): number[];
 ```
 
 ### Добавить панель управления
