@@ -97,8 +97,11 @@ const myPanel = $().rspanel(mySlider: RSlider): RSPanel;
 
 ## Архитектура приложения
 
-<!-- TODO update diagram -->
+<details>
+<summary>UML диаграмма</summary>
 
-[UML диаграмма](https://viewer.diagrams.net/?highlight=0000ff&edit=_blank&layers=1&nav=1&title=fsd4uml.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Frsilivestr%2FFSD4thTask%2Fmaster%2Ffsd4uml.drawio)
+![UML диаграмма](/diagram.svg)
+
+</details>
 
 Слайдер разделён на слои `Model`, `View` и `Presenter`. Для уменьшения связанности `Presenter` подписан на обновления `View` и `Model` с помощью шаблона "Наблюдатель". При изменении значений и настроек `Presenter` получает оповещение и вызывает соответствующие методы `Model` и `View`. `Model` ничего не знает о `View`, который знает о её настройках и значениях ползунков, но не может напрямую обратиться к её методам. `View` помимо основного класса имеет дочерние: `Handler` - для каждого ползунка и `Scale` - опциональная шкала значений.

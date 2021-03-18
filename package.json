@@ -11,7 +11,8 @@
     "start": "run-s clean rollup:watch",
     "lint": "eslint src/**/*.ts --fix",
     "test": "karma start karma.conf.js",
-    "test:once": "karma start karma.conf.js --single-run"
+    "test:once": "karma start karma.conf.js --single-run",
+    "drawuml": "tplant --input src/index.ts --output diagram.puml"
   },
   "repository": {
     "type": "git",
@@ -67,6 +68,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "sinon": "^9.2.4",
     "sinon-chai": "^3.5.0",
+    "tplant": "^2.3.6",
     "typescript": "^4.2.3"
   },
   "dependencies": {
