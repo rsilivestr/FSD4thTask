@@ -2,16 +2,18 @@
 import { expect } from 'chai';
 
 import { create } from '../src/components/Slider';
+import * as types from '../src/components/types';
 
 describe('Slider', () => {
   const CONTAINER = document.createElement('div');
 
-  const DEFAULT_CONFIG = {
+  const DEFAULT_CONFIG: types.SliderOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
     handlerCount: 1,
     allowReversedValues: false,
+    handlerInteraction: 'move',
     isHorizontal: true,
     handlerRadius: 8,
     showProgress: true,

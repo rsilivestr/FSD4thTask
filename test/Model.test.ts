@@ -2,14 +2,16 @@
 import { expect } from 'chai';
 
 import Model from '../src/components/Model';
+import * as types from '../src/components/types';
 
 describe('Model', () => {
-  const CONFIG_DEFAULTS = {
+  const CONFIG_DEFAULTS: types.ModelOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
     handlerCount: 1,
     allowReversedValues: false,
+    handlerInteraction: 'move',
   };
 
   const CONFIG_KEYS = Object.keys(CONFIG_DEFAULTS);
@@ -69,9 +71,13 @@ describe('Model', () => {
         stepSize: 5,
         handlerCount: 2,
       };
-      const { allowReversedValues } = MODEL.getConfig();
+      const { allowReversedValues, handlerInteraction } = MODEL.getConfig();
 
-      expect(MODEL.setConfig(conf)).to.eql({ ...conf, allowReversedValues });
+      expect(MODEL.setConfig(conf)).to.eql({
+        ...conf,
+        allowReversedValues,
+        handlerInteraction,
+      });
     });
 
     it('Should not be able to set minValue = maxValue and vice versa', () => {

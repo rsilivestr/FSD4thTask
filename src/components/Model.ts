@@ -10,6 +10,7 @@ class Model extends Subject implements types.Model {
     stepSize: 10,
     handlerCount: 1,
     allowReversedValues: false,
+    handlerInteraction: 'move',
   };
 
   private values: number[] = [];
@@ -46,12 +47,20 @@ class Model extends Subject implements types.Model {
     const indexIsOutOfRange = index < 0 || index >= handlerCount;
     if (indexIsOutOfRange) throw new Error('There is no value with such index');
 
-    const min = minValue + index * stepSize * this.directionMod;
-    const max = maxValue - (handlerCount - index - 1) * stepSize * this.directionMod;
+    const pass = this.options.handlerInteraction === 'pass';
 
-    let val = 0;
+    const min = pass ? minValue : minValue + index * stepSize * this.directionMod;
+    const maxDiff = stepSize - ((maxValue * this.directionMod) % stepSize);
+    const pseudoMaxValue =
+      maxDiff === stepSize ? maxValue : maxValue + maxDiff * this.directionMod;
+    let max = pseudoMaxValue - (handlerCount - index - 1) * stepSize * this.directionMod;
+    if (max * this.directionMod > maxValue * this.directionMod) max = maxValue;
+    if (pass) max = maxValue;
+
     const valueIsBelowMin = value * this.directionMod < min * this.directionMod;
     const valueIsAboveMax = value * this.directionMod > max * this.directionMod;
+
+    let val = 0;
     if (valueIsBelowMin) {
       val = min;
     } else if (valueIsAboveMax) {
@@ -63,7 +72,6 @@ class Model extends Subject implements types.Model {
     this.values[index] = val;
 
     this.updateValues(index, val);
-
     return val;
   }
 
@@ -161,7 +169,7 @@ class Model extends Subject implements types.Model {
 
   private configureFourOptions(o: types.ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
-    const { allowReversedValues } = this.options;
+    const { allowReversedValues, handlerInteraction } = this.options;
 
     const cannotReverse = !allowReversedValues && minValue > maxValue;
     if (cannotReverse) return;
@@ -180,6 +188,7 @@ class Model extends Subject implements types.Model {
       stepSize,
       handlerCount,
       allowReversedValues,
+      handlerInteraction,
     };
 
     this.configureDirection();
@@ -195,6 +204,11 @@ class Model extends Subject implements types.Model {
     const { allowReversedValues } = o;
     if (typeof allowReversedValues === 'boolean') {
       this.options.allowReversedValues = allowReversedValues;
+    }
+
+    const { handlerInteraction } = o;
+    if (['block', 'move', 'pass'].includes(handlerInteraction)) {
+      this.options.handlerInteraction = handlerInteraction;
     }
 
     // Strip non-numeric entries, save to new object
@@ -251,24 +265,65 @@ class Model extends Subject implements types.Model {
   }
 
   private updateValues(updatedIndex: number, updatedValue: number) {
-    const { stepSize } = this.options;
+    const { stepSize, maxValue, handlerInteraction } = this.options;
 
-    this.values.forEach((value, index) => {
-      // TODO Address case when maxValue is not a multiple of stepSize
-      const minValueDiff = (index - updatedIndex) * stepSize * this.directionMod;
-      const closestValue = updatedValue + minValueDiff;
+    switch (handlerInteraction) {
+      case 'block': {
+        const leftNeighbour = this.values[updatedIndex - 1];
+        if (
+          leftNeighbour &&
+          updatedValue * this.directionMod <= leftNeighbour * this.directionMod
+        ) {
+          const closestStep = leftNeighbour + stepSize * this.directionMod;
+          this.values[updatedIndex] =
+            closestStep * this.directionMod < maxValue * this.directionMod
+              ? closestStep
+              : maxValue;
+        }
+        const rightNeighbour = this.values[updatedIndex + 1];
+        if (
+          rightNeighbour &&
+          updatedValue * this.directionMod >= rightNeighbour * this.directionMod
+        ) {
+          this.values[updatedIndex] = rightNeighbour - stepSize * this.directionMod;
+        }
 
-      const shouldBeMovedLeft =
-        index < updatedIndex &&
-        value * this.directionMod > closestValue * this.directionMod;
-      const shouldBeMovedRight =
-        index > updatedIndex &&
-        value * this.directionMod < closestValue * this.directionMod;
-      const shouldBeMoved = shouldBeMovedLeft || shouldBeMovedRight;
-      if (shouldBeMoved) {
-        this.values[index] = closestValue;
+        break;
       }
-    });
+      case 'move': {
+        this.values.forEach((value, index) => {
+          const minValueDiff = (index - updatedIndex) * stepSize;
+          const closestStep = updatedValue + minValueDiff * this.directionMod;
+
+          let closestValue: number;
+          if (closestStep * this.directionMod > maxValue * this.directionMod) {
+            closestValue = maxValue;
+          } else if (closestStep % stepSize !== 0) {
+            closestValue = value;
+          } else {
+            closestValue = closestStep;
+          }
+
+          const shouldBeMovedLeft =
+            index < updatedIndex &&
+            value * this.directionMod > closestValue * this.directionMod;
+          const shouldBeMovedRight =
+            index > updatedIndex &&
+            value * this.directionMod < closestValue * this.directionMod;
+          const shouldBeMoved = shouldBeMovedLeft || shouldBeMovedRight;
+          if (shouldBeMoved) {
+            this.values[index] = closestValue;
+          }
+        });
+        break;
+      }
+      case 'pass': {
+        // Do nothing
+        break;
+      }
+      default:
+      // Do nothing
+    }
 
     this.notifyObservers(this.values);
   }

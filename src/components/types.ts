@@ -10,6 +10,7 @@ type SliderOptions = {
   stepSize?: number;
   handlerCount?: number;
   allowReversedValues?: boolean;
+  handlerInteraction?: 'block' | 'move' | 'pass';
   isHorizontal?: boolean;
   handlerRadius?: number;
   showProgress?: boolean;
@@ -32,12 +33,13 @@ type Slider = {
 };
 
 type ModelOptions = {
-  [key: string]: number | boolean;
+  [key: string]: any;
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
   handlerCount?: number;
   allowReversedValues?: boolean;
+  handlerInteraction?: 'block' | 'move' | 'pass';
 };
 
 type Model = Subject & {
