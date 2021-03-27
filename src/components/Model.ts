@@ -50,7 +50,7 @@ class Model extends Subject implements TModel {
     const pass = this.options.handlerInteraction === 'pass';
 
     const min = pass ? minValue : minValue + index * stepSize * this.directionMod;
-    const maxDiff = stepSize - ((maxValue * this.directionMod) % stepSize);
+    const maxDiff = stepSize - Math.abs((maxValue - minValue) % stepSize);
     const pseudoMaxValue =
       maxDiff === stepSize ? maxValue : maxValue + maxDiff * this.directionMod;
     let max = pseudoMaxValue - (handlerCount - index - 1) * stepSize * this.directionMod;
@@ -265,7 +265,7 @@ class Model extends Subject implements TModel {
   }
 
   private updateValues(updatedIndex: number, updatedValue: number) {
-    const { stepSize, maxValue, handlerInteraction } = this.options;
+    const { stepSize, minValue, maxValue, handlerInteraction } = this.options;
 
     switch (handlerInteraction) {
       case 'block': {
@@ -298,7 +298,7 @@ class Model extends Subject implements TModel {
           let closestValue: number;
           if (closestStep * this.directionMod > maxValue * this.directionMod) {
             closestValue = maxValue;
-          } else if (closestStep % stepSize !== 0) {
+          } else if ((closestStep - minValue) % stepSize !== 0) {
             closestValue = value;
           } else {
             closestValue = closestStep;
