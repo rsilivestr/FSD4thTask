@@ -1,22 +1,22 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Subject from './Subject';
-import * as types from './types';
+import { TScale, TSliderOptions, TScaleElements, TModelOptions } from './types';
 
-class Scale extends Subject implements types.Scale {
+class Scale extends Subject implements TScale {
   private markValues: number[] = [];
 
   private stepCountLimit: number = 10;
 
-  private options: types.SliderOptions;
+  private options: TSliderOptions;
 
-  private UI: types.ScaleElements = {
+  private UI: TScaleElements = {
     container: null,
     scale: document.createElement('ul'),
     marks: [],
   };
 
-  constructor(container: HTMLElement, options: types.SliderOptions) {
+  constructor(container: HTMLElement, options: TSliderOptions) {
     super();
 
     this.UI.container = container;
@@ -35,7 +35,7 @@ class Scale extends Subject implements types.Scale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public setConfig(newOptions: types.ModelOptions): void {
+  public setConfig(newOptions: TModelOptions): void {
     // Overwrite current config, can recieve partial config object
     this.options = { ...this.options, ...newOptions };
 

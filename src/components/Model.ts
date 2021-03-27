@@ -1,10 +1,10 @@
 import Subject from './Subject';
-import * as types from './types';
+import { TModel, TModelOptions } from './types';
 
-class Model extends Subject implements types.Model {
+class Model extends Subject implements TModel {
   private directionMod: 1 | -1 = 1;
 
-  private options: types.ModelOptions = {
+  private options: TModelOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
@@ -15,7 +15,7 @@ class Model extends Subject implements types.Model {
 
   private values: number[] = [];
 
-  constructor(o: types.ModelOptions = {}) {
+  constructor(o: TModelOptions = {}) {
     super();
 
     this.initValues();
@@ -26,7 +26,7 @@ class Model extends Subject implements types.Model {
     return this.options;
   }
 
-  public setConfig(o?: types.ModelOptions) {
+  public setConfig(o?: TModelOptions) {
     return this.configure(o);
   }
 
@@ -167,7 +167,7 @@ class Model extends Subject implements types.Model {
     }
   }
 
-  private configureFourOptions(o: types.ModelOptions) {
+  private configureFourOptions(o: TModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
     const { allowReversedValues, handlerInteraction } = this.options;
 
@@ -198,8 +198,8 @@ class Model extends Subject implements types.Model {
     this.setEachValue();
   }
 
-  private configure(o: types.ModelOptions) {
-    const validOptions: types.ModelOptions = {};
+  private configure(o: TModelOptions) {
+    const validOptions: TModelOptions = {};
 
     const { allowReversedValues } = o;
     if (typeof allowReversedValues === 'boolean') {

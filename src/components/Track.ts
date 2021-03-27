@@ -1,9 +1,9 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Subject from './Subject';
-import * as types from './types';
+import { TTrack } from './types';
 
-class Track extends Subject implements types.Track {
+class Track extends Subject implements TTrack {
   private isHorizontal: boolean;
 
   private UItrack: HTMLElement = document.createElement('div');

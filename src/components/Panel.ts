@@ -1,13 +1,13 @@
 import { boundMethod } from 'autobind-decorator';
 
-import * as types from './types';
+import { TPanel, TSliderOptions, TSlider, TPanelElements } from './types';
 
-class Panel implements types.Panel {
-  private options: types.SliderOptions;
+class Panel implements TPanel {
+  private options: TSliderOptions;
 
-  private slider: types.Slider;
+  private slider: TSlider;
 
-  private UI: types.PanelElements = {
+  private UI: TPanelElements = {
     configDiv: document.createElement('div'),
     container: null,
     valueInputs: [],
@@ -16,8 +16,8 @@ class Panel implements types.Panel {
     valuesDiv: document.createElement('div'),
   };
 
-  constructor(s: types.Slider) {
-    this.init(s);
+  constructor(slider: TSlider) {
+    this.init(slider);
   }
 
   static createInput(
@@ -58,7 +58,7 @@ class Panel implements types.Panel {
     this.renderValueInputs();
   }
 
-  private init(s: types.Slider) {
+  private init(s: TSlider) {
     // Save slider
     this.slider = s;
     this.UI.container = s.getContainer();

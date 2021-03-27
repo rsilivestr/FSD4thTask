@@ -1,74 +1,16 @@
 @startuml
-interface Subject {
-    +addObserver: (o: Function) => Function[]
-    +removeObserver: (o: Function) => Function[]
-    +notifyObservers: (...notifyData: any) => void
-}
-interface Slider {
-    +addObserver(o: Function): void
-    +getContainer(): HTMLElement
-    +setConfig(o: SliderOptions): SliderOptions
-    +getConfig(): SliderOptions
-    +getValue(index?: number): number
-    +setValue(index: number, value: number): number
-    +getValues(): number[]
-    +setValues(values?: number[]): number[]
-}
-interface Model extends Subject {
-    +getConfig(): ModelOptions
-    +setConfig(o?: ModelOptions): ModelOptions
-    +getValue(index: number): number
-    +getValues(): number[]
-    +setValue(index: number, v: number): number
-    +setValues(v: number[]): number[]
-}
-interface Handler {
-    +getElement(): HTMLElement
-    +setPosition(coord: number): void
-    +toggleTooltip(value?: boolean): boolean
-    +toggleLayout(layout: "horizontal" | "vertical"): void
-    +updateValue(value: number): void
-}
-interface Progress {
-    +getElement: () => HTMLElement
-    +setCoords: (coords: ProgressCoords) => void
-    +toggleHorizontal: (isHorizontal: boolean) => void
-}
-interface Scale extends Subject {
-    +getElement: () => HTMLUListElement
-    +toggleLayout: (layout: 'horizontal' | 'vertical') => void
-    +setConfig: (o: ModelOptions) => void
-}
-interface Track extends Subject {
-    +getElement: () => HTMLElement
-    +getRect: () => any
-    +toggleLayout: (isHorizontal: boolean) => void
-}
-interface View extends Subject {
-    +getConfig(): ViewOptions
-    +setConfig(o: ViewOptions): ViewOptions
-    +setModelOptions(o: SliderOptions): ModelOptions
-    +setValues(v: number[]): void
-}
-interface Presenter {
-    +getValues(): number[]
-    +setModelValue(index: number, value: number): number
-}
-interface Panel {
-    +update(v: number[]): void
-}
-class RSubject implements Subject {
+class Subject implements TSubject {
     #observers: Function[]
     +addObserver(o: Function): Function[]
     +removeObserver(o: Function): Function[]
     +notifyObservers(data: any): void
 }
-class RSModel extends RSubject implements Model {
+class Model extends Subject implements TModel {
     -directionMod: 1 | -1
-    -options: ModelOptions
+    -options: TModelOptions
     -values: number[]
-    +getConfig(): ModelOptions
-    +setConfig(o?: ModelOptions): ModelOptions
+    +getConfig(): TModelOptions
+    +setConfig(o?: TModelOptions): TModelOptions
     +getValue(index: number): number
     +getValues(): number[]
     +setValue(index: number, value: number): number
@@ -80,122 +22,20 @@ class RSModel extends RSubject implements Model {
     -configureStepSize(newStepSize: number): void
     -configureHandlerCount(newHandlerCount: number): void
     -configureSingleOption(key: string, value: number): void
-    -configureFourOptions(o: ModelOptions): void
-    -configure(o: ModelOptions): ModelOptions
+    -configureFourOptions(o: TModelOptions): void
+    -configure(o: TModelOptions): TModelOptions
     -initValues(): void
     -normalizeValue(value: number): number
     -updateValues(updatedIndex: number, updatedValue: number): void
     +{static} isNumber(n: any): boolean
 }
-interface Presenter {
-    +init(): void
-    +getValues(): number[]
-    +setModelValue(index: number, value: number): number
-}
-class RSPresenter implements Presenter {
-    -model: Model
-    -view: View
-    +init(): void
-    +getValues(): number[]
-    +setModelValue(index: number, value: number): number
-    +update(v: number[]): void
-}
-class RSProgress implements Progress {
-    -coords: ProgressCoords
-    -isHorizontal: boolean
-    -UIprogress: HTMLElement
-    +getElement(): HTMLElement
-    +setCoords(coords: ProgressCoords): void
-    +toggleHorizontal(isHorizontal: boolean): void
-    -setStyle(): void
-}
-class RSHandler implements Handler {
-    -coord: number
-    -id: number
-    -layout: string
-    -tooltip: boolean
-    -UI: HandlerElements
-    -value: number
-    +getElement(): HTMLElement
-    +setPosition(coord: number): void
-    +toggleTooltip(value?: boolean): boolean
-    +toggleLayout(layout: "horizontal" | "vertical"): void
-    +updateValue(value: number): void
-    -createHandler(): HTMLElement
-    -createTooltip(): HTMLElement
-    -init(o: HandlerOptions): void
-    -updateTooltip(): void
-}
-class RScale extends RSubject implements Scale {
-    -markValues: number[]
-    -stepCountLimit: number
-    -options: SliderOptions
-    -UI: ScaleElements
-    +getElement(): HTMLUListElement
-    +toggleLayout(layout: "horizontal" | "vertical"): void
-    +setConfig(newOptions: ModelOptions): void
-    -calcScaleStep(): number
-    -populateScale(): HTMLUListElement
-    -onClick(e: MouseEvent): void
-    -render(): HTMLUListElement
-}
-class RSTrack extends RSubject implements Track {
-    -isHorizontal: boolean
-    -UItrack: HTMLElement
-    +getElement(): HTMLElement
-    +getRect(): { trackLength: number; trackMin: number; trackMax: number; }
-    +toggleLayout(isHorizontal: boolean): void
-    -onMousedown(e: MouseEvent): void
-    -create(isHorizontal: boolean): HTMLElement
-}
-class RSView extends RSubject implements View {
-    -children: ViewChildren
-    -container: HTMLElement
-    -grabOffset: number
-    -modelOptions: ModelOptions
-    -options: ViewOptions
-    -UI: ViewElements
-    -values: number[]
-    +setValues(values: number[]): void
-    +getConfig(): ViewOptions
-    +setConfig(o: ViewOptions): ViewOptions
-    +setModelOptions(o: SliderOptions): ModelOptions
-    +onScaleClick(value: number): void
-    +onTrackMousedown(e: MouseEvent): void
-    -update(): void
-    -addScale(o: ModelOptions): void
-    -toggleScale(showScale: boolean): void
-    -init(o: SliderOptions): void
-    -render(): HTMLElement
-    -createHandlers(): void
-    -correctHandlerCoord(): number
-    -coordToValue(coord: number): number
-    -valueToCoord(value: number): number
-    -elCreateSlider(): HTMLElement
-    -createTrack(): HTMLElement
-    -calcProgressCoords(): ProgressCoords
-    -createProgress(): void
-    -updateProgress(): void
-    -toggleProgress(progress: boolean): void
-    -addHandler(index: number): Handler
-    -setGrabbedOffset(e: MouseEvent): void
-    -grab(e: MouseEvent, handler: HTMLElement): void
-    -updateHandlers(): void
-    -getRelativeCoord(e: MouseEvent): number
-    -getClosestHandlerIndex(goal: number): number
-    -moveHandler(coord: number): void
-    -drag(e: MouseEvent): void
-    -release(): void
-    -updateOrientation(horizontal?: boolean): void
-    -configure(o: ViewOptions): ViewOptions
-}
-class RSPanel implements Panel {
-    -options: SliderOptions
-    -slider: Slider
-    -UI: PanelElements
+class Panel implements TPanel {
+    -options: TSliderOptions
+    -slider: TSlider
+    -UI: TPanelElements
     +update(values: number[]): void
     -updateInputCount(): void
-    -init(s: Slider): void
+    -init(s: TSlider): void
     -onValueInputChange(e: KeyboardEvent, valueIndex: number): void
     -renderValueInputs(): void
     -setMinValue(e: KeyboardEvent): void
@@ -216,5 +56,102 @@ class RSPanel implements Panel {
     -createShowTooltipInput(): void
     -render(): void
     +{static} createInput(parent: HTMLElement, labelText: string, isCheckbox?: boolean): HTMLInputElement
+}
+class Presenter implements TPresenter {
+    -model: TModel
+    -view: TView
+    +init(): void
+    +getValues(): number[]
+    +setModelValue(index: number, value: number): number
+    +update(v: number[]): void
+}
+class Handler implements THandler {
+    -coord: number
+    -id: number
+    -layout: string
+    -tooltip: boolean
+    -UI: THandlerElements
+    -value: number
+    +getElement(): HTMLElement
+    +setPosition(coord: number): void
+    +toggleTooltip(value?: boolean): boolean
+    +toggleLayout(layout: "horizontal" | "vertical"): void
+    +updateValue(value: number): void
+    -createHandler(): HTMLElement
+    -createTooltip(): HTMLElement
+    -init(o: THandlerOptions): void
+    -updateTooltip(): void
+}
+class Progress implements TProgress {
+    -coords: TProgressCoords
+    -isHorizontal: boolean
+    -UIprogress: HTMLElement
+    +getElement(): HTMLElement
+    +setCoords(coords: TProgressCoords): void
+    +toggleHorizontal(isHorizontal: boolean): void
+    -setStyle(): void
+}
+class Scale extends Subject implements TScale {
+    -markValues: number[]
+    -stepCountLimit: number
+    -options: TSliderOptions
+    -UI: TScaleElements
+    +getElement(): HTMLUListElement
+    +toggleLayout(layout: "horizontal" | "vertical"): void
+    +setConfig(newOptions: TModelOptions): void
+    -calcScaleStep(): number
+    -populateScale(): HTMLUListElement
+    -onClick(e: MouseEvent): void
+    -render(): HTMLUListElement
+}
+class Track extends Subject implements TTrack {
+    -isHorizontal: boolean
+    -UItrack: HTMLElement
+    +getElement(): HTMLElement
+    +getRect(): { trackLength: number; trackMin: number; trackMax: number; }
+    +toggleLayout(isHorizontal: boolean): void
+    -onMousedown(e: MouseEvent): void
+    -create(isHorizontal: boolean): HTMLElement
+}
+class View extends Subject implements TView {
+    -children: TViewChildren
+    -container: HTMLElement
+    -grabOffset: number
+    -modelOptions: TModelOptions
+    -options: TViewOptions
+    -UI: TViewElements
+    -values: number[]
+    +setValues(values: number[]): void
+    +getConfig(): TViewOptions
+    +setConfig(o: TViewOptions): TViewOptions
+    +setModelOptions(o: TSliderOptions): TModelOptions
+    +onScaleClick(value: number): void
+    +onTrackMousedown(e: MouseEvent): void
+    -update(): void
+    -addScale(o: TModelOptions): void
+    -toggleScale(showScale: boolean): void
+    -init(o: TSliderOptions): void
+    -render(): HTMLElement
+    -createHandlers(): void
+    -correctHandlerCoord(): number
+    -coordToValue(coord: number): number
+    -valueToCoord(value: number): number
+    -elCreateSlider(): HTMLElement
+    -createTrack(): HTMLElement
+    -calcProgressCoords(): TProgressCoords
+    -createProgress(): void
+    -updateProgress(): void
+    -toggleProgress(progress: boolean): void
+    -addHandler(index: number): THandler
+    -setGrabbedOffset(e: MouseEvent): void
+    -grab(e: MouseEvent, handler: HTMLElement): void
+    -updateHandlers(): void
+    -getRelativeCoord(e: MouseEvent): number
+    -getClosestHandlerIndex(goal: number): number
+    -moveHandler(coord: number): void
+    -drag(e: MouseEvent): void
+    -release(): void
+    -updateOrientation(horizontal?: boolean): void
+    -configure(o: TViewOptions): TViewOptions
 }
 @enduml

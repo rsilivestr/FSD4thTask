@@ -7,14 +7,14 @@ import * as types from '../src/components/types';
 use(require('chai-dom'));
 
 describe('Handler', () => {
-  const CONFIG: types.HandlerOptions = {
+  const CONFIG: types.THandlerOptions = {
     id: 0,
     layout: 'horizontal',
     tooltip: true,
     value: 5,
   };
 
-  const HANDLER: types.Handler = new Handler(CONFIG);
+  const HANDLER: types.THandler = new Handler(CONFIG);
 
   const HANDLER_ELEMENT = HANDLER.getElement();
 

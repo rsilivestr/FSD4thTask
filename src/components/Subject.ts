@@ -1,6 +1,6 @@
-import * as types from './types';
+import { TSubject } from './types';
 
-class Subject implements types.Subject {
+class Subject implements TSubject {
   protected observers: Function[] = [];
 
   public addObserver(o: Function) {

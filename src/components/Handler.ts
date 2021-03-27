@@ -1,6 +1,6 @@
-import * as types from './types';
+import { THandler, THandlerElements, THandlerOptions } from './types';
 
-class Handler implements types.Handler {
+class Handler implements THandler {
   private coord: number;
 
   private id: number;
@@ -9,14 +9,14 @@ class Handler implements types.Handler {
 
   private tooltip: boolean;
 
-  private UI: types.HandlerElements = {
+  private UI: THandlerElements = {
     handler: null,
     tooltip: null,
   };
 
   private value: number;
 
-  constructor(o: types.HandlerOptions) {
+  constructor(o: THandlerOptions) {
     this.init(o);
   }
 
@@ -101,7 +101,7 @@ class Handler implements types.Handler {
     return tooltip;
   }
 
-  private init(o: types.HandlerOptions): void {
+  private init(o: THandlerOptions): void {
     this.id = o.id;
     this.layout = o.layout;
     this.tooltip = o.tooltip;

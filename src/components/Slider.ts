@@ -2,11 +2,11 @@ import Model from './Model';
 import Panel from './Panel';
 import Presenter from './Presenter';
 import View from './View';
-import * as types from './types';
+import { TSlider, TSliderOptions } from './types';
 
 import '../styles/rslider.sass';
 
-const create = (container: HTMLElement, options: types.SliderOptions = {}) => {
+const create = (container: HTMLElement, options: TSliderOptions = {}) => {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
@@ -31,7 +31,7 @@ const create = (container: HTMLElement, options: types.SliderOptions = {}) => {
   presenter.init();
 
   // Facade methods
-  const slider: types.Slider = {
+  const slider: TSlider = {
     getContainer() {
       return container;
     },
@@ -41,7 +41,7 @@ const create = (container: HTMLElement, options: types.SliderOptions = {}) => {
 
       return { ...mConfig, ...vConfig };
     },
-    setConfig(o: types.SliderOptions) {
+    setConfig(o: TSliderOptions) {
       const mConfig = model.setConfig(o);
       const vConfig = view.setConfig(o);
 
@@ -65,6 +65,6 @@ const create = (container: HTMLElement, options: types.SliderOptions = {}) => {
   return slider;
 };
 
-const addControlPanel = (s: types.Slider) => new Panel(s);
+const addControlPanel = (s: TSlider) => new Panel(s);
 
 export { create, addControlPanel };

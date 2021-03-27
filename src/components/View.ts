@@ -5,10 +5,20 @@ import Progress from './Progress';
 import Scale from './Scale';
 import Subject from './Subject';
 import Track from './Track';
-import * as types from './types';
+import {
+  TView,
+  TViewChildren,
+  TModelOptions,
+  TViewOptions,
+  TViewElements,
+  TSliderOptions,
+  TProgressCoords,
+  THandler,
+  THandlerOptions,
+} from './types';
 
-class View extends Subject implements types.View {
-  private children: types.ViewChildren = {
+class View extends Subject implements TView {
+  private children: TViewChildren = {
     handlers: [],
     progress: null,
     scale: null,
@@ -19,11 +29,11 @@ class View extends Subject implements types.View {
 
   private grabOffset: number = 0;
 
-  private modelOptions: types.ModelOptions;
+  private modelOptions: TModelOptions;
 
-  private options: types.ViewOptions = {};
+  private options: TViewOptions = {};
 
-  private UI: types.ViewElements = {
+  private UI: TViewElements = {
     activeHandler: null,
     progress: null,
     scale: null,
@@ -33,7 +43,7 @@ class View extends Subject implements types.View {
 
   private values: number[] = [];
 
-  constructor(container: HTMLElement, o: types.SliderOptions = {}) {
+  constructor(container: HTMLElement, o: TSliderOptions = {}) {
     super();
 
     this.container = container;
@@ -47,15 +57,15 @@ class View extends Subject implements types.View {
     this.update();
   }
 
-  public getConfig(): types.ViewOptions {
+  public getConfig(): TViewOptions {
     return this.options;
   }
 
-  public setConfig(o: types.ViewOptions) {
+  public setConfig(o: TViewOptions) {
     return this.configure(o);
   }
 
-  public setModelOptions(o: types.SliderOptions): types.ModelOptions {
+  public setModelOptions(o: TSliderOptions): TModelOptions {
     const { minValue, maxValue, stepSize, handlerCount, allowReversedValues } = o;
 
     if (this.modelOptions) {
@@ -130,7 +140,7 @@ class View extends Subject implements types.View {
     }
   }
 
-  private addScale(o: types.ModelOptions) {
+  private addScale(o: TModelOptions) {
     if (!this.children.scale) {
       const scale = new Scale(this.container, o);
       this.children.scale = scale;
@@ -155,7 +165,7 @@ class View extends Subject implements types.View {
     }
   }
 
-  private init(o: types.SliderOptions): void {
+  private init(o: TSliderOptions): void {
     this.configure(o);
 
     this.setModelOptions(o);
@@ -244,7 +254,7 @@ class View extends Subject implements types.View {
     return trackElement;
   }
 
-  private calcProgressCoords(): types.ProgressCoords {
+  private calcProgressCoords(): TProgressCoords {
     const { handlerCount } = this.modelOptions;
     const single = handlerCount === 1;
 
@@ -299,14 +309,14 @@ class View extends Subject implements types.View {
   }
 
   private addHandler(index: number) {
-    const options: types.HandlerOptions = {
+    const options: THandlerOptions = {
       id: index,
       layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
       tooltip: this.options.showTooltip,
       value: 0,
     };
 
-    const handler: types.Handler = new Handler(options);
+    const handler: THandler = new Handler(options);
     const handlerElement = handler.getElement();
 
     this.UI.slider.appendChild(handlerElement);
@@ -424,7 +434,7 @@ class View extends Subject implements types.View {
     this.children.handlers.forEach((h) => h.toggleLayout(layout));
   }
 
-  private configure(o: types.ViewOptions) {
+  private configure(o: TViewOptions) {
     const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
 
     if (typeof isHorizontal === 'boolean') {

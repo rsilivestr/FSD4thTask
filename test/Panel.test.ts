@@ -7,7 +7,7 @@ import * as types from '../src/components/types';
 
 describe('Panel(s: Slider)', () => {
   const CONTAINER = document.createElement('div');
-  const DEFAULT_CONFIG: types.SliderOptions = {
+  const DEFAULT_CONFIG: types.TSliderOptions = {
     minValue: 0,
     maxValue: 10,
     stepSize: 1,

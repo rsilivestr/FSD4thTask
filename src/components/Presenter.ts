@@ -1,11 +1,11 @@
-import * as types from './types';
+import { TModel, TPresenter, TView } from './types';
 
-class Presenter implements types.Presenter {
-  private model: types.Model;
+class Presenter implements TPresenter {
+  private model: TModel;
 
-  private view: types.View;
+  private view: TView;
 
-  constructor(model: types.Model, view: types.View) {
+  constructor(model: TModel, view: TView) {
     this.model = model;
     this.view = view;
   }

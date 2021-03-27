@@ -5,7 +5,7 @@ import Model from '../src/components/Model';
 import * as types from '../src/components/types';
 
 describe('Model', () => {
-  const CONFIG_DEFAULTS: types.ModelOptions = {
+  const CONFIG_DEFAULTS: types.TModelOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,

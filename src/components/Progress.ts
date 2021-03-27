@@ -1,13 +1,13 @@
-import * as types from './types';
+import { TProgress, TProgressCoords } from './types';
 
-class Progress implements types.Progress {
-  private coords: types.ProgressCoords = [0, 0];
+class Progress implements TProgress {
+  private coords: TProgressCoords = [0, 0];
 
   private isHorizontal: boolean = null;
 
   private UIprogress: HTMLElement = document.createElement('div');
 
-  constructor(coords: types.ProgressCoords, isHorizontal: boolean) {
+  constructor(coords: TProgressCoords, isHorizontal: boolean) {
     this.UIprogress.className = 'rslider__progress';
 
     this.setCoords(coords);
@@ -19,7 +19,7 @@ class Progress implements types.Progress {
     return this.UIprogress;
   }
 
-  public setCoords(coords: types.ProgressCoords): void {
+  public setCoords(coords: TProgressCoords): void {
     this.coords = coords;
 
     if (typeof this.isHorizontal === 'boolean') {

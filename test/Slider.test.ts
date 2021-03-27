@@ -7,7 +7,7 @@ import * as types from '../src/components/types';
 describe('Slider', () => {
   const CONTAINER = document.createElement('div');
 
-  const DEFAULT_CONFIG: types.SliderOptions = {
+  const DEFAULT_CONFIG: types.TSliderOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,

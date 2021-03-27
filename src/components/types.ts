@@ -1,10 +1,10 @@
-type Subject = {
+type TSubject = {
   addObserver: (o: Function) => Function[];
   removeObserver: (o: Function) => Function[];
   notifyObservers: (...notifyData: any) => void;
 };
 
-type SliderOptions = {
+type TSliderOptions = {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -18,12 +18,12 @@ type SliderOptions = {
   showTooltip?: boolean;
 };
 
-type Slider = {
+type TSlider = {
   addObserver(o: Function): void;
   getContainer(): HTMLElement;
 
-  setConfig(o: SliderOptions): SliderOptions;
-  getConfig(): SliderOptions;
+  setConfig(o: TSliderOptions): TSliderOptions;
+  getConfig(): TSliderOptions;
 
   getValue(index?: number): number;
   setValue(index: number, value: number): number;
@@ -32,7 +32,7 @@ type Slider = {
   setValues(values?: number[]): number[];
 };
 
-type ModelOptions = {
+type TModelOptions = {
   [key: string]: any;
   minValue?: number;
   maxValue?: number;
@@ -42,16 +42,16 @@ type ModelOptions = {
   handlerInteraction?: 'block' | 'move' | 'pass';
 };
 
-type Model = Subject & {
-  getConfig(): ModelOptions;
-  setConfig(o?: ModelOptions): ModelOptions;
+type TModel = TSubject & {
+  getConfig(): TModelOptions;
+  setConfig(o?: TModelOptions): TModelOptions;
   getValue(index: number): number | null;
   getValues(): number[];
   setValue(index: number, v: number): number;
   setValues(v: number[]): number[];
 };
 
-type Handler = {
+type THandler = {
   getElement(): HTMLElement;
   setPosition(coord: number): void;
   toggleTooltip(value?: boolean): boolean;
@@ -59,52 +59,52 @@ type Handler = {
   updateValue(value: number): void;
 };
 
-type HandlerOptions = {
+type THandlerOptions = {
   id: number;
   layout: string;
   tooltip: boolean;
   value: number;
 };
 
-type HandlerElements = {
+type THandlerElements = {
   handler: HTMLElement;
   tooltip: HTMLElement;
 };
 
-type ProgressCoords = [number, number];
+type TProgressCoords = [number, number];
 
-type Progress = {
+type TProgress = {
   getElement: () => HTMLElement;
-  setCoords: (coords: ProgressCoords) => void;
+  setCoords: (coords: TProgressCoords) => void;
   toggleHorizontal: (isHorizontal: boolean) => void;
 };
 
-type ScaleElements = {
+type TScaleElements = {
   container: HTMLElement;
   scale: HTMLUListElement;
   marks: HTMLLIElement[];
 };
 
-type Scale = Subject & {
+type TScale = TSubject & {
   getElement: () => HTMLUListElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
-  setConfig: (o: ModelOptions) => void;
+  setConfig: (o: TModelOptions) => void;
 };
 
-type Track = Subject & {
+type TTrack = TSubject & {
   getElement: () => HTMLElement;
   getRect: () => any;
   toggleLayout: (isHorizontal: boolean) => void;
 };
 
-type ViewChildren = {
-  handlers: Handler[];
-  progress: Progress;
-  scale: Scale;
-  track: Track;
+type TViewChildren = {
+  handlers: THandler[];
+  progress: TProgress;
+  scale: TScale;
+  track: TTrack;
 };
 
-type ViewElements = {
+type TViewElements = {
   activeHandler: HTMLElement;
   progress?: HTMLElement;
   scale?: HTMLUListElement;
@@ -112,7 +112,7 @@ type ViewElements = {
   track?: HTMLElement;
 };
 
-type ViewOptions = {
+type TViewOptions = {
   isHorizontal?: boolean;
   handlerRadius?: number;
   showProgress?: boolean;
@@ -120,23 +120,23 @@ type ViewOptions = {
   showTooltip?: boolean;
 };
 
-type View = Subject & {
-  getConfig(): ViewOptions;
-  setConfig(o: ViewOptions): ViewOptions;
-  setModelOptions(o: SliderOptions): ModelOptions;
+type TView = TSubject & {
+  getConfig(): TViewOptions;
+  setConfig(o: TViewOptions): TViewOptions;
+  setModelOptions(o: TSliderOptions): TModelOptions;
   setValues(v: number[]): void;
 };
 
-type Presenter = {
+type TPresenter = {
   getValues(): number[];
   setModelValue(index: number, value: number): number;
 };
 
-type Panel = {
+type TPanel = {
   update(v: number[]): void;
 };
 
-type PanelElements = {
+type TPanelElements = {
   configDiv: HTMLElement;
   container: HTMLElement;
   valueInputs: HTMLInputElement[];
@@ -146,24 +146,24 @@ type PanelElements = {
 };
 
 export type {
-  Handler,
-  HandlerElements,
-  HandlerOptions,
-  Model,
-  ModelOptions,
-  Panel,
-  PanelElements,
-  Presenter,
-  Progress,
-  ProgressCoords,
-  Scale,
-  ScaleElements,
-  Slider,
-  SliderOptions,
-  Subject,
-  Track,
-  View,
-  ViewChildren,
-  ViewElements,
-  ViewOptions,
+  THandler,
+  THandlerElements,
+  THandlerOptions,
+  TModel,
+  TModelOptions,
+  TPanel,
+  TPanelElements,
+  TPresenter,
+  TProgress,
+  TProgressCoords,
+  TScale,
+  TScaleElements,
+  TSlider,
+  TSliderOptions,
+  TSubject,
+  TTrack,
+  TView,
+  TViewChildren,
+  TViewElements,
+  TViewOptions,
 };

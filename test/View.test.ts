@@ -25,7 +25,7 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     'allowReversedValues',
   ];
 
-  const MODEL_DEFAULTS: types.SliderOptions = {
+  const MODEL_DEFAULTS: types.TSliderOptions = {
     minValue: 0,
     maxValue: 30,
     stepSize: 3,
@@ -56,7 +56,7 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
 
   describe('setValues(values: number[]): void ', () => {});
 
-  describe('getConfig(): ViewOptions', () => {
+  describe('getConfig(): TViewOptions', () => {
     it('Should return config object', () => {
       const res = VIEW.getConfig();
 
@@ -65,8 +65,8 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     });
   });
 
-  describe('setConfig(o: ViewOptions): ViewOptions', () => {
-    it('Should return ViewOptions object', () => {
+  describe('setConfig(o: TViewOptions): TViewOptions', () => {
+    it('Should return TViewOptions object', () => {
       expect(VIEW.setConfig({})).to.have.deep.keys(CONFIG_KEYS);
     });
 

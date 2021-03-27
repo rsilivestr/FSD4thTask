@@ -16,8 +16,8 @@ const s3 = $('#fizz').rslider({ isHorizontal: false });
 const s3p = $().rspanel(s3);
 
 const s4o = {
-  minValue: 0,
-  maxValue: -100,
+  minValue: 9,
+  maxValue: -65,
   stepSize: 10,
   handlerCount: 4,
   allowReversedValues: true,
