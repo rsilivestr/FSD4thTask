@@ -35,6 +35,7 @@ export default {
         { src: './src/demo/*.css', dest: './dist/css/' },
         { src: './src/demo/*.js', dest: './dist/js/' },
         { src: './src/demo/*.html', dest: './dist/' },
+        { src: './src/demo/*.ico', dest: './dist/' },
       ],
     }),
     nodeResolve(),
