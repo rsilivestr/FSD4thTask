@@ -1,8 +1,9 @@
 import { boundMethod } from 'autobind-decorator';
-import { Track } from './interfaces';
-import RSubject from './RSubject';
 
-class RSTrack extends RSubject implements Track {
+import Subject from './Subject';
+import * as types from './types';
+
+class Track extends Subject implements types.Track {
   private isHorizontal: boolean;
 
   private UItrack: HTMLElement = document.createElement('div');
@@ -50,4 +51,4 @@ class RSTrack extends RSubject implements Track {
   }
 }
 
-export default RSTrack;
+export default Track;

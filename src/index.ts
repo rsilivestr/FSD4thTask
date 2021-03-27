@@ -1,15 +1,15 @@
 /* eslint-disable no-undef */
-import { Slider, SliderOptions } from './components/interfaces';
-import { create, addControlPanel } from './components/RSlider';
+import { create, addControlPanel } from './components/Slider';
+import * as types from './components/types';
 
 $.fn.extend({
-  rslider(options: SliderOptions) {
+  rslider(options: types.SliderOptions) {
     return create((<JQuery>this)[0], options);
   },
 });
 
 $.fn.extend({
-  rspanel(slider: Slider) {
+  rspanel(slider: types.Slider) {
     return addControlPanel(slider);
   },
 });

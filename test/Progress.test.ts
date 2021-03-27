@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import RSProgress from '../src/components/RSProgress';
 
-describe('RSProgress(coords: number[], isHorizontal: boolean)', () => {
+import Progress from '../src/components/Progress';
+
+describe('Progress(coords: number[], isHorizontal: boolean)', () => {
   const COORDS: [number, number] = [0, 10];
-  const PROGRESS = new RSProgress(COORDS, true);
+  const PROGRESS = new Progress(COORDS, true);
 
   describe('getElement', () => {
     it('Should return HTMLElement', () => {

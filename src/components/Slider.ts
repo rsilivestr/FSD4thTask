@@ -1,12 +1,12 @@
-import RSModel from './RSModel';
-import RSPresenter from './RSPresenter';
-import RSView from './RSView';
-import RSPanel from './RSPanel';
-import { SliderOptions, Slider } from './interfaces';
+import Model from './Model';
+import Panel from './Panel';
+import Presenter from './Presenter';
+import View from './View';
+import * as types from './types';
 
 import '../styles/rslider.sass';
 
-const create = (container: HTMLElement, options: SliderOptions = {}) => {
+const create = (container: HTMLElement, options: types.SliderOptions = {}) => {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
@@ -17,7 +17,7 @@ const create = (container: HTMLElement, options: SliderOptions = {}) => {
     observers.forEach((o) => o(values));
   };
 
-  const model = new RSModel(options);
+  const model = new Model(options);
 
   // Notify slider about model changes
   // Slider then notifies it's own observers (e.g. panel)
@@ -25,13 +25,13 @@ const create = (container: HTMLElement, options: SliderOptions = {}) => {
 
   const modelConfig = model.getConfig();
 
-  const view = new RSView(container, { ...options, ...modelConfig });
+  const view = new View(container, { ...options, ...modelConfig });
 
-  const presenter = new RSPresenter(model, view);
+  const presenter = new Presenter(model, view);
   presenter.init();
 
   // Facade methods
-  const slider: Slider = {
+  const slider: types.Slider = {
     getContainer() {
       return container;
     },
@@ -41,7 +41,7 @@ const create = (container: HTMLElement, options: SliderOptions = {}) => {
 
       return { ...mConfig, ...vConfig };
     },
-    setConfig(o: SliderOptions) {
+    setConfig(o: types.SliderOptions) {
       const mConfig = model.setConfig(o);
       const vConfig = view.setConfig(o);
 
@@ -65,6 +65,6 @@ const create = (container: HTMLElement, options: SliderOptions = {}) => {
   return slider;
 };
 
-const addControlPanel = (s: Slider) => new RSPanel(s);
+const addControlPanel = (s: types.Slider) => new Panel(s);
 
 export { create, addControlPanel };

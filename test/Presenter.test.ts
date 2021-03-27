@@ -2,9 +2,10 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import Model from '../src/components/RSModel';
-import View from '../src/components/RSView';
-import Presenter from '../src/components/RSPresenter';
+
+import Model from '../src/components/Model';
+import Presenter from '../src/components/Presenter';
+import View from '../src/components/View';
 
 chai.use(sinonChai);
 

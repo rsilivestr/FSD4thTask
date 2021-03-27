@@ -1,6 +1,6 @@
-import { Subject } from './interfaces';
+import * as types from './types';
 
-class RSubject implements Subject {
+class Subject implements types.Subject {
   protected observers: Function[] = [];
 
   public addObserver(o: Function) {
@@ -20,4 +20,4 @@ class RSubject implements Subject {
   }
 }
 
-export default RSubject;
+export default Subject;

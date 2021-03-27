@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import RSModel from '../src/components/RSModel';
 
-describe('RSModel', () => {
+import Model from '../src/components/Model';
+
+describe('Model', () => {
   const CONFIG_DEFAULTS = {
     minValue: 0,
     maxValue: 100,
@@ -13,7 +14,7 @@ describe('RSModel', () => {
 
   const CONFIG_KEYS = Object.keys(CONFIG_DEFAULTS);
 
-  const MODEL = new RSModel();
+  const MODEL = new Model();
 
   beforeEach(() => {
     MODEL.setConfig(CONFIG_DEFAULTS);

@@ -1,12 +1,13 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import { create } from '../src/components/RSlider';
-import RSPanel from '../src/components/RSPanel';
-import { SliderOptions } from '../src/components/interfaces';
 
-describe('RSPanel(s: Slider)', () => {
+import Panel from '../src/components/Panel';
+import { create } from '../src/components/Slider';
+import * as types from '../src/components/types';
+
+describe('Panel(s: Slider)', () => {
   const CONTAINER = document.createElement('div');
-  const DEFAULT_CONFIG: SliderOptions = {
+  const DEFAULT_CONFIG: types.SliderOptions = {
     minValue: 0,
     maxValue: 10,
     stepSize: 1,
@@ -17,7 +18,7 @@ describe('RSPanel(s: Slider)', () => {
     showTooltip: true,
   };
   const SLIDER = create(CONTAINER, DEFAULT_CONFIG);
-  const PANEL = new RSPanel(SLIDER);
+  const PANEL = new Panel(SLIDER);
   const labels = Array.from(
     CONTAINER.querySelector('.rslider-panel').querySelectorAll('label')
   );
@@ -46,9 +47,7 @@ describe('RSPanel(s: Slider)', () => {
       const newValue = 3;
 
       const input = INPUTS['Handler #1'];
-      // Set value
       input.value = newValue.toString(10);
-      // Dispatch event
       input.dispatchEvent(KEYDOWN_EVENT);
 
       expect(SLIDER.getValue(0)).equal(newValue);

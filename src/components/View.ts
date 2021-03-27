@@ -1,23 +1,14 @@
 import { boundMethod } from 'autobind-decorator';
-import {
-  Handler,
-  HandlerOptions,
-  ModelOptions,
-  ProgressCoords,
-  SliderOptions,
-  View,
-  ViewChildren,
-  ViewElements,
-  ViewOptions,
-} from './interfaces';
-import RSProgress from './RSProgress';
-import RSHandler from './RSHandler';
-import RScale from './RScale';
-import RSubject from './RSubject';
-import RSTrack from './RSTrack';
 
-class RSView extends RSubject implements View {
-  private children: ViewChildren = {
+import Handler from './Handler';
+import Progress from './Progress';
+import Scale from './Scale';
+import Subject from './Subject';
+import Track from './Track';
+import * as types from './types';
+
+class View extends Subject implements types.View {
+  private children: types.ViewChildren = {
     handlers: [],
     progress: null,
     scale: null,
@@ -28,11 +19,11 @@ class RSView extends RSubject implements View {
 
   private grabOffset: number = 0;
 
-  private modelOptions: ModelOptions;
+  private modelOptions: types.ModelOptions;
 
-  private options: ViewOptions = {};
+  private options: types.ViewOptions = {};
 
-  private UI: ViewElements = {
+  private UI: types.ViewElements = {
     activeHandler: null,
     progress: null,
     scale: null,
@@ -42,7 +33,7 @@ class RSView extends RSubject implements View {
 
   private values: number[] = [];
 
-  constructor(container: HTMLElement, o: SliderOptions = {}) {
+  constructor(container: HTMLElement, o: types.SliderOptions = {}) {
     super();
 
     this.container = container;
@@ -56,15 +47,15 @@ class RSView extends RSubject implements View {
     this.update();
   }
 
-  public getConfig(): ViewOptions {
+  public getConfig(): types.ViewOptions {
     return this.options;
   }
 
-  public setConfig(o: ViewOptions) {
+  public setConfig(o: types.ViewOptions) {
     return this.configure(o);
   }
 
-  public setModelOptions(o: SliderOptions): ModelOptions {
+  public setModelOptions(o: types.SliderOptions): types.ModelOptions {
     const { minValue, maxValue, stepSize, handlerCount, allowReversedValues } = o;
 
     if (this.modelOptions) {
@@ -139,9 +130,9 @@ class RSView extends RSubject implements View {
     }
   }
 
-  private addScale(o: ModelOptions) {
+  private addScale(o: types.ModelOptions) {
     if (!this.children.scale) {
-      const scale = new RScale(this.container, o);
+      const scale = new Scale(this.container, o);
       this.children.scale = scale;
     }
 
@@ -164,7 +155,7 @@ class RSView extends RSubject implements View {
     }
   }
 
-  private init(o: SliderOptions): void {
+  private init(o: types.SliderOptions): void {
     this.configure(o);
 
     this.setModelOptions(o);
@@ -242,7 +233,7 @@ class RSView extends RSubject implements View {
   }
 
   private createTrack(): HTMLElement {
-    this.children.track = new RSTrack(this.options.isHorizontal);
+    this.children.track = new Track(this.options.isHorizontal);
 
     const trackElement = this.children.track.getElement();
 
@@ -253,7 +244,7 @@ class RSView extends RSubject implements View {
     return trackElement;
   }
 
-  private calcProgressCoords(): ProgressCoords {
+  private calcProgressCoords(): types.ProgressCoords {
     const { handlerCount } = this.modelOptions;
     const single = handlerCount === 1;
 
@@ -269,7 +260,7 @@ class RSView extends RSubject implements View {
     const coords = this.calcProgressCoords();
     const { isHorizontal } = this.options;
 
-    this.children.progress = new RSProgress(coords, isHorizontal);
+    this.children.progress = new Progress(coords, isHorizontal);
 
     this.UI.progress = this.children.progress.getElement();
 
@@ -308,14 +299,14 @@ class RSView extends RSubject implements View {
   }
 
   private addHandler(index: number) {
-    const options: HandlerOptions = {
+    const options: types.HandlerOptions = {
       id: index,
       layout: this.options.isHorizontal ? 'horizontal' : 'vertical',
       tooltip: this.options.showTooltip,
       value: 0,
     };
 
-    const handler: Handler = new RSHandler(options);
+    const handler: types.Handler = new Handler(options);
     const handlerElement = handler.getElement();
 
     this.UI.slider.appendChild(handlerElement);
@@ -433,7 +424,7 @@ class RSView extends RSubject implements View {
     this.children.handlers.forEach((h) => h.toggleLayout(layout));
   }
 
-  private configure(o: ViewOptions) {
+  private configure(o: types.ViewOptions) {
     const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
 
     if (typeof isHorizontal === 'boolean') {
@@ -488,4 +479,4 @@ class RSView extends RSubject implements View {
   }
 }
 
-export default RSView;
+export default View;

@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
-import { create } from '../src/components/RSlider';
 
-describe('RSlider', () => {
+import { create } from '../src/components/Slider';
+
+describe('Slider', () => {
   const CONTAINER = document.createElement('div');
 
   const DEFAULT_CONFIG = {

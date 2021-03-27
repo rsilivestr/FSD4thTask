@@ -1,22 +1,22 @@
 import { boundMethod } from 'autobind-decorator';
 
-import { ModelOptions, Scale, ScaleElements, SliderOptions } from './interfaces';
-import RSubject from './RSubject';
+import Subject from './Subject';
+import * as types from './types';
 
-class RScale extends RSubject implements Scale {
+class Scale extends Subject implements types.Scale {
   private markValues: number[] = [];
 
   private stepCountLimit: number = 10;
 
-  private options: SliderOptions;
+  private options: types.SliderOptions;
 
-  private UI: ScaleElements = {
+  private UI: types.ScaleElements = {
     container: null,
     scale: document.createElement('ul'),
     marks: [],
   };
 
-  constructor(container: HTMLElement, options: SliderOptions) {
+  constructor(container: HTMLElement, options: types.SliderOptions) {
     super();
 
     this.UI.container = container;
@@ -35,7 +35,7 @@ class RScale extends RSubject implements Scale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public setConfig(newOptions: ModelOptions): void {
+  public setConfig(newOptions: types.ModelOptions): void {
     // Overwrite current config, can recieve partial config object
     this.options = { ...this.options, ...newOptions };
 
@@ -107,4 +107,4 @@ class RScale extends RSubject implements Scale {
   }
 }
 
-export default RScale;
+export default Scale;

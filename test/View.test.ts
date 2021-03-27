@@ -2,12 +2,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { SliderOptions } from '../src/components/interfaces';
-import RSView from '../src/components/RSView';
+
+import View from '../src/components/View';
+import * as types from '../src/components/types';
 
 chai.use(sinonChai);
 
-describe('RSView(container: HTMLElement, o: SliderOptions)', () => {
+describe('View(container: HTMLElement, o: SliderOptions)', () => {
   const CONFIG_KEYS = [
     'isHorizontal',
     'handlerRadius',
@@ -24,7 +25,7 @@ describe('RSView(container: HTMLElement, o: SliderOptions)', () => {
     'allowReversedValues',
   ];
 
-  const MODEL_DEFAULTS: SliderOptions = {
+  const MODEL_DEFAULTS: types.SliderOptions = {
     minValue: 0,
     maxValue: 30,
     stepSize: 3,
@@ -43,7 +44,7 @@ describe('RSView(container: HTMLElement, o: SliderOptions)', () => {
   const SLIDER_DEFAULTS = { ...MODEL_DEFAULTS, ...VIEW_DEFAULTS };
 
   const container = document.createElement('div');
-  const VIEW = new RSView(container, SLIDER_DEFAULTS);
+  const VIEW = new View(container, SLIDER_DEFAULTS);
 
   beforeEach(() => {
     // Re-apply default config

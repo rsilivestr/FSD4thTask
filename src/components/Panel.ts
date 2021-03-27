@@ -1,12 +1,13 @@
 import { boundMethod } from 'autobind-decorator';
-import { Panel, PanelElements, Slider, SliderOptions } from './interfaces';
 
-class RSPanel implements Panel {
-  private options: SliderOptions;
+import * as types from './types';
 
-  private slider: Slider;
+class Panel implements types.Panel {
+  private options: types.SliderOptions;
 
-  private UI: PanelElements = {
+  private slider: types.Slider;
+
+  private UI: types.PanelElements = {
     configDiv: document.createElement('div'),
     container: null,
     valueInputs: [],
@@ -15,7 +16,7 @@ class RSPanel implements Panel {
     valuesDiv: document.createElement('div'),
   };
 
-  constructor(s: Slider) {
+  constructor(s: types.Slider) {
     this.init(s);
   }
 
@@ -57,7 +58,7 @@ class RSPanel implements Panel {
     this.renderValueInputs();
   }
 
-  private init(s: Slider) {
+  private init(s: types.Slider) {
     // Save slider
     this.slider = s;
     this.UI.container = s.getContainer();
@@ -84,7 +85,7 @@ class RSPanel implements Panel {
     handlerValues.forEach((value, index) => {
       // Create input, set value
       const labelText = `Handler #${index + 1}`;
-      const input = RSPanel.createInput(this.UI.valuesDiv, labelText);
+      const input = Panel.createInput(this.UI.valuesDiv, labelText);
       input.value = value.toString(10);
 
       input.addEventListener('keydown', (e) => this.onValueInputChange(e, index));
@@ -178,7 +179,7 @@ class RSPanel implements Panel {
 
   private createMinValueInput() {
     const { minValue } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Min value');
+    const input = Panel.createInput(this.UI.configDiv, 'Min value');
     input.value = minValue.toString(10);
 
     input.addEventListener('keydown', this.setMinValue);
@@ -188,7 +189,7 @@ class RSPanel implements Panel {
 
   private createMaxValueInput() {
     const { maxValue } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Max value');
+    const input = Panel.createInput(this.UI.configDiv, 'Max value');
     input.value = maxValue.toString(10);
 
     input.addEventListener('keydown', this.setMaxValue);
@@ -198,7 +199,7 @@ class RSPanel implements Panel {
 
   private createStepSizeInput() {
     const { stepSize } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Step size');
+    const input = Panel.createInput(this.UI.configDiv, 'Step size');
     input.value = stepSize.toString(10);
 
     input.addEventListener('keydown', this.setStepSize);
@@ -208,7 +209,7 @@ class RSPanel implements Panel {
 
   private createHandlerCountInput() {
     const { handlerCount } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Handler count');
+    const input = Panel.createInput(this.UI.configDiv, 'Handler count');
     input.value = handlerCount.toString(10);
 
     input.addEventListener('keydown', this.setHandlerCount);
@@ -218,7 +219,7 @@ class RSPanel implements Panel {
 
   private createIsHorizontalInput() {
     const { isHorizontal } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Is horizontal', true);
+    const input = Panel.createInput(this.UI.configDiv, 'Is horizontal', true);
     input.checked = isHorizontal;
 
     input.addEventListener('change', this.setIsHorizontal);
@@ -228,7 +229,7 @@ class RSPanel implements Panel {
 
   private createShowProgressInput() {
     const { showProgress } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Show progress', true);
+    const input = Panel.createInput(this.UI.configDiv, 'Show progress', true);
     input.checked = showProgress;
 
     input.addEventListener('change', this.setShowProgress);
@@ -238,7 +239,7 @@ class RSPanel implements Panel {
 
   private createShowScaleInput() {
     const { showScale } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Show scale', true);
+    const input = Panel.createInput(this.UI.configDiv, 'Show scale', true);
     input.checked = showScale;
 
     input.addEventListener('change', this.setShowScale);
@@ -248,7 +249,7 @@ class RSPanel implements Panel {
 
   private createShowTooltipInput() {
     const { showTooltip } = this.options;
-    const input = RSPanel.createInput(this.UI.configDiv, 'Show tooltip', true);
+    const input = Panel.createInput(this.UI.configDiv, 'Show tooltip', true);
     input.checked = showTooltip;
 
     input.addEventListener('change', this.setShowTooltip);
@@ -257,36 +258,24 @@ class RSPanel implements Panel {
   }
 
   private render() {
-    // Set panel className
     this.UI.panel.className = 'rslider-panel';
 
-    // Append input groups containers
     this.UI.panel.appendChild(this.UI.valuesDiv);
     this.UI.panel.appendChild(this.UI.configDiv);
 
-    // Render handler value inputs
     this.renderValueInputs();
 
-    // Config inputs
     this.createMinValueInput();
-
     this.createMaxValueInput();
-
     this.createStepSizeInput();
-
     this.createHandlerCountInput();
-
     this.createIsHorizontalInput();
-
     this.createShowProgressInput();
-
     this.createShowScaleInput();
-
     this.createShowTooltipInput();
 
-    // Append to container
     this.UI.container.appendChild(this.UI.panel);
   }
 }
 
-export default RSPanel;
+export default Panel;

@@ -1,19 +1,20 @@
 /* eslint-disable no-undef */
 import { use, expect } from 'chai';
-import { Handler, HandlerOptions } from '../src/components/interfaces';
-import RSHandler from '../src/components/RSHandler';
+
+import Handler from '../src/components/Handler';
+import * as types from '../src/components/types';
 
 use(require('chai-dom'));
 
-describe('RSHandler', () => {
-  const CONFIG: HandlerOptions = {
+describe('Handler', () => {
+  const CONFIG: types.HandlerOptions = {
     id: 0,
     layout: 'horizontal',
     tooltip: true,
     value: 5,
   };
 
-  const HANDLER: Handler = new RSHandler(CONFIG);
+  const HANDLER: types.Handler = new Handler(CONFIG);
 
   const HANDLER_ELEMENT = HANDLER.getElement();
 

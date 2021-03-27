@@ -1,10 +1,10 @@
-import { ModelOptions, Model } from './interfaces';
-import RSubject from './RSubject';
+import Subject from './Subject';
+import * as types from './types';
 
-class RSModel extends RSubject implements Model {
+class Model extends Subject implements types.Model {
   private directionMod: 1 | -1 = 1;
 
-  private options: ModelOptions = {
+  private options: types.ModelOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
@@ -14,7 +14,7 @@ class RSModel extends RSubject implements Model {
 
   private values: number[] = [];
 
-  constructor(o: ModelOptions = {}) {
+  constructor(o: types.ModelOptions = {}) {
     super();
 
     this.initValues();
@@ -25,7 +25,7 @@ class RSModel extends RSubject implements Model {
     return this.options;
   }
 
-  public setConfig(o?: ModelOptions) {
+  public setConfig(o?: types.ModelOptions) {
     return this.configure(o);
   }
 
@@ -38,7 +38,7 @@ class RSModel extends RSubject implements Model {
   }
 
   public setValue(index: number, value: number) {
-    const indexOrValueIsNotNumeric = !RSModel.isNumber(index) || !RSModel.isNumber(value);
+    const indexOrValueIsNotNumeric = !Model.isNumber(index) || !Model.isNumber(value);
     if (indexOrValueIsNotNumeric) throw new Error('Value and index should be numeric');
 
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
@@ -159,7 +159,7 @@ class RSModel extends RSubject implements Model {
     }
   }
 
-  private configureFourOptions(o: ModelOptions) {
+  private configureFourOptions(o: types.ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
     const { allowReversedValues } = this.options;
 
@@ -189,8 +189,8 @@ class RSModel extends RSubject implements Model {
     this.setEachValue();
   }
 
-  private configure(o: ModelOptions) {
-    const validOptions: ModelOptions = {};
+  private configure(o: types.ModelOptions) {
+    const validOptions: types.ModelOptions = {};
 
     const { allowReversedValues } = o;
     if (typeof allowReversedValues === 'boolean') {
@@ -200,7 +200,7 @@ class RSModel extends RSubject implements Model {
     // Strip non-numeric entries, save to new object
     // Mutating existing object will break view configuration
     Object.keys(o).forEach((key) => {
-      if (RSModel.isNumber(o[key])) {
+      if (Model.isNumber(o[key])) {
         validOptions[key] = o[key];
       }
     });
@@ -254,6 +254,7 @@ class RSModel extends RSubject implements Model {
     const { stepSize } = this.options;
 
     this.values.forEach((value, index) => {
+      // TODO Address case when maxValue is not a multiple of stepSize
       const minValueDiff = (index - updatedIndex) * stepSize * this.directionMod;
       const closestValue = updatedValue + minValueDiff;
 
@@ -273,4 +274,4 @@ class RSModel extends RSubject implements Model {
   }
 }
 
-export default RSModel;
+export default Model;

@@ -1,17 +1,11 @@
-import { Model, View } from './interfaces';
+import * as types from './types';
 
-interface Presenter {
-  init(): void;
-  getValues(): number[];
-  setModelValue(index: number, value: number): number;
-}
+class Presenter implements types.Presenter {
+  private model: types.Model;
 
-class RSPresenter implements Presenter {
-  private model: Model;
+  private view: types.View;
 
-  private view: View;
-
-  constructor(model: Model, view: View) {
+  constructor(model: types.Model, view: types.View) {
     this.model = model;
     this.view = view;
   }
@@ -43,4 +37,4 @@ class RSPresenter implements Presenter {
   }
 }
 
-export default RSPresenter;
+export default Presenter;

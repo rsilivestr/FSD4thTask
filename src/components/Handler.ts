@@ -1,6 +1,6 @@
-import { Handler, HandlerOptions, HandlerElements } from './interfaces';
+import * as types from './types';
 
-class RSHandler implements Handler {
+class Handler implements types.Handler {
   private coord: number;
 
   private id: number;
@@ -9,14 +9,14 @@ class RSHandler implements Handler {
 
   private tooltip: boolean;
 
-  private UI: HandlerElements = {
+  private UI: types.HandlerElements = {
     handler: null,
     tooltip: null,
   };
 
   private value: number;
 
-  constructor(o: HandlerOptions) {
+  constructor(o: types.HandlerOptions) {
     this.init(o);
   }
 
@@ -57,13 +57,10 @@ class RSHandler implements Handler {
   public toggleLayout(layout: 'horizontal' | 'vertical'): void {
     this.layout = layout;
 
-    // Remove old inline styles
     this.UI.handler.removeAttribute('style');
 
-    // Update handler position
     this.setPosition(this.coord);
 
-    // Update tooltip classes
     if (this.UI.tooltip) {
       this.UI.tooltip.classList.remove('rslider__tooltip--horizontal');
       this.UI.tooltip.classList.remove('rslider__tooltip--vertical');
@@ -104,14 +101,12 @@ class RSHandler implements Handler {
     return tooltip;
   }
 
-  private init(o: HandlerOptions): void {
-    // Save config
+  private init(o: types.HandlerOptions): void {
     this.id = o.id;
     this.layout = o.layout;
     this.tooltip = o.tooltip;
     this.value = o.value;
 
-    // Create handler element
     this.UI.handler = this.createHandler();
   }
 
@@ -120,4 +115,4 @@ class RSHandler implements Handler {
   }
 }
 
-export default RSHandler;
+export default Handler;

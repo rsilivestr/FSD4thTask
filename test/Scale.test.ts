@@ -2,11 +2,12 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import RScale from '../src/components/RScale';
+
+import Scale from '../src/components/Scale';
 
 chai.use(sinonChai);
 
-describe('RScale(container: HTMLElement, o: SliderOptions)', () => {
+describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
   const CONTAINER = document.createElement('div');
   const CONFIG = {
     minValue: 0,
@@ -15,7 +16,7 @@ describe('RScale(container: HTMLElement, o: SliderOptions)', () => {
     isHorizontal: true,
   };
 
-  const SCALE = new RScale(CONTAINER, CONFIG);
+  const SCALE = new Scale(CONTAINER, CONFIG);
   const ELEMENT = SCALE.getElement();
 
   beforeEach(() => {
