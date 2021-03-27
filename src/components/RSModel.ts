@@ -38,8 +38,7 @@ class RSModel extends RSubject implements Model {
   }
 
   public setValue(index: number, value: number) {
-    const indexOrValueIsNotNumeric =
-      !RSModel._isNumber(index) || !RSModel._isNumber(value);
+    const indexOrValueIsNotNumeric = !RSModel.isNumber(index) || !RSModel.isNumber(value);
     if (indexOrValueIsNotNumeric) throw new Error('Value and index should be numeric');
 
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
@@ -201,7 +200,7 @@ class RSModel extends RSubject implements Model {
     // Strip non-numeric entries, save to new object
     // Mutating existing object will break view configuration
     Object.keys(o).forEach((key) => {
-      if (RSModel._isNumber(o[key])) {
+      if (RSModel.isNumber(o[key])) {
         validOptions[key] = o[key];
       }
     });
@@ -238,7 +237,7 @@ class RSModel extends RSubject implements Model {
     }
   }
 
-  static _isNumber(n: any) {
+  static isNumber(n: any) {
     return !Number.isNaN(n) && Number.isFinite(n);
   }
 

@@ -73,19 +73,19 @@ class RSModel extends RSubject implements Model {
     +getValues(): number[]
     +setValue(index: number, value: number): number
     +setValues(v: number[]): number[]
-    -_setEachValue(): void
-    -_configureDirection(): void
-    -_configureMinValue(newMinValue: number): void
-    -_configureMaxValue(newMaxValue: number): void
-    -_configureStepSize(newStepSize: number): void
-    -_configureHandlerCount(newHandlerCount: number): void
-    -_configureSingleOption(key: string, value: number): void
-    -_configureFourOptions(o: ModelOptions): void
-    -_configure(o: ModelOptions): ModelOptions
-    -_initValues(): void
-    -_normalizeValue(value: number): number
-    -_updateValues(updatedIndex: number, updatedValue: number): void
-    +{static} _isNumber(n: any): boolean
+    -setEachValue(): void
+    -configureDirection(): void
+    -configureMinValue(newMinValue: number): void
+    -configureMaxValue(newMaxValue: number): void
+    -configureStepSize(newStepSize: number): void
+    -configureHandlerCount(newHandlerCount: number): void
+    -configureSingleOption(key: string, value: number): void
+    -configureFourOptions(o: ModelOptions): void
+    -configure(o: ModelOptions): ModelOptions
+    -initValues(): void
+    -normalizeValue(value: number): number
+    -updateValues(updatedIndex: number, updatedValue: number): void
+    +{static} isNumber(n: any): boolean
 }
 interface Presenter {
     +init(): void
@@ -107,7 +107,7 @@ class RSProgress implements Progress {
     +getElement(): HTMLElement
     +setCoords(coords: ProgressCoords): void
     +toggleHorizontal(isHorizontal: boolean): void
-    -_setStyle(): void
+    -setStyle(): void
 }
 class RSHandler implements Handler {
     -coord: number
@@ -121,10 +121,10 @@ class RSHandler implements Handler {
     +toggleTooltip(value?: boolean): boolean
     +toggleLayout(layout: "horizontal" | "vertical"): void
     +updateValue(value: number): void
-    -_createHandler(): HTMLElement
-    -_createTooltip(): HTMLElement
-    -_init(o: HandlerOptions): void
-    -_updateTooltip(): void
+    -createHandler(): HTMLElement
+    -createTooltip(): HTMLElement
+    -init(o: HandlerOptions): void
+    -updateTooltip(): void
 }
 class RScale extends RSubject implements Scale {
     -markValues: number[]
@@ -134,10 +134,10 @@ class RScale extends RSubject implements Scale {
     +getElement(): HTMLUListElement
     +toggleLayout(layout: "horizontal" | "vertical"): void
     +setConfig(newOptions: ModelOptions): void
-    -_calcScaleStep(): number
-    -_populateScale(): HTMLUListElement
-    -_onClick(e: MouseEvent): void
-    -_render(): HTMLUListElement
+    -calcScaleStep(): number
+    -populateScale(): HTMLUListElement
+    -onClick(e: MouseEvent): void
+    -render(): HTMLUListElement
 }
 class RSTrack extends RSubject implements Track {
     -isHorizontal: boolean
@@ -145,8 +145,8 @@ class RSTrack extends RSubject implements Track {
     +getElement(): HTMLElement
     +getRect(): { trackLength: number; trackMin: number; trackMax: number; }
     +toggleLayout(isHorizontal: boolean): void
-    -_onMousedown(e: MouseEvent): void
-    -_create(isHorizontal: boolean): HTMLElement
+    -onMousedown(e: MouseEvent): void
+    -create(isHorizontal: boolean): HTMLElement
 }
 class RSView extends RSubject implements View {
     -children: ViewChildren
@@ -162,59 +162,59 @@ class RSView extends RSubject implements View {
     +setModelOptions(o: SliderOptions): ModelOptions
     +onScaleClick(value: number): void
     +onTrackMousedown(e: MouseEvent): void
-    -_update(): void
-    -_addScale(o: ModelOptions): void
-    -_toggleScale(showScale: boolean): void
-    -_init(o: SliderOptions): void
-    -_render(): HTMLElement
-    -_createHandlers(): void
-    -_correctHandlerCoord(): number
-    -_coordToValue(coord: number): number
-    -_valueToCoord(value: number): number
-    -_elCreateSlider(): HTMLElement
-    -_createTrack(): HTMLElement
-    -_calcProgressCoords(): ProgressCoords
-    -_createProgress(): void
-    -_updateProgress(): void
-    -_toggleProgress(progress: boolean): void
-    -_addHandler(index: number): Handler
-    -_setGrabbedOffset(e: MouseEvent): void
-    -_grab(e: MouseEvent, handler: HTMLElement): void
-    -_updateHandlers(): void
-    -_getRelativeCoord(e: MouseEvent): number
-    -_getClosestHandlerIndex(goal: number): number
-    -_moveHandler(coord: number): void
-    -_drag(e: MouseEvent): void
-    -_release(): void
-    -_updateOrientation(horizontal?: boolean): void
-    -_configure(o: ViewOptions): ViewOptions
+    -update(): void
+    -addScale(o: ModelOptions): void
+    -toggleScale(showScale: boolean): void
+    -init(o: SliderOptions): void
+    -render(): HTMLElement
+    -createHandlers(): void
+    -correctHandlerCoord(): number
+    -coordToValue(coord: number): number
+    -valueToCoord(value: number): number
+    -elCreateSlider(): HTMLElement
+    -createTrack(): HTMLElement
+    -calcProgressCoords(): ProgressCoords
+    -createProgress(): void
+    -updateProgress(): void
+    -toggleProgress(progress: boolean): void
+    -addHandler(index: number): Handler
+    -setGrabbedOffset(e: MouseEvent): void
+    -grab(e: MouseEvent, handler: HTMLElement): void
+    -updateHandlers(): void
+    -getRelativeCoord(e: MouseEvent): number
+    -getClosestHandlerIndex(goal: number): number
+    -moveHandler(coord: number): void
+    -drag(e: MouseEvent): void
+    -release(): void
+    -updateOrientation(horizontal?: boolean): void
+    -configure(o: ViewOptions): ViewOptions
 }
 class RSPanel implements Panel {
     -options: SliderOptions
     -slider: Slider
     -UI: PanelElements
     +update(values: number[]): void
-    -_updateInputCount(): void
-    -_init(s: Slider): void
-    -_onValueInputChange(e: KeyboardEvent, valueIndex: number): void
-    -_renderValueInputs(): void
-    -_setMinValue(e: KeyboardEvent): void
-    -_setMaxValue(e: KeyboardEvent): void
-    -_setStepSize(e: KeyboardEvent): void
-    -_setHandlerCount(e: KeyboardEvent): void
-    -_setIsHorizontal(e: Event): void
-    -_setShowProgress(e: Event): void
-    -_setShowScale(e: Event): void
-    -_setShowTooltip(e: Event): void
-    -_createMinValueInput(): void
-    -_createMaxValueInput(): void
-    -_createStepSizeInput(): void
-    +_createHandlerCountInput(): void
-    +_createIsHorizontalInput(): void
-    +_createShowProgressInput(): void
-    +_createShowScaleInput(): void
-    +_createShowTooltipInput(): void
-    -_render(): void
-    +{static} _createInput(parent: HTMLElement, labelText: string, isCheckbox?: boolean): HTMLInputElement
+    -updateInputCount(): void
+    -init(s: Slider): void
+    -onValueInputChange(e: KeyboardEvent, valueIndex: number): void
+    -renderValueInputs(): void
+    -setMinValue(e: KeyboardEvent): void
+    -setMaxValue(e: KeyboardEvent): void
+    -setStepSize(e: KeyboardEvent): void
+    -setHandlerCount(e: KeyboardEvent): void
+    -setIsHorizontal(e: Event): void
+    -setShowProgress(e: Event): void
+    -setShowScale(e: Event): void
+    -setShowTooltip(e: Event): void
+    -createMinValueInput(): void
+    -createMaxValueInput(): void
+    -createStepSizeInput(): void
+    -createHandlerCountInput(): void
+    -createIsHorizontalInput(): void
+    -createShowProgressInput(): void
+    -createShowScaleInput(): void
+    -createShowTooltipInput(): void
+    -render(): void
+    +{static} createInput(parent: HTMLElement, labelText: string, isCheckbox?: boolean): HTMLInputElement
 }
 @enduml
