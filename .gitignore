@@ -1,8 +1,2 @@
-.cmessage
-.eslintcache
-.nyc_output
-.vscode
-_test
 dist
 node_modules
-TODO
