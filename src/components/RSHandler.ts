@@ -17,7 +17,7 @@ class RSHandler implements Handler {
   private value: number;
 
   constructor(o: HandlerOptions) {
-    this._init(o);
+    this.init(o);
   }
 
   public getElement(): HTMLElement {
@@ -43,7 +43,7 @@ class RSHandler implements Handler {
 
     if (this.tooltip && !this.UI.tooltip) {
       // If ON but does not exist already
-      this.UI.tooltip = this._createTooltip();
+      this.UI.tooltip = this.createTooltip();
       this.UI.handler.appendChild(this.UI.tooltip);
     } else if (!this.tooltip && this.UI.tooltip) {
       // If OFF and already exists
@@ -76,18 +76,18 @@ class RSHandler implements Handler {
     this.value = value;
 
     if (this.tooltip) {
-      this._updateTooltip();
+      this.updateTooltip();
     }
   }
 
-  private _createHandler(): HTMLElement {
+  private createHandler(): HTMLElement {
     const handler = document.createElement('div');
     handler.className = 'rslider__handler';
     handler.dataset.id = this.id.toString();
 
     if (this.tooltip) {
       // Create tooltip element
-      this.UI.tooltip = this._createTooltip();
+      this.UI.tooltip = this.createTooltip();
 
       // Append tooltip
       handler.appendChild(this.UI.tooltip);
@@ -96,7 +96,7 @@ class RSHandler implements Handler {
     return handler;
   }
 
-  private _createTooltip(): HTMLElement {
+  private createTooltip(): HTMLElement {
     const tooltip = document.createElement('div');
     tooltip.className = `rslider__tooltip rslider__tooltip--${this.layout}`;
     tooltip.textContent = this.value.toString(10);
@@ -104,7 +104,7 @@ class RSHandler implements Handler {
     return tooltip;
   }
 
-  private _init(o: HandlerOptions): void {
+  private init(o: HandlerOptions): void {
     // Save config
     this.id = o.id;
     this.layout = o.layout;
@@ -112,10 +112,10 @@ class RSHandler implements Handler {
     this.value = o.value;
 
     // Create handler element
-    this.UI.handler = this._createHandler();
+    this.UI.handler = this.createHandler();
   }
 
-  private _updateTooltip(): void {
+  private updateTooltip(): void {
     this.UI.tooltip.textContent = this.value.toString(10);
   }
 }

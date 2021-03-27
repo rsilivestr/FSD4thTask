@@ -23,7 +23,7 @@ class RSProgress implements Progress {
     this.coords = coords;
 
     if (typeof this.isHorizontal === 'boolean') {
-      this._setStyle();
+      this.setStyle();
     }
   }
 
@@ -32,10 +32,10 @@ class RSProgress implements Progress {
 
     this.UIprogress.removeAttribute('style');
 
-    this._setStyle();
+    this.setStyle();
   }
 
-  private _setStyle(): void {
+  private setStyle(): void {
     const min = `${this.coords[0].toString(10)}%`;
     const max = `${(100 - this.coords[1]).toString(10)}%`;
 

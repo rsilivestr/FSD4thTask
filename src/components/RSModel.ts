@@ -17,8 +17,8 @@ class RSModel extends RSubject implements Model {
   constructor(o: ModelOptions = {}) {
     super();
 
-    this._initValues();
-    this._configure(o);
+    this.initValues();
+    this.configure(o);
   }
 
   public getConfig() {
@@ -26,7 +26,7 @@ class RSModel extends RSubject implements Model {
   }
 
   public setConfig(o?: ModelOptions) {
-    return this._configure(o);
+    return this.configure(o);
   }
 
   public getValue(index: number) {
@@ -58,12 +58,12 @@ class RSModel extends RSubject implements Model {
     } else if (valueIsAboveMax) {
       val = max;
     } else {
-      val = this._normalizeValue(value);
+      val = this.normalizeValue(value);
     }
 
     this.values[index] = val;
 
-    this._updateValues(index, val);
+    this.updateValues(index, val);
 
     return val;
   }
@@ -74,18 +74,18 @@ class RSModel extends RSubject implements Model {
     return this.values;
   }
 
-  private _setEachValue() {
+  private setEachValue() {
     if (!this.values) return;
 
     this.values.forEach((value, index) => this.setValue(index, value));
   }
 
-  private _configureDirection() {
+  private configureDirection() {
     const maxIsGreaterThanMin = this.options.maxValue > this.options.minValue;
     this.directionMod = maxIsGreaterThanMin ? 1 : -1;
   }
 
-  private _configureMinValue(newMinValue: number) {
+  private configureMinValue(newMinValue: number) {
     const { maxValue, stepSize, handlerCount, allowReversedValues } = this.options;
     const minLength = stepSize * handlerCount;
 
@@ -96,12 +96,12 @@ class RSModel extends RSubject implements Model {
 
     this.options.minValue = newMinValue;
 
-    this._configureDirection();
+    this.configureDirection();
 
-    this._setEachValue();
+    this.setEachValue();
   }
 
-  private _configureMaxValue(newMaxValue: number) {
+  private configureMaxValue(newMaxValue: number) {
     const { minValue, stepSize, handlerCount, allowReversedValues } = this.options;
     const minLength = stepSize * handlerCount;
 
@@ -113,23 +113,23 @@ class RSModel extends RSubject implements Model {
 
     this.options.maxValue = newMaxValue;
 
-    this._configureDirection();
+    this.configureDirection();
 
-    this._setEachValue();
+    this.setEachValue();
   }
 
-  private _configureStepSize(newStepSize: number) {
+  private configureStepSize(newStepSize: number) {
     const { minValue, maxValue, handlerCount } = this.options;
     const sliderLength = Math.abs(maxValue - minValue);
 
     if (newStepSize > 0 && newStepSize <= sliderLength / handlerCount) {
       this.options.stepSize = newStepSize;
 
-      this._setEachValue();
+      this.setEachValue();
     }
   }
 
-  private _configureHandlerCount(newHandlerCount: number) {
+  private configureHandlerCount(newHandlerCount: number) {
     const { minValue, maxValue, stepSize } = this.options;
     const sliderLength = Math.abs(maxValue - minValue);
     const maxHandlerCount = Math.floor(sliderLength / stepSize);
@@ -138,29 +138,29 @@ class RSModel extends RSubject implements Model {
     if (isCountInRange) {
       this.options.handlerCount = newHandlerCount;
 
-      if (this.values.length !== newHandlerCount) this._initValues();
+      if (this.values.length !== newHandlerCount) this.initValues();
     }
   }
 
-  private _configureSingleOption(key: string, value: number) {
+  private configureSingleOption(key: string, value: number) {
     switch (key) {
       case 'minValue':
-        this._configureMinValue(value);
+        this.configureMinValue(value);
         break;
       case 'maxValue':
-        this._configureMaxValue(value);
+        this.configureMaxValue(value);
         break;
       case 'stepSize':
-        this._configureStepSize(value);
+        this.configureStepSize(value);
         break;
       case 'handlerCount':
-        this._configureHandlerCount(value);
+        this.configureHandlerCount(value);
         break;
       default:
     }
   }
 
-  private _configureFourOptions(o: ModelOptions) {
+  private configureFourOptions(o: ModelOptions) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
     const { allowReversedValues } = this.options;
 
@@ -183,14 +183,14 @@ class RSModel extends RSubject implements Model {
       allowReversedValues,
     };
 
-    this._configureDirection();
+    this.configureDirection();
 
-    if (this.values.length !== handlerCount) this._initValues();
+    if (this.values.length !== handlerCount) this.initValues();
 
-    this._setEachValue();
+    this.setEachValue();
   }
 
-  private _configure(o: ModelOptions) {
+  private configure(o: ModelOptions) {
     const validOptions: ModelOptions = {};
 
     const { allowReversedValues } = o;
@@ -214,10 +214,10 @@ class RSModel extends RSubject implements Model {
     // Allow either 1 or 4 options
     switch (len) {
       case 1:
-        this._configureSingleOption(firstKey, firstValue as number);
+        this.configureSingleOption(firstKey, firstValue as number);
         break;
       case 4:
-        this._configureFourOptions(validOptions);
+        this.configureFourOptions(validOptions);
         break;
       default:
         return this.options;
@@ -228,7 +228,7 @@ class RSModel extends RSubject implements Model {
     return this.options;
   }
 
-  private _initValues() {
+  private initValues() {
     const { minValue, stepSize, handlerCount } = this.options;
 
     this.values = [];
@@ -243,7 +243,7 @@ class RSModel extends RSubject implements Model {
   }
 
   // Converts value to multiple of stepSize
-  private _normalizeValue(value: number): number {
+  private normalizeValue(value: number): number {
     const { minValue, stepSize } = this.options;
 
     const x = value - minValue + (stepSize / 2) * this.directionMod;
@@ -251,7 +251,7 @@ class RSModel extends RSubject implements Model {
     return Math.round(minValue + x - (x % stepSize));
   }
 
-  private _updateValues(updatedIndex: number, updatedValue: number) {
+  private updateValues(updatedIndex: number, updatedValue: number) {
     const { stepSize } = this.options;
 
     this.values.forEach((value, index) => {

@@ -21,7 +21,7 @@ class RScale extends RSubject implements Scale {
 
     this.UI.container = container;
     this.options = options;
-    this._render();
+    this.render();
   }
 
   public getElement(): HTMLUListElement {
@@ -39,10 +39,10 @@ class RScale extends RSubject implements Scale {
     // Overwrite current config, can recieve partial config object
     this.options = { ...this.options, ...newOptions };
 
-    this._populateScale();
+    this.populateScale();
   }
 
-  private _calcScaleStep(): number {
+  private calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
     const stepNumber = Math.abs((maxValue - minValue) / stepSize);
 
@@ -56,12 +56,12 @@ class RScale extends RSubject implements Scale {
     return maxValue > minValue ? stepSize : -stepSize;
   }
 
-  private _populateScale(): HTMLUListElement {
+  private populateScale(): HTMLUListElement {
     this.UI.scale.textContent = '';
 
     const { minValue, maxValue } = this.options;
     const scaleLength: number = Math.abs(maxValue - minValue);
-    const scaleStepSize: number = this._calcScaleStep();
+    const scaleStepSize: number = this.calcScaleStep();
     const stepNumber: number = Math.abs(scaleLength / scaleStepSize);
 
     let i = 0;
@@ -84,7 +84,7 @@ class RScale extends RSubject implements Scale {
   }
 
   @boundMethod
-  private _onClick(e: MouseEvent) {
+  private onClick(e: MouseEvent) {
     const target = <HTMLLIElement>e.target;
 
     if (!target.classList.contains('rscale__mark')) return;
@@ -94,14 +94,14 @@ class RScale extends RSubject implements Scale {
     this.notifyObservers(value);
   }
 
-  private _render() {
+  private render() {
     const { isHorizontal } = this.options;
     const layout = isHorizontal ? 'horizontal' : 'vertical';
     this.UI.scale.className = `rslider__scale rscale rscale--layout_${layout}`;
 
-    this._populateScale();
+    this.populateScale();
 
-    this.UI.scale.addEventListener('click', this._onClick);
+    this.UI.scale.addEventListener('click', this.onClick);
 
     return this.UI.scale;
   }

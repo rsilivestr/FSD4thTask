@@ -10,7 +10,7 @@ class RSTrack extends RSubject implements Track {
   constructor(isHorizontal: boolean) {
     super();
 
-    this._create(isHorizontal);
+    this.create(isHorizontal);
   }
 
   public getElement(): HTMLElement {
@@ -32,19 +32,19 @@ class RSTrack extends RSubject implements Track {
   }
 
   @boundMethod
-  private _onMousedown(e: MouseEvent) {
+  private onMousedown(e: MouseEvent) {
     // Prevent text selection
     e.preventDefault();
 
     this.notifyObservers(e);
   }
 
-  private _create(isHorizontal: boolean) {
+  private create(isHorizontal: boolean) {
     this.UItrack.className = 'rslider__track';
 
     this.toggleLayout(isHorizontal);
 
-    this.UItrack.addEventListener('mousedown', this._onMousedown);
+    this.UItrack.addEventListener('mousedown', this.onMousedown);
 
     return this.UItrack;
   }

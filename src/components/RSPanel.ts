@@ -16,7 +16,7 @@ class RSPanel implements Panel {
   };
 
   constructor(s: Slider) {
-    this._init(s);
+    this.init(s);
   }
 
   static _createInput(
@@ -42,35 +42,35 @@ class RSPanel implements Panel {
   public update(values: number[]) {
     this.options = this.slider.getConfig();
 
-    this._updateInputCount();
+    this.updateInputCount();
 
     values.forEach((value, index) => {
       this.UI.valueInputs[index].value = value.toString(10);
     });
   }
 
-  private _updateInputCount() {
+  private updateInputCount() {
     // Remove 'old' inputs from DOM and 'state'
     this.UI.valueInputs.forEach((input) => input.parentElement.remove());
     this.UI.valueInputs = [];
 
-    this._renderValueInputs();
+    this.renderValueInputs();
   }
 
-  private _init(s: Slider) {
+  private init(s: Slider) {
     // Save slider
     this.slider = s;
     this.UI.container = s.getContainer();
     this.options = s.getConfig();
 
     // Create and append panel
-    this._render();
+    this.render();
 
     // Subscribe to slider updates
     this.slider.addObserver(this.update.bind(this));
   }
 
-  private _onValueInputChange(e: KeyboardEvent, valueIndex: number) {
+  private onValueInputChange(e: KeyboardEvent, valueIndex: number) {
     if (e.key === 'Enter') {
       const value = parseInt((<HTMLInputElement>e.target).value, 10);
 
@@ -78,7 +78,7 @@ class RSPanel implements Panel {
     }
   }
 
-  private _renderValueInputs() {
+  private renderValueInputs() {
     const handlerValues = this.slider.getValues();
 
     handlerValues.forEach((value, index) => {
@@ -87,14 +87,14 @@ class RSPanel implements Panel {
       const input = RSPanel._createInput(this.UI.valuesDiv, labelText);
       input.value = value.toString(10);
 
-      input.addEventListener('keydown', (e) => this._onValueInputChange(e, index));
+      input.addEventListener('keydown', (e) => this.onValueInputChange(e, index));
 
       this.UI.valueInputs.push(input);
     });
   }
 
   @boundMethod
-  private _setMinValue(e: KeyboardEvent) {
+  private setMinValue(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       const input = <HTMLInputElement>e.target;
       const minValue = parseInt(input.value, 10);
@@ -105,7 +105,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setMaxValue(e: KeyboardEvent) {
+  private setMaxValue(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       const input = <HTMLInputElement>e.target;
       const maxValue = parseInt(input.value, 10);
@@ -116,7 +116,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setStepSize(e: KeyboardEvent) {
+  private setStepSize(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       const input = <HTMLInputElement>e.target;
       const stepSize = parseInt(input.value, 10);
@@ -127,7 +127,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setHandlerCount(e: KeyboardEvent) {
+  private setHandlerCount(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       const input = <HTMLInputElement>e.target;
       const handlerCount = parseInt(input.value, 10);
@@ -141,7 +141,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setIsHorizontal(e: Event) {
+  private setIsHorizontal(e: Event) {
     const input = <HTMLInputElement>e.target;
     const isHorizontal = input.checked;
 
@@ -150,7 +150,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setShowProgress(e: Event) {
+  private setShowProgress(e: Event) {
     const input = <HTMLInputElement>e.target;
     const showProgress = input.checked;
 
@@ -159,7 +159,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setShowScale(e: Event) {
+  private setShowScale(e: Event) {
     const input = <HTMLInputElement>e.target;
     const showScale = input.checked;
 
@@ -168,7 +168,7 @@ class RSPanel implements Panel {
   }
 
   @boundMethod
-  private _setShowTooltip(e: Event) {
+  private setShowTooltip(e: Event) {
     const input = <HTMLInputElement>e.target;
     const showTooltip = input.checked;
 
@@ -176,87 +176,87 @@ class RSPanel implements Panel {
     input.checked = this.options.showTooltip;
   }
 
-  private _createMinValueInput() {
+  private createMinValueInput() {
     const { minValue } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Min value');
     input.value = minValue.toString(10);
 
-    input.addEventListener('keydown', this._setMinValue);
+    input.addEventListener('keydown', this.setMinValue);
 
     this.UI.configInputs.minValue = input;
   }
 
-  private _createMaxValueInput() {
+  private createMaxValueInput() {
     const { maxValue } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Max value');
     input.value = maxValue.toString(10);
 
-    input.addEventListener('keydown', this._setMaxValue);
+    input.addEventListener('keydown', this.setMaxValue);
 
     this.UI.configInputs.maxValue = input;
   }
 
-  private _createStepSizeInput() {
+  private createStepSizeInput() {
     const { stepSize } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Step size');
     input.value = stepSize.toString(10);
 
-    input.addEventListener('keydown', this._setStepSize);
+    input.addEventListener('keydown', this.setStepSize);
 
     this.UI.configInputs.stepSize = input;
   }
 
-  _createHandlerCountInput() {
+  private createHandlerCountInput() {
     const { handlerCount } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Handler count');
     input.value = handlerCount.toString(10);
 
-    input.addEventListener('keydown', this._setHandlerCount);
+    input.addEventListener('keydown', this.setHandlerCount);
 
     this.UI.configInputs.handlerCount = input;
   }
 
-  _createIsHorizontalInput() {
+  private createIsHorizontalInput() {
     const { isHorizontal } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Is horizontal', true);
     input.checked = isHorizontal;
 
-    input.addEventListener('change', this._setIsHorizontal);
+    input.addEventListener('change', this.setIsHorizontal);
 
     this.UI.configInputs.isHorizontal = input;
   }
 
-  _createShowProgressInput() {
+  private createShowProgressInput() {
     const { showProgress } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show progress', true);
     input.checked = showProgress;
 
-    input.addEventListener('change', this._setShowProgress);
+    input.addEventListener('change', this.setShowProgress);
 
     this.UI.configInputs.showProgress = input;
   }
 
-  _createShowScaleInput() {
+  private createShowScaleInput() {
     const { showScale } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show scale', true);
     input.checked = showScale;
 
-    input.addEventListener('change', this._setShowScale);
+    input.addEventListener('change', this.setShowScale);
 
     this.UI.configInputs.showScale = input;
   }
 
-  _createShowTooltipInput() {
+  private createShowTooltipInput() {
     const { showTooltip } = this.options;
     const input = RSPanel._createInput(this.UI.configDiv, 'Show tooltip', true);
     input.checked = showTooltip;
 
-    input.addEventListener('change', this._setShowTooltip);
+    input.addEventListener('change', this.setShowTooltip);
 
     this.UI.configInputs.showTooltip = input;
   }
 
-  private _render() {
+  private render() {
     // Set panel className
     this.UI.panel.className = 'rslider-panel';
 
@@ -265,24 +265,24 @@ class RSPanel implements Panel {
     this.UI.panel.appendChild(this.UI.configDiv);
 
     // Render handler value inputs
-    this._renderValueInputs();
+    this.renderValueInputs();
 
     // Config inputs
-    this._createMinValueInput();
+    this.createMinValueInput();
 
-    this._createMaxValueInput();
+    this.createMaxValueInput();
 
-    this._createStepSizeInput();
+    this.createStepSizeInput();
 
-    this._createHandlerCountInput();
+    this.createHandlerCountInput();
 
-    this._createIsHorizontalInput();
+    this.createIsHorizontalInput();
 
-    this._createShowProgressInput();
+    this.createShowProgressInput();
 
-    this._createShowScaleInput();
+    this.createShowScaleInput();
 
-    this._createShowTooltipInput();
+    this.createShowTooltipInput();
 
     // Append to container
     this.UI.container.appendChild(this.UI.panel);
