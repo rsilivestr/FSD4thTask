@@ -10,7 +10,7 @@ class Model extends Subject implements TModel {
     stepSize: 10,
     handlerCount: 1,
     allowReversedValues: false,
-    handlerInteraction: 'move',
+    handlerInteraction: 'block',
   };
 
   private values: number[] = [];
@@ -247,7 +247,7 @@ class Model extends Subject implements TModel {
     this.values = [];
 
     for (let i = 0; i < handlerCount; i += 1) {
-      this.values[i] = minValue + i * stepSize;
+      this.values[i] = minValue + i * stepSize * this.directionMod;
     }
   }
 
