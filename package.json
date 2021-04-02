@@ -84,7 +84,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run test:once"
+      "pre-commit": "lint-staged"
     }
   },
   "browserslist": [

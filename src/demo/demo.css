@@ -35,14 +35,5 @@ h2 {
 .demo-content {
   display: flex;
   gap: 32px;
-}
-
-#foo,
-#bar {
-  flex-direction: column;
-}
-
-#fizz,
-#buzz {
-  flex-direction: row;
+  flex-flow: row wrap;
 }
