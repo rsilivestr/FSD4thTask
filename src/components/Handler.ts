@@ -25,13 +25,17 @@ class Handler implements THandler {
   }
 
   public setPosition(coord: number): void {
-    this.coord = coord;
-
     if (this.layout === 'horizontal') {
       this.UI.handler.style.left = `${coord}%`;
     } else {
       this.UI.handler.style.bottom = `${coord}%`;
     }
+  }
+
+  public setZIndex(sliderLength: number, coord: number) {
+    this.UI.handler.style.zIndex = Math.floor(
+      Math.abs(sliderLength ** 2 / (50 - coord))
+    ).toString();
   }
 
   public toggleTooltip(value: boolean = null): boolean {

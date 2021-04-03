@@ -350,10 +350,14 @@ class View extends Subject implements TView {
   }
 
   private updateHandlers() {
+    const { minValue, maxValue } = this.modelOptions;
+    const sliderLength = maxValue - minValue;
+
     this.children.handlers.forEach((handler, index) => {
       const value = this.values[index];
       const coord = this.valueToCoord(value) * this.correctHandlerCoord();
       handler.setPosition(coord);
+      handler.setZIndex(sliderLength, coord);
       handler.updateValue(value);
     });
   }
