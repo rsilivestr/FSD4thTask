@@ -30,6 +30,8 @@ type TSlider = {
 
   getValues(): number[];
   setValues(values?: number[]): number[];
+
+  rslider(method: string, payload?: any): void;
 };
 
 type TModelOptions = {

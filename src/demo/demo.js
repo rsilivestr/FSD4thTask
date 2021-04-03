@@ -1,4 +1,4 @@
-const s1o = {
+const sliderOneConfig = {
   minValue: 500,
   maxValue: 1000,
   stepSize: 10,
@@ -6,16 +6,21 @@ const s1o = {
   progress: true,
 };
 
-const s1 = $('#foo').rslider(s1o);
-const s1p = $().rspanel(s1);
+const sliderOne = $('#foo').rslider(sliderOneConfig);
+const sliderOnePanel = $().rspanel(sliderOne);
 
-const s2 = $('#bar').rslider({ minValue: 0, maxValue: 10, stepSize: 3, handlerCount: 2 });
-const s2p = $().rspanel(s2);
+const sliderTwo = $('#bar').rslider({
+  minValue: 0,
+  maxValue: 10,
+  stepSize: 3,
+  handlerCount: 2,
+});
+const sliderTwoPanel = $().rspanel(sliderTwo);
 
-const s3 = $('#fizz').rslider({ isHorizontal: false });
-const s3p = $().rspanel(s3);
+const sliderThree = $('#fizz').rslider({ isHorizontal: false });
+const sliderThreePanel = $().rspanel(sliderThree);
 
-const s4o = {
+const sliderFourConfig = {
   minValue: 7,
   maxValue: -65,
   stepSize: 10,
@@ -25,5 +30,5 @@ const s4o = {
   showTooltip: false,
 };
 
-const s4 = $('#buzz').rslider(s4o);
-const s4p = $().rspanel(s4);
+const sliderFour = $('#buzz').rslider(sliderFourConfig);
+const sliderFourPanel = $().rspanel(sliderFour);

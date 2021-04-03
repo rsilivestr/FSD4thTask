@@ -30,8 +30,8 @@ const create = (container: HTMLElement, options: TSliderOptions = {}) => {
   const presenter = new Presenter(model, view);
   presenter.init();
 
-  // Facade methods
   const slider: TSlider = {
+    // Human facade
     getContainer() {
       return container;
     },
@@ -60,6 +60,36 @@ const create = (container: HTMLElement, options: TSliderOptions = {}) => {
       return model.setValues(v);
     },
     addObserver,
+
+    // JQuery fasade
+    rslider(method: string, payload?: any) {
+      switch (method) {
+        case 'getContainer':
+          return this.getContainer();
+
+        case 'getConfig':
+          return this.getConfig();
+
+        case 'setConfig':
+          return this.setConfig(payload as TSliderOptions);
+
+        case 'getValue':
+          return this.getValue((payload as number) || 0);
+
+        case 'getValues':
+          return this.getValues();
+
+        case 'setValue': {
+          const { index, value } = payload;
+          return this.setValue(index, value);
+        }
+        case 'setValues':
+          return this.setValues(payload || []);
+
+        default:
+          return null;
+      }
+    },
   };
 
   return slider;
