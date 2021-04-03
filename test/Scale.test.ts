@@ -9,19 +9,19 @@ chai.use(sinonChai);
 
 describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
   const SLIDER = document.createElement('div');
-  const CONFIG = {
+  const DEFAULT_CONFIG = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
     isHorizontal: true,
   };
 
-  const SCALE = new Scale(SLIDER, CONFIG);
+  const SCALE = new Scale(SLIDER, DEFAULT_CONFIG);
   const ELEMENT = SCALE.getElement();
 
   beforeEach(() => {
     // Make sure scale has defalut config
-    SCALE.setConfig(CONFIG);
+    SCALE.setConfig(DEFAULT_CONFIG);
   });
 
   describe('getElement(): HTMLUListElement', () => {

@@ -1,3 +1,4 @@
+import { boundMethod } from 'autobind-decorator';
 import { TModel, TPresenter, TView } from './types';
 
 class Presenter implements TPresenter {
@@ -11,10 +12,10 @@ class Presenter implements TPresenter {
   }
 
   public init() {
-    this.view.addObserver(this.setModelValue.bind(this));
+    this.view.addObserver(this.setModelValue);
 
     // Add and notify observer
-    this.model.addObserver(this.update.bind(this));
+    this.model.addObserver(this.update);
 
     const modelValues = this.model.getValues();
     this.model.notifyObservers(modelValues);
@@ -25,11 +26,13 @@ class Presenter implements TPresenter {
   }
 
   // Invoked on view change (Observer)
+  @boundMethod
   public setModelValue(index: number, value: number) {
     return this.model.setValue(index, value);
   }
 
   // Invoked on model change (Observer)
+  @boundMethod
   public update(v: number[]): void {
     const conf = this.model.getConfig();
     this.view.setModelOptions(conf);

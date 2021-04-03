@@ -118,6 +118,7 @@ class View extends Subject implements TView {
     this.notifyObservers(index, value);
   }
 
+  @boundMethod
   public onTrackMousedown(e: MouseEvent): void {
     const coord = this.getRelativeCoord(e);
     const value = this.coordToValue(coord);
@@ -249,7 +250,7 @@ class View extends Subject implements TView {
 
     this.UI.slider.appendChild(trackElement);
 
-    this.children.track.addObserver(this.onTrackMousedown.bind(this));
+    this.children.track.addObserver(this.onTrackMousedown);
 
     return trackElement;
   }

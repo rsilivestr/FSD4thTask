@@ -77,7 +77,9 @@ class Scale extends Subject implements TScale {
     const { minValue, maxValue, isHorizontal, handlerRadius } = this.options;
     const scaleRange: number = Math.abs(maxValue - minValue);
     const scaleStepSize: number = this.calcScaleStep();
-    const stepCount: number = Math.abs(scaleRange / scaleStepSize);
+    const isLastStepFull: boolean = !(scaleRange % scaleStepSize);
+    const fullStepCount: number = Math.floor(Math.abs(scaleRange / scaleStepSize));
+    const stepCount: number = isLastStepFull ? fullStepCount : fullStepCount + 1;
 
     const scaleRect = this.UI.slider.getBoundingClientRect();
     const { top, right, bottom, left } = scaleRect;
@@ -85,19 +87,23 @@ class Scale extends Subject implements TScale {
     const handlerElementPercentRadius = (handlerRadius / scaleElementLength) * 100;
     const scalePercentLength = 100 - 2 * handlerElementPercentRadius;
 
-    let i = 0;
-    let value = minValue;
+    const directionMod = minValue > maxValue ? -1 : 1;
 
-    while (i <= stepCount) {
-      const scaleStepPosition: number =
-        handlerElementPercentRadius +
-        Math.abs(scaleStepSize / scaleRange) * i * scalePercentLength;
+    Array(stepCount + 1 || 0)
+      .fill(null)
+      .forEach((step, index) => {
+        const stepPosition: number =
+          handlerElementPercentRadius +
+          Math.abs(scaleStepSize / scaleRange) * index * scalePercentLength;
+        const stepValue = minValue + scaleStepSize * index;
 
-      this.createScaleMark(value, scaleStepPosition);
-
-      value += scaleStepSize;
-      i += 1;
-    }
+        const stepExceedsMax = stepValue * directionMod >= maxValue * directionMod;
+        if (!stepExceedsMax && 100 - stepPosition < 10) return;
+        const markValue = stepExceedsMax ? maxValue : stepValue;
+        const maxPosition = scalePercentLength + handlerElementPercentRadius;
+        const markPosition = stepExceedsMax ? maxPosition : stepPosition;
+        this.createScaleMark(markValue, markPosition);
+      });
 
     return this.UI.scale;
   }
