@@ -8,7 +8,7 @@ import Scale from '../src/components/Scale';
 chai.use(sinonChai);
 
 describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
-  const CONTAINER = document.createElement('div');
+  const SLIDER = document.createElement('div');
   const CONFIG = {
     minValue: 0,
     maxValue: 100,
@@ -16,7 +16,7 @@ describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
     isHorizontal: true,
   };
 
-  const SCALE = new Scale(CONTAINER, CONFIG);
+  const SCALE = new Scale(SLIDER, CONFIG);
   const ELEMENT = SCALE.getElement();
 
   beforeEach(() => {

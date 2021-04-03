@@ -12,6 +12,7 @@ describe('Panel(s: Slider)', () => {
     maxValue: 10,
     stepSize: 1,
     handlerCount: 1,
+    handlerInteraction: 'block',
     isHorizontal: true,
     showProgress: true,
     showScale: true,
@@ -31,6 +32,7 @@ describe('Panel(s: Slider)', () => {
   });
   const KEYDOWN_EVENT = new KeyboardEvent('keydown', { key: 'Enter' });
   const CLICK_EVENT = new MouseEvent('click');
+  const INPUT_CHANGE_EVENT = new InputEvent('change');
 
   beforeEach(() => {
     SLIDER.setConfig(DEFAULT_CONFIG);
@@ -108,6 +110,7 @@ describe('Panel(s: Slider)', () => {
 
       const input = INPUTS['Is horizontal'];
       input.dispatchEvent(CLICK_EVENT);
+      input.dispatchEvent(INPUT_CHANGE_EVENT);
 
       expect(SLIDER.getConfig().isHorizontal).to.equal(!isHorizontal);
     });
@@ -119,6 +122,7 @@ describe('Panel(s: Slider)', () => {
 
       const input = INPUTS['Show progress'];
       input.dispatchEvent(CLICK_EVENT);
+      input.dispatchEvent(INPUT_CHANGE_EVENT);
 
       expect(SLIDER.getConfig().showProgress).to.equal(!showProgress);
     });
@@ -130,6 +134,7 @@ describe('Panel(s: Slider)', () => {
 
       const input = INPUTS['Show scale'];
       input.dispatchEvent(CLICK_EVENT);
+      input.dispatchEvent(INPUT_CHANGE_EVENT);
 
       expect(SLIDER.getConfig().showScale).to.equal(!showScale);
     });
@@ -141,6 +146,7 @@ describe('Panel(s: Slider)', () => {
 
       const input = INPUTS['Show tooltip'];
       input.dispatchEvent(CLICK_EVENT);
+      input.dispatchEvent(INPUT_CHANGE_EVENT);
 
       expect(SLIDER.getConfig().showTooltip).to.equal(!showTooltip);
     });

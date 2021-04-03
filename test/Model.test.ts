@@ -5,7 +5,7 @@ import Model from '../src/components/Model';
 import * as types from '../src/components/types';
 
 describe('Model', () => {
-  const CONFIG_DEFAULTS: types.TModelOptions = {
+  const DEFAULT_CONFIG: types.TModelOptions = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
@@ -14,12 +14,12 @@ describe('Model', () => {
     handlerInteraction: 'move',
   };
 
-  const CONFIG_KEYS = Object.keys(CONFIG_DEFAULTS);
+  const CONFIG_KEYS = Object.keys(DEFAULT_CONFIG);
 
   const MODEL = new Model();
 
   beforeEach(() => {
-    MODEL.setConfig(CONFIG_DEFAULTS);
+    MODEL.setConfig(DEFAULT_CONFIG);
   });
 
   describe('getConfig(): ModelOptions', () => {
@@ -45,23 +45,23 @@ describe('Model', () => {
     });
 
     it('Should not work with 2 or 3 options', () => {
-      expect(MODEL.setConfig({ minValue: 20, maxValue: 120 })).to.eql(CONFIG_DEFAULTS);
-      expect(MODEL.setConfig({ minValue: 20, stepSize: 20 })).to.eql(CONFIG_DEFAULTS);
-      expect(MODEL.setConfig({ minValue: 20, handlerCount: 3 })).to.eql(CONFIG_DEFAULTS);
+      expect(MODEL.setConfig({ minValue: 20, maxValue: 120 })).to.eql(DEFAULT_CONFIG);
+      expect(MODEL.setConfig({ minValue: 20, stepSize: 20 })).to.eql(DEFAULT_CONFIG);
+      expect(MODEL.setConfig({ minValue: 20, handlerCount: 3 })).to.eql(DEFAULT_CONFIG);
       expect(
         MODEL.setConfig({
           minValue: 20,
           maxValue: 120,
           stepSize: 5,
         })
-      ).to.eql(CONFIG_DEFAULTS);
+      ).to.eql(DEFAULT_CONFIG);
       expect(
         MODEL.setConfig({
           minValue: 20,
           maxValue: 120,
           handlerCount: 4,
         })
-      ).to.eql(CONFIG_DEFAULTS);
+      ).to.eql(DEFAULT_CONFIG);
     });
 
     it('Should work with all four options provided', () => {

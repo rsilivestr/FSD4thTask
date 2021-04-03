@@ -25,7 +25,7 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     'allowReversedValues',
   ];
 
-  const MODEL_DEFAULTS: types.TSliderOptions = {
+  const MODEL_DEFAULT_CONFIG: types.TSliderOptions = {
     minValue: 0,
     maxValue: 30,
     stepSize: 3,
@@ -33,7 +33,7 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     allowReversedValues: false,
   };
 
-  const VIEW_DEFAULTS = {
+  const VIEW_DEFAULT_CONFIG = {
     isHorizontal: true,
     handlerRadius: 8,
     showProgress: true,
@@ -41,15 +41,15 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     showTooltip: true,
   };
 
-  const SLIDER_DEFAULTS = { ...MODEL_DEFAULTS, ...VIEW_DEFAULTS };
+  const SLIDER_DEFAULTS = { ...MODEL_DEFAULT_CONFIG, ...VIEW_DEFAULT_CONFIG };
 
   const container = document.createElement('div');
   const VIEW = new View(container, SLIDER_DEFAULTS);
 
   beforeEach(() => {
     // Re-apply default config
-    VIEW.setConfig(VIEW_DEFAULTS);
-    VIEW.setModelOptions(MODEL_DEFAULTS);
+    VIEW.setConfig(VIEW_DEFAULT_CONFIG);
+    VIEW.setModelOptions(MODEL_DEFAULT_CONFIG);
     // Make sure that value(s) is(are) set
     VIEW.setValues([0]);
   });
@@ -61,7 +61,7 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
       const res = VIEW.getConfig();
 
       expect(res).to.have.deep.keys(CONFIG_KEYS);
-      expect(res).to.eql(VIEW_DEFAULTS);
+      expect(res).to.eql(VIEW_DEFAULT_CONFIG);
     });
   });
 

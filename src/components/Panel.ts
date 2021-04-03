@@ -58,11 +58,11 @@ class Panel implements TPanel {
     this.renderValueInputs();
   }
 
-  private init(s: TSlider) {
+  private init(slider: TSlider) {
     // Save slider
-    this.slider = s;
-    this.UI.container = s.getContainer();
-    this.options = s.getConfig();
+    this.slider = slider;
+    this.UI.container = slider.getContainer();
+    this.options = slider.getConfig();
 
     // Create and append panel
     this.render();
