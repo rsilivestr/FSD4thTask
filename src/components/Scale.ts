@@ -11,15 +11,15 @@ class Scale extends Subject implements TScale {
   private options: TSliderOptions;
 
   private UI: TScaleElements = {
-    container: null,
+    slider: null,
     scale: document.createElement('ul'),
     marks: [],
   };
 
-  constructor(container: HTMLElement, options: TSliderOptions) {
+  constructor(slider: HTMLElement, options: TSliderOptions) {
     super();
 
-    this.UI.container = container;
+    this.UI.slider = slider;
     this.options = options;
     this.render();
   }
@@ -44,11 +44,11 @@ class Scale extends Subject implements TScale {
 
   private calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
-    const stepNumber = Math.abs((maxValue - minValue) / stepSize);
+    const stepCount = Math.abs((maxValue - minValue) / stepSize);
 
-    if (stepNumber > this.stepCountLimit) {
+    if (stepCount > this.stepCountLimit) {
       // More steps than scale can hold
-      const step = stepSize * Math.ceil(stepNumber / this.stepCountLimit);
+      const step = stepSize * Math.ceil(stepCount / this.stepCountLimit);
 
       return maxValue > minValue ? step : -step;
     }
@@ -56,25 +56,44 @@ class Scale extends Subject implements TScale {
     return maxValue > minValue ? stepSize : -stepSize;
   }
 
+  private createScaleMark(value: number, position: number): HTMLLIElement {
+    const mark = document.createElement('li');
+    mark.className = 'rscale__mark';
+    mark.textContent = value.toString(10);
+    if (this.options.isHorizontal) mark.style.left = `${position}%`;
+    else mark.style.bottom = `${position}%`;
+
+    this.UI.scale.appendChild(mark);
+
+    this.UI.marks.push(mark);
+    this.markValues.push(value);
+
+    return mark;
+  }
+
   private populateScale(): HTMLUListElement {
     this.UI.scale.textContent = '';
 
-    const { minValue, maxValue } = this.options;
-    const scaleLength: number = Math.abs(maxValue - minValue);
+    const { minValue, maxValue, isHorizontal, handlerRadius } = this.options;
+    const scaleRange: number = Math.abs(maxValue - minValue);
     const scaleStepSize: number = this.calcScaleStep();
-    const stepNumber: number = Math.abs(scaleLength / scaleStepSize);
+    const stepCount: number = Math.abs(scaleRange / scaleStepSize);
+
+    const scaleRect = this.UI.slider.getBoundingClientRect();
+    const { top, right, bottom, left } = scaleRect;
+    const scaleElementLength = isHorizontal ? right - left : bottom - top;
+    const handlerElementPercentRadius = (handlerRadius / scaleElementLength) * 100;
+    const scalePercentLength = 100 - 2 * handlerElementPercentRadius;
 
     let i = 0;
     let value = minValue;
 
-    while (i <= stepNumber) {
-      const mark = document.createElement('li');
-      mark.className = 'rscale__mark';
-      mark.textContent = value.toString(10);
-      this.UI.scale.appendChild(mark);
+    while (i <= stepCount) {
+      const scaleStepPosition: number =
+        handlerElementPercentRadius +
+        Math.abs(scaleStepSize / scaleRange) * i * scalePercentLength;
 
-      this.UI.marks.push(mark);
-      this.markValues.push(value);
+      this.createScaleMark(value, scaleStepPosition);
 
       value += scaleStepSize;
       i += 1;

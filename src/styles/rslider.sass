@@ -78,6 +78,7 @@ $trackTipOffset: $handlerSize / 2
       margin-left: 16px
 
 .rscale
+  position: relative
   display: flex
   justify-content: space-between
   list-style-type: none
@@ -90,23 +91,29 @@ $trackTipOffset: $handlerSize / 2
     max-width: $maxLength
     width: 100%
 
+    .rscale__mark
+      transform: translate(-50%, 0)
+
   &--layout_vertical
     flex-flow: column-reverse nowrap
     height: $maxLength
     margin-left: -28px
     max-width: 32px
 
+    .rscale__mark
+      align-self: flex-end
+      transform: translate(0, 50%)
+
   &__mark
-    align-self: flex-end
+    position: absolute
     cursor: pointer
-    flex: 1
-    font-size: 12px
-    padding: 4px
+    font-size: .75rem
+    padding: .25rem
     text-align: center
 
-    &:first-child,
-    &:last-child
-      flex: .75
+    // &:first-child,
+    // &:last-child
+    //   flex: .75
 
 .rslider-panel
   & >div

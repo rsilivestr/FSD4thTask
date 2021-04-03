@@ -142,7 +142,7 @@ class View extends Subject implements TView {
 
   private addScale(o: TModelOptions) {
     if (!this.children.scale) {
-      const scale = new Scale(this.container, o);
+      const scale = new Scale(this.UI.slider, o);
       this.children.scale = scale;
     }
 

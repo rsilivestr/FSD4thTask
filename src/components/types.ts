@@ -80,7 +80,7 @@ type TProgress = {
 };
 
 type TScaleElements = {
-  container: HTMLElement;
+  slider: HTMLElement;
   scale: HTMLUListElement;
   marks: HTMLLIElement[];
 };
