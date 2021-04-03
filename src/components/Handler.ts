@@ -34,7 +34,7 @@ class Handler implements THandler {
 
   public setZIndex(sliderLength: number, coord: number) {
     this.UI.handler.style.zIndex = Math.floor(
-      Math.abs(sliderLength ** 2 / (50 - coord))
+      2 + Math.abs(sliderLength ** 2 / (50 - coord))
     ).toString();
   }
 
