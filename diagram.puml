@@ -35,7 +35,7 @@ class Panel implements TPanel {
     -UI: TPanelElements
     +update(values: number[]): void
     -updateInputCount(): void
-    -init(s: TSlider): void
+    -init(slider: TSlider): void
     -onValueInputChange(e: KeyboardEvent, valueIndex: number): void
     -renderValueInputs(): void
     -setMinValue(e: KeyboardEvent): void
@@ -74,6 +74,7 @@ class Handler implements THandler {
     -value: number
     +getElement(): HTMLElement
     +setPosition(coord: number): void
+    +setZIndex(sliderLength: number, coord: number): void
     +toggleTooltip(value?: boolean): boolean
     +toggleLayout(layout: "horizontal" | "vertical"): void
     +updateValue(value: number): void
@@ -100,6 +101,7 @@ class Scale extends Subject implements TScale {
     +toggleLayout(layout: "horizontal" | "vertical"): void
     +setConfig(newOptions: TModelOptions): void
     -calcScaleStep(): number
+    -createScaleMark(value: number, position: number): HTMLLIElement
     -populateScale(): HTMLUListElement
     -onClick(e: MouseEvent): void
     -render(): HTMLUListElement

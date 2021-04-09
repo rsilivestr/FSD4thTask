@@ -20,6 +20,7 @@ type TSliderOptions = {
 
 type TSlider = {
   addObserver(o: Function): void;
+  removeObserver(o: Function): void;
   getContainer(): HTMLElement;
 
   setConfig(o: TSliderOptions): TSliderOptions;

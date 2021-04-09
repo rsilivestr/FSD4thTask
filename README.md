@@ -47,7 +47,7 @@ const $mySlider: RSlider = $(selector: string).rslider(options: SliderOptions);
 ### Узнать родительский элемент слайдера
 
 ```typescript
-const container = $mySlider.rslider('getContainer');
+$mySlider.rslider('getContainer'): HTMLElement;
 ```
 
 ### Узнать настройки
@@ -73,7 +73,6 @@ $mySlider.rslider('setConfig', config: SliderOptions): SliderOptions;
   maxValue: 50,                 // number
   stepSize: 20,                 // number
   handlerCount: 1,              // number
-  // Allow minValue to be greater than maxValue (reverse slider direction)
   allowReversedValues: false    // boolean
   handlerInteraction: 'block',  // 'block' | 'pass' | 'move'
 
@@ -86,14 +85,14 @@ $mySlider.rslider('setConfig', config: SliderOptions): SliderOptions;
 }
 ```
 
-### Узнать / изменить одно или все значения
+### Узнать / задать значения ползунков
 
 ```typescript
 // Узнать одно значение
 $mySlider.rslider('getValue', index: number): number;
 
 // Задать одно значение
-$mySlider.rslider('setValue', { index: number, value: number }): number;
+$mySlider.rslider('setValue', { index, value }: { index: number, value: number }): number;
 
 // Узнать значения
 $mySlider.rslider('getValues'): number[];
@@ -105,7 +104,7 @@ $mySlider.rslider('setValues' values: number[]): number[];
 ### Добавить панель управления
 
 ```typescript
-const myPanel = $().rspanel(mySlider: RSlider): RSPanel;
+$mySlider.rslider('addControlPanel'): RSPanel;
 ```
 
 ## Архитектура приложения
@@ -117,4 +116,11 @@ const myPanel = $().rspanel(mySlider: RSlider): RSPanel;
 
 </details>
 
-Слайдер разделён на слои `Model`, `View` и `Presenter`. Для уменьшения связанности `Presenter` подписан на обновления `View` и `Model` с помощью шаблона "Наблюдатель". При изменении значений и настроек `Presenter` получает оповещение и вызывает соответствующие методы `Model` и `View`. `Model` ничего не знает о `View`, который знает о её настройках и значениях ползунков, но не может напрямую обратиться к её методам. `View` помимо основного класса имеет дочерние: `Handler` - для каждого ползунка и `Scale` - опциональная шкала значений.
+Слайдер разделён на слои `Model`, `View` и `Presenter`. Для уменьшения связанности `Presenter` подписан на обновления `View` и `Model` с помощью шаблона "Наблюдатель". При изменении значений и настроек `Presenter` получает оповещение и вызывает соответствующие методы `Model` и `View`. `Model` ничего не знает о `View`, который знает о её настройках и значениях ползунков, но не может напрямую обратиться к её методам. `View` помимо основного класса имеет дочерние:
+
+- `Track` - дорожка по которой ходят ползунки;
+- `Handler` - для каждого ползунка;
+- `Progress` - подсветка дорожки от минимума трека до ползунка (для одного ползунка) или между ползунками (для двух ползунков) - опционально;
+- `Scale` - шкала значений - опционально;
+
+Для наглядного изменения настроек слайдер оснащён панелью управления `Panel`, которая общается со слайдером через его фасад.

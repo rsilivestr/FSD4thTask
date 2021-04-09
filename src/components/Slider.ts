@@ -6,11 +6,17 @@ import { TSlider, TSliderOptions } from './types';
 
 import '../styles/rslider.sass';
 
-const create = (container: HTMLElement, options: TSliderOptions = {}) => {
+export default (container: HTMLElement, options: TSliderOptions = {}) => {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
     observers.push(o);
+  };
+
+  const removeObserver = (o: Function) => {
+    const indexToRemove = observers.indexOf(o);
+
+    observers.splice(indexToRemove, 1);
   };
 
   const notifyObservers = (values: number[]) => {
@@ -60,6 +66,7 @@ const create = (container: HTMLElement, options: TSliderOptions = {}) => {
       return model.setValues(v);
     },
     addObserver,
+    removeObserver,
 
     // JQuery fasade
     rslider(method: string, payload?: any) {
@@ -86,6 +93,15 @@ const create = (container: HTMLElement, options: TSliderOptions = {}) => {
         case 'setValues':
           return this.setValues(payload || []);
 
+        case 'addObserver':
+          return this.addObserver(payload);
+
+        case 'removeObserver':
+          return this.removeObserver(payload);
+
+        case 'addControlPanel':
+          return new Panel(this);
+
         default:
           return null;
       }
@@ -94,7 +110,3 @@ const create = (container: HTMLElement, options: TSliderOptions = {}) => {
 
   return slider;
 };
-
-const addControlPanel = (s: TSlider) => new Panel(s);
-
-export { create, addControlPanel };

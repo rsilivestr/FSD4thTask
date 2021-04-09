@@ -2,7 +2,7 @@
 import { expect } from 'chai';
 
 import Panel from '../src/components/Panel';
-import { create } from '../src/components/Slider';
+import createSlider from '../src/components/Slider';
 import * as types from '../src/components/types';
 
 describe('Panel(s: Slider)', () => {
@@ -18,7 +18,7 @@ describe('Panel(s: Slider)', () => {
     showScale: true,
     showTooltip: true,
   };
-  const SLIDER = create(CONTAINER, DEFAULT_CONFIG);
+  const SLIDER = createSlider(CONTAINER, DEFAULT_CONFIG);
   const PANEL = new Panel(SLIDER);
   const labels = Array.from(
     CONTAINER.querySelector('.rslider-panel').querySelectorAll('label')

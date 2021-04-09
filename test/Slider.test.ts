@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 
-import { create } from '../src/components/Slider';
+import createSlider from '../src/components/Slider';
 import * as types from '../src/components/types';
 
 describe('Slider', () => {
@@ -23,7 +23,7 @@ describe('Slider', () => {
 
   const CONFIG_KEYS = Object.keys(DEFAULT_CONFIG);
 
-  const SLIDER = create(CONTAINER, DEFAULT_CONFIG);
+  const SLIDER = createSlider(CONTAINER, DEFAULT_CONFIG);
 
   beforeEach(() => {
     SLIDER.setConfig(DEFAULT_CONFIG);

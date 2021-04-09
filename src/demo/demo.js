@@ -7,7 +7,7 @@ const sliderOneConfig = {
 };
 
 const sliderOne = $('#foo').rslider(sliderOneConfig);
-const sliderOnePanel = $().rspanel(sliderOne);
+const sliderOnePanel = sliderOne.rslider('addControlPanel');
 
 const sliderTwo = $('#bar').rslider({
   minValue: 0,
@@ -15,10 +15,10 @@ const sliderTwo = $('#bar').rslider({
   stepSize: 3,
   handlerCount: 2,
 });
-const sliderTwoPanel = $().rspanel(sliderTwo);
+const sliderTwoPanel = sliderTwo.rslider('addControlPanel');
 
 const sliderThree = $('#fizz').rslider({ isHorizontal: false });
-const sliderThreePanel = $().rspanel(sliderThree);
+const sliderThreePanel = sliderThree.rslider('addControlPanel');
 
 const sliderFourConfig = {
   minValue: 7,
@@ -31,4 +31,4 @@ const sliderFourConfig = {
 };
 
 const sliderFour = $('#buzz').rslider(sliderFourConfig);
-const sliderFourPanel = $().rspanel(sliderFour);
+sliderFourPanel = sliderFour.rslider('addControlPanel');
