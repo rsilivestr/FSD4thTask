@@ -41,15 +41,27 @@ npm test
 ### Создать слайдер
 
 ```typescript
-const mySlider: RSlider = $(selector: string).rslider(options: SliderOptions);
+const $mySlider: RSlider = $(selector: string).rslider(options: SliderOptions);
 ```
 
-### Задать / узнать настройки
+### Узнать родительский элемент слайдера
 
 ```typescript
-mySlider.setConfig(options: SliderOptions = {}): SliderOptions;
+const container = $mySlider.rslider('getContainer');
+```
 
-mySlider.getConfig(): SliderOptions;
+### Узнать настройки
+
+```typescript
+$mySlider.rslider('getConfig'): SliderOptions;
+```
+
+### Задать настройки
+
+в объекте конфигурации можно передать одно, несколько или все свойства
+
+```typescript
+$mySlider.rslider('setConfig', config: SliderOptions): SliderOptions;
 ```
 
 ### Настройки по умолчанию
@@ -57,19 +69,20 @@ mySlider.getConfig(): SliderOptions;
 ```typescript
 {
   // Настройки модели
-  minValue: -50,        // number
-  maxValue: 50,         // number
-  stepSize: 20,         // number
-  handlerCount: 1,      // number
+  minValue: -50,                // number
+  maxValue: 50,                 // number
+  stepSize: 20,                 // number
+  handlerCount: 1,              // number
   // Allow minValue to be greater than maxValue (reverse slider direction)
-  allowReversedValues: false // boolean
+  allowReversedValues: false    // boolean
+  handlerInteraction: 'block',  // 'block' | 'pass' | 'move'
 
   // Настройки отображения
-  isHorizontal: true,   // boolean
-  handlerRadius: 8,     // number
-  showProgress: false,  // boolean
-  showScale: true,      // boolean
-  showTooltip: true,    // boolean
+  isHorizontal: true,           // boolean
+  handlerRadius: 8,             // number
+  showProgress: false,          // boolean
+  showScale: true,              // boolean
+  showTooltip: true,            // boolean
 }
 ```
 
@@ -77,16 +90,16 @@ mySlider.getConfig(): SliderOptions;
 
 ```typescript
 // Узнать одно значение
-mySlider.getValue(index: number): number;
+$mySlider.rslider('getValue', index: number): number;
 
 // Задать одно значение
-mySlider.setValue(index: number, value: number): number;
+$mySlider.rslider('setValue', { index: number, value: number }): number;
 
 // Узнать значения
-mySlider.getValues(): number[];
+$mySlider.rslider('getValues'): number[];
 
 // Задать значения
-mySlider.setValues(values: number[]): number[];
+$mySlider.rslider('setValues' values: number[]): number[];
 ```
 
 ### Добавить панель управления
