@@ -1,6 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 
-import Subject from './Subject';
+import Subject from '@/components/Subject';
+
 import { TTrack } from './types';
 
 class Track extends Subject implements TTrack {

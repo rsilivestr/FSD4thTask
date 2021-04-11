@@ -23,20 +23,13 @@
   "rules": {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "error",
-    "no-underscore-dangle": "off",
     "implicit-arrow-linebreak": "off",
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "ts": "never"
-      }
-    ]
+    "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }]
   },
   "settings": {
     "react": {
       "version": "999.999.999"
-    }
+    },
+    "import/resolver": "typescript"
   }
 }

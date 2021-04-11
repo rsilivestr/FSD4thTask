@@ -20,10 +20,12 @@ module.exports = (config) => {
     },
     reporters: ['progress', 'coverage'],
     karmaTypescriptConfig: {
-      include: ['./src/**/*.ts', './test/**/*.test.ts'],
       compilerOptions: {
         esModuleInterop: true,
+        baseUrl: '.',
+        paths: { '@/*': ['src/*'] },
       },
+      include: ['./src/**/*.ts', './test/**/*.test.ts'],
     },
   });
 };

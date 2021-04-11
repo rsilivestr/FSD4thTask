@@ -1,21 +1,21 @@
 import { boundMethod } from 'autobind-decorator';
 
-import Handler from './Handler';
-import Progress from './Progress';
-import Scale from './Scale';
-import Subject from './Subject';
-import Track from './Track';
+import Subject from '@/components/Subject';
+
+import { TModelOptions, TSliderOptions } from '../types';
 import {
   TView,
   TViewChildren,
-  TModelOptions,
   TViewOptions,
   TViewElements,
-  TSliderOptions,
   TProgressCoords,
   THandler,
   THandlerOptions,
 } from './types';
+import Handler from './Handler';
+import Progress from './Progress';
+import Scale from './Scale';
+import Track from './Track';
 
 class View extends Subject implements TView {
   private children: TViewChildren = {

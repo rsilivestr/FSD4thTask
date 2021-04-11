@@ -3,9 +3,9 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import Model from '../src/components/Model';
-import Presenter from '../src/components/Presenter';
-import View from '../src/components/View';
+import Model from '@/components/Model';
+import Presenter from '@/components/Presenter';
+import { View } from '@/components/views';
 
 chai.use(sinonChai);
 

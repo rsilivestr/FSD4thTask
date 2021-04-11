@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import { use, expect } from 'chai';
 
-import Handler from '../src/components/Handler';
-import * as types from '../src/components/types';
+import { Handler } from '@/components/views';
+import * as types from '@/components/views/types';
 
 use(require('chai-dom'));
 

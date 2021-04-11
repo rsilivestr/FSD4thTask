@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import Scale from '../src/components/Scale';
+import { Scale } from '@/components/views';
 
 chai.use(sinonChai);
 

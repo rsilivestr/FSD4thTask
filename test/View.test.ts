@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
-import View from '../src/components/View';
-import * as types from '../src/components/types';
+import { View } from '@/components/views';
+import * as types from '@/components/types';
 
 chai.use(sinonChai);
 

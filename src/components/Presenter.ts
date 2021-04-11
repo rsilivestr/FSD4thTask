@@ -1,5 +1,6 @@
 import { boundMethod } from 'autobind-decorator';
-import { TModel, TPresenter, TView } from './types';
+import { TModel, TPresenter } from './types';
+import { TView } from './views/types';
 
 class Presenter implements TPresenter {
   private model: TModel;

@@ -1,7 +1,9 @@
 import { boundMethod } from 'autobind-decorator';
 
-import Subject from './Subject';
-import { TScale, TSliderOptions, TScaleElements, TModelOptions } from './types';
+import Subject from '@/components/Subject';
+import { TSliderOptions, TModelOptions } from '@/components/types';
+
+import { TScale, TScaleElements } from './types';
 
 class Scale extends Subject implements TScale {
   private markValues: number[] = [];

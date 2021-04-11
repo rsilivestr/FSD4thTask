@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 
-import createSlider from '../src/components/Slider';
-import * as types from '../src/components/types';
+import createSlider from '@/components/Slider';
+import * as types from '@/components/types';
 
 describe('Slider', () => {
   const CONTAINER = document.createElement('div');

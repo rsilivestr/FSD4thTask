@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 
-import Progress from '../src/components/Progress';
+import { Progress } from '@/components/views';
 
 describe('Progress(coords: number[], isHorizontal: boolean)', () => {
   const COORDS: [number, number] = [0, 10];

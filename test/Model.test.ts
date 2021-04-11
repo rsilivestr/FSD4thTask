@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 
-import Model from '../src/components/Model';
-import * as types from '../src/components/types';
+import Model from '@/components/Model';
+import * as types from '@/components/types';
 
 describe('Model', () => {
   const DEFAULT_CONFIG: types.TModelOptions = {

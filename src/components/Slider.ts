@@ -1,7 +1,7 @@
 import Model from './Model';
 import Panel from './Panel';
 import Presenter from './Presenter';
-import View from './View';
+import { View } from './views';
 import { TSlider, TSliderOptions } from './types';
 
 import '../styles/rslider.sass';

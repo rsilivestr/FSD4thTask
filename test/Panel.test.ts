@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 
-import Panel from '../src/components/Panel';
-import createSlider from '../src/components/Slider';
-import * as types from '../src/components/types';
+import Panel from '@/components/Panel';
+import createSlider from '@/components/Slider';
+import * as types from '@/components/types';
 
 describe('Panel(s: Slider)', () => {
   const CONTAINER = document.createElement('div');
