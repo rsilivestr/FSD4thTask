@@ -91,7 +91,10 @@ class Model extends Subject implements TModel {
 
   private configureDirection() {
     const maxIsGreaterThanMin = this.options.maxValue > this.options.minValue;
+    const oldMod = this.directionMod;
     this.directionMod = maxIsGreaterThanMin ? 1 : -1;
+
+    if (oldMod !== this.directionMod) this.initValues();
   }
 
   private configureMinValue(newMinValue: number) {
@@ -194,8 +197,9 @@ class Model extends Subject implements TModel {
     };
 
     this.configureDirection();
+    const hasHandlerCountChanged = this.values.length !== handlerCount;
 
-    if (this.values.length !== handlerCount) this.initValues();
+    if (hasHandlerCountChanged) this.initValues();
 
     this.setEachValue();
   }

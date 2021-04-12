@@ -25,6 +25,8 @@ class Handler implements THandler {
   }
 
   public setPosition(coord: number): void {
+    this.coord = coord;
+
     if (this.layout === 'horizontal') {
       this.UI.handler.style.left = `${coord}%`;
     } else {
@@ -66,9 +68,8 @@ class Handler implements THandler {
     this.setPosition(this.coord);
 
     if (this.UI.tooltip) {
-      this.UI.tooltip.classList.remove('rslider__tooltip--horizontal');
-      this.UI.tooltip.classList.remove('rslider__tooltip--vertical');
-
+      const oldLayout = layout === 'horizontal' ? 'vertical' : 'horizontal';
+      this.UI.tooltip.classList.remove(`rslider__tooltip--${oldLayout}`);
       this.UI.tooltip.classList.add(`rslider__tooltip--${layout}`);
     }
   }
