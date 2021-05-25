@@ -10,19 +10,15 @@ class Scale extends Subject implements TScale {
 
   private stepCountLimit: number = 10;
 
-  private options: TSliderOptions;
+  private options!: TSliderOptions;
 
-  private UI: TScaleElements = {
-    slider: null,
-    scale: document.createElement('ul'),
-    marks: [],
-  };
+  private UI!: TScaleElements;
 
   constructor(slider: HTMLElement, options: TSliderOptions) {
     super();
 
-    this.UI.slider = slider;
-    this.options = options;
+    this.init(slider, options);
+
     this.render();
   }
 
@@ -116,9 +112,19 @@ class Scale extends Subject implements TScale {
 
     if (!target.classList.contains('rscale__mark')) return;
 
-    const value = parseInt(target.textContent, 10);
+    const value = parseInt(<string>target.textContent, 10);
 
     this.notifyObservers(value);
+  }
+
+  private init(slider: HTMLElement, options: TSliderOptions) {
+    this.UI = {
+      slider,
+      scale: document.createElement('ul'),
+      marks: [],
+    };
+
+    this.options = options;
   }
 
   private render() {

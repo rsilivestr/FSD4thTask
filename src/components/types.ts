@@ -1,10 +1,24 @@
-type TSubject = {
+export type TSubject = {
   addObserver: (o: Function) => Function[];
   removeObserver: (o: Function) => Function[];
   notifyObservers: (...notifyData: any) => void;
 };
 
-type TSliderOptions = {
+export type TSliderOptions = {
+  minValue: number;
+  maxValue: number;
+  stepSize: number;
+  handlerCount: number;
+  allowReversedValues: boolean;
+  handlerInteraction: 'block' | 'move' | 'pass';
+  isHorizontal: boolean;
+  handlerRadius: number;
+  showProgress: boolean;
+  showScale: boolean;
+  showTooltip: boolean;
+};
+
+export type TSliderOptionsPartial = {
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
@@ -18,7 +32,7 @@ type TSliderOptions = {
   showTooltip?: boolean;
 };
 
-type TSlider = {
+export type TSlider = {
   addObserver(o: Function): void;
   removeObserver(o: Function): void;
   getContainer(): HTMLElement;
@@ -35,7 +49,7 @@ type TSlider = {
   rslider(method: string, payload?: any): void;
 };
 
-type TModelOptions = {
+export type TModelOptions = {
   [key: string]: any;
   minValue?: number;
   maxValue?: number;
@@ -45,7 +59,7 @@ type TModelOptions = {
   handlerInteraction?: 'block' | 'move' | 'pass';
 };
 
-type TModel = TSubject & {
+export type TModel = TSubject & {
   getConfig(): TModelOptions;
   setConfig(o?: TModelOptions): TModelOptions;
   getValue(index: number): number | null;
@@ -54,31 +68,20 @@ type TModel = TSubject & {
   setValues(v: number[]): number[];
 };
 
-type TPresenter = {
+export type TPresenter = {
   getValues(): number[];
   setModelValue(index: number, value: number): number;
 };
 
-type TPanel = {
+export type TPanel = {
   update(v: number[]): void;
 };
 
-type TPanelElements = {
+export type TPanelElements = {
   configDiv: HTMLElement;
   container: HTMLElement;
   valueInputs: HTMLInputElement[];
   configInputs: { [key: string]: HTMLInputElement };
   panel: HTMLElement;
   valuesDiv: HTMLElement;
-};
-
-export type {
-  TModel,
-  TModelOptions,
-  TPanel,
-  TPanelElements,
-  TPresenter,
-  TSlider,
-  TSliderOptions,
-  TSubject,
 };
