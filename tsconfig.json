@@ -7,7 +7,7 @@
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "alwaysStrict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
