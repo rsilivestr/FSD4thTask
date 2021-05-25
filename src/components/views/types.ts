@@ -1,6 +1,6 @@
-import { TSubject, TModelOptions, TSliderOptions } from '@/components/types';
+import { TSubject, TModelOptions } from '@/components/types';
 
-type THandler = {
+export type THandler = {
   getElement(): HTMLElement;
   setPosition(coord: number): void;
   setZIndex(sliderRange: number, coord: number): void;
@@ -9,60 +9,74 @@ type THandler = {
   updateValue(value: number): void;
 };
 
-type THandlerOptions = {
+export type THandlerOptions = {
   id: number;
   layout: string;
   tooltip: boolean;
   value: number;
 };
 
-type THandlerElements = {
+export type THandlerElements = {
   handler: HTMLElement;
   tooltip: HTMLElement;
 };
 
-type TProgressCoords = [number, number];
+export type TProgressCoords = [number, number];
 
-type TProgress = {
+export type TProgress = {
   getElement: () => HTMLElement;
   setCoords: (coords: TProgressCoords) => void;
   toggleHorizontal: (isHorizontal: boolean) => void;
 };
 
-type TScaleElements = {
+export type TScaleElements = {
   slider: HTMLElement;
   scale: HTMLUListElement;
   marks: HTMLLIElement[];
 };
 
-type TScale = TSubject & {
+export type TScale = TSubject & {
   getElement: () => HTMLUListElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
   setConfig: (o: TModelOptions) => void;
 };
 
-type TTrack = TSubject & {
+export type TTrackRect = {
+  trackLength: number;
+  trackMin: number;
+  trackMax: number;
+};
+
+export type TTrack = TSubject & {
   getElement: () => HTMLElement;
-  getRect: () => any;
+  getRect: () => TTrackRect;
   toggleLayout: (isHorizontal: boolean) => void;
 };
 
-type TViewChildren = {
+export type TViewChildren = {
   handlers: THandler[];
-  progress: TProgress;
-  scale: TScale;
-  track: TTrack;
+  progress: TProgress | null;
+  scale: TScale | null;
+  track: TTrack | null;
 };
 
-type TViewElements = {
-  activeHandler: HTMLElement;
-  progress?: HTMLElement;
-  scale?: HTMLUListElement;
-  slider?: HTMLElement;
-  track?: HTMLElement;
+export type TViewElements = {
+  activeHandler: HTMLElement | null;
+  progress: HTMLElement | null;
+  scale: HTMLUListElement | null;
+  slider: HTMLElement;
+  track: HTMLElement;
 };
 
-type TViewOptions = {
+export type TViewOptions = {
+  isHorizontal: boolean;
+  handlerRadius: number;
+  showProgress: boolean;
+  showScale: boolean;
+  showTooltip: boolean;
+};
+
+export type TViewOptionsPartial = {
   isHorizontal?: boolean;
   handlerRadius?: number;
   showProgress?: boolean;
@@ -70,24 +84,9 @@ type TViewOptions = {
   showTooltip?: boolean;
 };
 
-type TView = TSubject & {
+export type TView = TSubject & {
   getConfig(): TViewOptions;
   setConfig(o: TViewOptions): TViewOptions;
-  setModelOptions(o: TSliderOptions): TModelOptions;
+  setModelOptions(o: TModelOptions): TModelOptions;
   setValues(v: number[]): void;
-};
-
-export type {
-  THandler,
-  THandlerElements,
-  THandlerOptions,
-  TProgress,
-  TProgressCoords,
-  TScale,
-  TScaleElements,
-  TTrack,
-  TView,
-  TViewChildren,
-  TViewElements,
-  TViewOptions,
 };

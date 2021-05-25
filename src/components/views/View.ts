@@ -2,11 +2,12 @@ import { boundMethod } from 'autobind-decorator';
 
 import Subject from '@/components/Subject';
 
-import { TModelOptions, TSliderOptions } from '../types';
+import { TModelOptions, TSliderOptions, TSliderOptionsPartial } from '../types';
 import {
   TView,
   TViewChildren,
   TViewOptions,
+  TViewOptionsPartial,
   TViewElements,
   TProgressCoords,
   THandler,
@@ -29,21 +30,15 @@ class View extends Subject implements TView {
 
   private grabOffset: number = 0;
 
-  private modelOptions: TModelOptions;
+  private modelOptions!: TModelOptions;
 
-  private options: TViewOptions = {};
+  private options!: TViewOptions;
 
-  private UI: TViewElements = {
-    activeHandler: null,
-    progress: null,
-    scale: null,
-    slider: null,
-    track: null,
-  };
+  private UI!: TViewElements;
 
   private values: number[] = [];
 
-  constructor(container: HTMLElement, o: TSliderOptions = {}) {
+  constructor(container: HTMLElement, o: TSliderOptionsPartial & TModelOptions) {
     super();
 
     this.container = container;
@@ -65,8 +60,15 @@ class View extends Subject implements TView {
     return this.configure(o);
   }
 
-  public setModelOptions(o: TSliderOptions): TModelOptions {
-    const { minValue, maxValue, stepSize, handlerCount, allowReversedValues } = o;
+  public setModelOptions(o: TModelOptions): TModelOptions {
+    const {
+      minValue,
+      maxValue,
+      stepSize,
+      handlerCount,
+      handlerInteraction,
+      allowReversedValues,
+    } = o;
 
     if (this.modelOptions) {
       const mo = this.modelOptions;
@@ -77,8 +79,12 @@ class View extends Subject implements TView {
         this.modelOptions.minValue = minValue;
         this.modelOptions.maxValue = maxValue;
 
-        this.children.scale.setConfig(o);
+        if (this.children.scale) {
+          this.children.scale.setConfig(o);
+        }
+
         this.updateHandlers();
+
         if (this.options.showProgress) {
           this.updateProgress();
         }
@@ -87,7 +93,9 @@ class View extends Subject implements TView {
       if (stepSize !== mo.stepSize) {
         this.modelOptions.stepSize = stepSize;
 
-        this.children.scale.setConfig(o);
+        if (this.children.scale) {
+          this.children.scale.setConfig(o);
+        }
       }
 
       if (handlerCount !== mo.handlerCount) {
@@ -105,6 +113,7 @@ class View extends Subject implements TView {
         maxValue,
         stepSize,
         handlerCount,
+        handlerInteraction,
         allowReversedValues,
       };
     }
@@ -141,7 +150,7 @@ class View extends Subject implements TView {
     }
   }
 
-  private addScale(o: TModelOptions) {
+  private addScale(o: TSliderOptions) {
     if (!this.children.scale) {
       const scale = new Scale(this.UI.slider, o);
       this.children.scale = scale;
@@ -155,7 +164,7 @@ class View extends Subject implements TView {
   }
 
   private toggleScale(showScale: boolean) {
-    if (!this.UI.slider) return;
+    if (!this.UI) return;
 
     if (showScale && !this.UI.scale) {
       this.addScale({ ...this.modelOptions, ...this.options });
@@ -166,7 +175,7 @@ class View extends Subject implements TView {
     }
   }
 
-  private init(o: TSliderOptions): void {
+  private init(o: TSliderOptionsPartial & TModelOptions): void {
     this.configure(o);
 
     this.setModelOptions(o);
@@ -179,8 +188,15 @@ class View extends Subject implements TView {
       throw new Error('There is no element matching provided selector.');
     }
 
-    this.UI.slider = this.elCreateSlider();
-    this.UI.track = this.createTrack();
+    this.UI = {
+      activeHandler: null,
+      progress: null,
+      scale: null,
+      slider: this.createSlider(),
+      track: this.createTrack(),
+    };
+
+    this.UI.slider.appendChild(this.UI.track);
 
     this.createHandlers();
 
@@ -211,6 +227,8 @@ class View extends Subject implements TView {
   }
 
   private correctHandlerCoord(): number {
+    if (!this.children.track) return 0;
+
     const { trackLength } = this.children.track.getRect();
     const r = this.options.handlerRadius;
 
@@ -229,7 +247,7 @@ class View extends Subject implements TView {
     return ((value - minValue) / (maxValue - minValue)) * 100;
   }
 
-  private elCreateSlider(): HTMLElement {
+  private createSlider(): HTMLElement {
     const layout = this.options.isHorizontal ? 'horizontal' : 'vertical';
 
     const slider = document.createElement('div');
@@ -247,8 +265,6 @@ class View extends Subject implements TView {
     this.children.track = new Track(this.options.isHorizontal);
 
     const trackElement = this.children.track.getElement();
-
-    this.UI.slider.appendChild(trackElement);
 
     this.children.track.addObserver(this.onTrackMousedown);
 
@@ -279,13 +295,15 @@ class View extends Subject implements TView {
   }
 
   private updateProgress(): void {
+    if (!this.children.progress) return;
+
     const coords = this.calcProgressCoords();
 
     this.children.progress.setCoords(coords);
   }
 
   private toggleProgress(progress: boolean): void {
-    if (!this.UI.slider) return;
+    if (!this.UI) return;
 
     if (this.modelOptions.handlerCount > 2) {
       this.options.showProgress = false;
@@ -328,6 +346,8 @@ class View extends Subject implements TView {
   }
 
   private setGrabbedOffset(e: MouseEvent): void {
+    if (!this.UI.activeHandler) return;
+
     const { isHorizontal, handlerRadius } = this.options;
 
     const handlerRect = this.UI.activeHandler.getBoundingClientRect();
@@ -363,6 +383,8 @@ class View extends Subject implements TView {
   }
 
   private getRelativeCoord(e: MouseEvent): number {
+    if (!this.children.track) return 0;
+
     const { isHorizontal } = this.options;
     const { trackMin, trackLength } = this.children.track.getRect();
 
@@ -385,8 +407,10 @@ class View extends Subject implements TView {
   private moveHandler(coord: number) {
     const value = this.coordToValue(coord);
 
+    if (!this.UI.activeHandler) return;
+
     // Update model through presenter
-    const index = parseInt(this.UI.activeHandler.dataset.id, 10);
+    const index = parseInt(this.UI.activeHandler.dataset.id || '0', 10);
     this.notifyObservers(index, value);
 
     this.updateHandlers();
@@ -412,7 +436,7 @@ class View extends Subject implements TView {
   }
 
   private updateOrientation(horizontal = true) {
-    if (!this.UI.slider) return;
+    if (!this.UI) return;
 
     if (horizontal) {
       this.UI.slider.classList.remove('rslider--layout_vertical');
@@ -422,15 +446,16 @@ class View extends Subject implements TView {
       this.UI.slider.classList.remove('rslider--layout_horizontal');
     }
 
+    if (!this.children.track) return;
     this.children.track.toggleLayout(this.options.isHorizontal);
 
-    if (this.options.showProgress) {
+    if (this.options.showProgress && this.children.progress) {
       this.children.progress.toggleHorizontal(this.options.isHorizontal);
 
       this.updateProgress();
     }
 
-    if (this.UI.scale) {
+    if (this.children.scale) {
       const layout = horizontal ? 'horizontal' : 'vertical';
       this.children.scale.toggleLayout(layout);
     }
@@ -439,8 +464,10 @@ class View extends Subject implements TView {
     this.children.handlers.forEach((h) => h.toggleLayout(layout));
   }
 
-  private configure(o: TViewOptions) {
+  private configure(o: TViewOptionsPartial) {
     const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
+
+    if (!this.options) this.options = <TViewOptions>{};
 
     if (typeof isHorizontal === 'boolean') {
       this.options.isHorizontal = isHorizontal;
@@ -455,7 +482,7 @@ class View extends Subject implements TView {
     const isHandlerRadiusValid =
       typeof handlerRadius === 'number' && !Number.isNaN(handlerRadius);
     if (isHandlerRadiusValid) {
-      this.options.handlerRadius = handlerRadius;
+      this.options.handlerRadius = <number>handlerRadius;
     } else if (this.options.handlerRadius === undefined) {
       this.options.handlerRadius = 8;
     }
