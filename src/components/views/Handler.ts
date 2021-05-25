@@ -1,20 +1,20 @@
 import { THandler, THandlerElements, THandlerOptions } from './types';
 
 class Handler implements THandler {
-  private coord: number;
+  private coord!: number;
 
-  private id: number;
+  private id!: number;
 
-  private layout: string;
+  private layout!: string;
 
-  private tooltip: boolean;
+  private tooltip!: boolean;
 
   private UI: THandlerElements = {
-    handler: null,
-    tooltip: null,
+    handler: Handler.createHandler(),
+    tooltip: Handler.createTooltip(),
   };
 
-  private value: number;
+  private value!: number;
 
   constructor(o: THandlerOptions) {
     this.init(o);
@@ -40,21 +40,18 @@ class Handler implements THandler {
     ).toString();
   }
 
-  public toggleTooltip(value: boolean = null): boolean {
+  public toggleTooltip(value: boolean | null = null): boolean {
     if (value === null) {
       this.tooltip = !this.tooltip;
     } else {
       this.tooltip = value;
     }
 
-    if (this.tooltip && !this.UI.tooltip) {
-      // If ON but does not exist already
-      this.UI.tooltip = this.createTooltip();
+    if (this.tooltip) {
       this.UI.handler.appendChild(this.UI.tooltip);
-    } else if (!this.tooltip && this.UI.tooltip) {
-      // If OFF and already exists
+      this.updateTooltip();
+    } else {
       this.UI.tooltip.remove();
-      this.UI.tooltip = null;
     }
 
     return this.tooltip;
@@ -78,32 +75,36 @@ class Handler implements THandler {
     this.value = value;
 
     if (this.tooltip) {
-      this.updateTooltip();
+      this.updateTooltipValue();
     }
   }
 
-  private createHandler(): HTMLElement {
+  static createHandler(): HTMLElement {
     const handler = document.createElement('div');
     handler.className = 'rslider__handler';
-    handler.dataset.id = this.id.toString();
-
-    if (this.tooltip) {
-      // Create tooltip element
-      this.UI.tooltip = this.createTooltip();
-
-      // Append tooltip
-      handler.appendChild(this.UI.tooltip);
-    }
 
     return handler;
   }
 
-  private createTooltip(): HTMLElement {
+  private initHandler(): void {
+    this.UI.handler.dataset.id = this.id.toString();
+
+    if (this.tooltip) {
+      this.updateTooltip();
+      this.UI.handler.appendChild(this.UI.tooltip);
+    }
+  }
+
+  static createTooltip(): HTMLElement {
     const tooltip = document.createElement('div');
-    tooltip.className = `rslider__tooltip rslider__tooltip--${this.layout}`;
-    tooltip.textContent = this.value.toString(10);
+    tooltip.className = 'rslider__tooltip';
 
     return tooltip;
+  }
+
+  private updateTooltip(): void {
+    this.UI.tooltip.classList.add(`rslider__tooltip--${this.layout}`);
+    this.updateTooltipValue();
   }
 
   private init(o: THandlerOptions): void {
@@ -112,10 +113,10 @@ class Handler implements THandler {
     this.tooltip = o.tooltip;
     this.value = o.value;
 
-    this.UI.handler = this.createHandler();
+    this.initHandler();
   }
 
-  private updateTooltip(): void {
+  private updateTooltipValue(): void {
     this.UI.tooltip.textContent = this.value.toString(10);
   }
 }
