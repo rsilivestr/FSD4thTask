@@ -2,11 +2,11 @@ import Model from './Model';
 import Panel from './Panel';
 import Presenter from './Presenter';
 import { View } from './views';
-import { TSlider, TSliderOptions } from './types';
+import { TSlider, TSliderOptions, TSliderOptionsPartial } from './types';
 
 import '../styles/rslider.sass';
 
-export default (container: HTMLElement, options: TSliderOptions = {}) => {
+export default (container: HTMLElement, options: TSliderOptionsPartial = {}) => {
   const observers: Function[] = [];
 
   const addObserver = (o: Function) => {
@@ -68,7 +68,7 @@ export default (container: HTMLElement, options: TSliderOptions = {}) => {
     addObserver,
     removeObserver,
 
-    // JQuery fasade
+    // JQuery facade
     rslider(method: string, payload?: any) {
       switch (method) {
         case 'getContainer':

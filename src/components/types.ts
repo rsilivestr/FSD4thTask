@@ -51,6 +51,23 @@ export type TSlider = {
 
 export type TModelOptions = {
   [key: string]: any;
+  minValue: number;
+  maxValue: number;
+  stepSize: number;
+  handlerCount: number;
+  allowReversedValues: boolean;
+  handlerInteraction: 'block' | 'move' | 'pass';
+};
+
+export type TModelOptionsNumeric = {
+  minValue: number;
+  maxValue: number;
+  stepSize: number;
+  handlerCount: number;
+};
+
+export type TModelOptionsPartial = {
+  [key: string]: any;
   minValue?: number;
   maxValue?: number;
   stepSize?: number;

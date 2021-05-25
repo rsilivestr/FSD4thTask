@@ -1,5 +1,10 @@
 import Subject from './Subject';
-import { TModel, TModelOptions } from './types';
+import {
+  TModel,
+  TModelOptions,
+  TModelOptionsNumeric,
+  TModelOptionsPartial,
+} from './types';
 
 class Model extends Subject implements TModel {
   private directionMod: 1 | -1 = 1;
@@ -15,7 +20,7 @@ class Model extends Subject implements TModel {
 
   private values: number[] = [];
 
-  constructor(o: TModelOptions = {}) {
+  constructor(o: TModelOptionsPartial = {}) {
     super();
 
     this.initValues();
@@ -26,7 +31,7 @@ class Model extends Subject implements TModel {
     return this.options;
   }
 
-  public setConfig(o?: TModelOptions) {
+  public setConfig(o: TModelOptionsPartial = {}) {
     return this.configure(o);
   }
 
@@ -172,7 +177,7 @@ class Model extends Subject implements TModel {
     }
   }
 
-  private configureFourOptions(o: TModelOptions) {
+  private configureFourOptions(o: TModelOptionsNumeric) {
     const { minValue, maxValue, stepSize, handlerCount } = o;
     const { allowReversedValues, handlerInteraction } = this.options;
 
@@ -204,8 +209,8 @@ class Model extends Subject implements TModel {
     this.setEachValue();
   }
 
-  private configure(o: TModelOptions) {
-    const validOptions: TModelOptions = {};
+  private configure(o: TModelOptionsPartial) {
+    const validOptions: TModelOptionsPartial = {};
 
     const { allowReversedValues } = o;
     if (typeof allowReversedValues === 'boolean') {
@@ -213,7 +218,7 @@ class Model extends Subject implements TModel {
     }
 
     const { handlerInteraction } = o;
-    if (['block', 'move', 'pass'].includes(handlerInteraction)) {
+    if (handlerInteraction && ['block', 'move', 'pass'].includes(handlerInteraction)) {
       this.options.handlerInteraction = handlerInteraction;
     }
 
@@ -236,7 +241,7 @@ class Model extends Subject implements TModel {
         this.configureSingleOption(firstKey, firstValue as number);
         break;
       case 4:
-        this.configureFourOptions(validOptions);
+        this.configureFourOptions(<TModelOptionsNumeric>validOptions);
         break;
       default:
         return this.options;
