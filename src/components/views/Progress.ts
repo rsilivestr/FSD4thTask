@@ -3,7 +3,7 @@ import { TProgress, TProgressCoords } from './types';
 class Progress implements TProgress {
   private coords: TProgressCoords = [0, 0];
 
-  private isHorizontal: boolean = null;
+  private isHorizontal!: boolean;
 
   private UIprogress: HTMLElement = document.createElement('div');
 
