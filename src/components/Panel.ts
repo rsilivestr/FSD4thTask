@@ -3,18 +3,11 @@ import { boundMethod } from 'autobind-decorator';
 import { TPanel, TSliderOptions, TSlider, TPanelElements } from './types';
 
 class Panel implements TPanel {
-  private options: TSliderOptions;
+  private options!: TSliderOptions;
 
-  private slider: TSlider;
+  private slider!: TSlider;
 
-  private UI: TPanelElements = {
-    configDiv: document.createElement('div'),
-    container: null,
-    valueInputs: [],
-    configInputs: {},
-    panel: document.createElement('div'),
-    valuesDiv: document.createElement('div'),
-  };
+  private UI!: TPanelElements;
 
   constructor(slider: TSlider) {
     this.init(slider);
@@ -52,22 +45,31 @@ class Panel implements TPanel {
 
   private updateInputCount() {
     // Remove 'old' inputs from DOM and 'state'
-    this.UI.valueInputs.forEach((input) => input.parentElement.remove());
+    this.UI.valueInputs.forEach((input) => {
+      const inputLabel = input.parentElement;
+      if (inputLabel) inputLabel.remove();
+    });
     this.UI.valueInputs = [];
 
     this.renderValueInputs();
   }
 
   private init(slider: TSlider) {
-    // Save slider
     this.slider = slider;
-    this.UI.container = slider.getContainer();
+
+    this.UI = {
+      configDiv: document.createElement('div'),
+      container: slider.getContainer(),
+      valueInputs: [],
+      configInputs: {},
+      panel: document.createElement('div'),
+      valuesDiv: document.createElement('div'),
+    };
+
     this.options = slider.getConfig();
 
-    // Create and append panel
     this.render();
 
-    // Subscribe to slider updates
     this.slider.addObserver(this.update.bind(this));
   }
 

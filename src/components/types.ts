@@ -37,7 +37,7 @@ export type TSlider = {
   removeObserver(o: Function): void;
   getContainer(): HTMLElement;
 
-  setConfig(o: TSliderOptions): TSliderOptions;
+  setConfig(o: TSliderOptionsPartial): TSliderOptions;
   getConfig(): TSliderOptions;
 
   getValue(index?: number): number;
