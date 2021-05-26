@@ -50,7 +50,6 @@ export type TSlider = {
 };
 
 export type TModelOptions = {
-  [key: string]: any;
   minValue: number;
   maxValue: number;
   stepSize: number;
@@ -59,14 +58,8 @@ export type TModelOptions = {
   handlerInteraction: 'block' | 'move' | 'pass';
 };
 
-export type TModelOptionsNumeric = {
-  minValue: number;
-  maxValue: number;
-  stepSize: number;
-  handlerCount: number;
-};
-
 export type TModelOptionsPartial = {
+  // Index signature to iterate through Object.keys()
   [key: string]: any;
   minValue?: number;
   maxValue?: number;
@@ -78,7 +71,7 @@ export type TModelOptionsPartial = {
 
 export type TModel = TSubject & {
   getConfig(): TModelOptions;
-  setConfig(o?: TModelOptions): void;
+  setConfig(o: TModelOptionsPartial): void;
   getValue(index: number): number | null;
   getValues(): number[];
   setValue(index: number, v: number): void;

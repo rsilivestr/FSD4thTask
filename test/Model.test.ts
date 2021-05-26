@@ -53,48 +53,33 @@ describe('Model', () => {
       expect(MODEL.getConfig().handlerCount).to.equal(2);
     });
 
-    it('Should not work with 2 options provided', () => {
-      MODEL.setConfig({ minValue: 20, maxValue: 120 });
-      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
+    it('Should work with two to four options provided', () => {
+      const configs = [
+        { minValue: 20, maxValue: 120 },
+        { minValue: 15, stepSize: 5 },
+        { minValue: 10, handlerCount: 3 },
+        {
+          minValue: 20,
+          maxValue: 120,
+          stepSize: 5,
+        },
+        {
+          minValue: 20,
+          maxValue: 120,
+          handlerCount: 4,
+        },
+        {
+          minValue: 5,
+          maxValue: 25,
+          stepSize: 5,
+          handlerCount: 2,
+        },
+      ];
 
-      MODEL.setConfig({ minValue: 20, stepSize: 20 });
-      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
-
-      MODEL.setConfig({ minValue: 20, handlerCount: 3 });
-      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
-    });
-
-    it('Should not work with 3 options provided', () => {
-      MODEL.setConfig({
-        minValue: 20,
-        maxValue: 120,
-        stepSize: 5,
-      });
-      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
-
-      MODEL.setConfig({
-        minValue: 20,
-        maxValue: 120,
-        handlerCount: 4,
-      });
-      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
-    });
-
-    it('Should work with all four options provided', () => {
-      const conf = {
-        minValue: 5,
-        maxValue: 25,
-        stepSize: 5,
-        handlerCount: 2,
-      };
-      const { allowReversedValues, handlerInteraction } = MODEL.getConfig();
-
-      MODEL.setConfig(conf);
-
-      expect(MODEL.getConfig()).to.eql({
-        ...conf,
-        allowReversedValues,
-        handlerInteraction,
+      configs.forEach((config) => {
+        MODEL.setConfig(DEFAULT_CONFIG);
+        MODEL.setConfig(config);
+        expect(MODEL.getConfig()).to.eql({ ...DEFAULT_CONFIG, ...config });
       });
     });
 
@@ -161,22 +146,6 @@ describe('Model', () => {
 
       MODEL.setValue(1, 20);
       expect(MODEL.getValues()).to.eql([10, 20]);
-    });
-
-    it('Should not accept anything but numbers', () => {
-      ['string', null, NaN, true].forEach((nan) => {
-        expect(MODEL.setValue.bind(MODEL, 0, nan as number)).to.throw(
-          'Value and index should be numeric'
-        );
-      });
-    });
-
-    it('Should throw error if value with such index does not exist', () => {
-      [-1, 2, 99].forEach((i) => {
-        expect(MODEL.setValue.bind(MODEL, i, 80)).to.throw(
-          'There is no value with such index'
-        );
-      });
     });
   });
 });

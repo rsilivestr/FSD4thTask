@@ -1,10 +1,5 @@
 import Subject from './Subject';
-import {
-  TModel,
-  TModelOptions,
-  TModelOptionsNumeric,
-  TModelOptionsPartial,
-} from './types';
+import { TModel, TModelOptions, TModelOptionsPartial } from './types';
 
 class Model extends Subject implements TModel {
   private directionMod: 1 | -1 = 1;
@@ -24,15 +19,35 @@ class Model extends Subject implements TModel {
     super();
 
     this.initValues();
-    this.configure(o);
+    this.setConfig(o);
   }
 
   public getConfig() {
     return this.options;
   }
 
-  public setConfig(o: TModelOptionsPartial = {}) {
-    this.configure(o);
+  public setConfig(o: TModelOptionsPartial) {
+    const { allowReversedValues } = o;
+    if (typeof allowReversedValues === 'boolean') {
+      this.options.allowReversedValues = allowReversedValues;
+    }
+
+    const { handlerInteraction } = o;
+    if (handlerInteraction && ['block', 'move', 'pass'].includes(handlerInteraction)) {
+      this.options.handlerInteraction = handlerInteraction;
+    }
+
+    const numericOptionsCount = Model.countNumericOptions(o);
+
+    if (numericOptionsCount === 1) {
+      Object.entries(o).forEach(([key, value]) => {
+        if (Model.isNumber(value)) this.configureSingleOption(key, value);
+      });
+    } else {
+      this.configureFourOptions({ ...this.options, ...o });
+    }
+
+    this.notifyObservers(this.values);
   }
 
   public getValue(index: number) {
@@ -44,13 +59,7 @@ class Model extends Subject implements TModel {
   }
 
   public setValue(index: number, value: number) {
-    const indexOrValueIsNotNumeric = !Model.isNumber(index) || !Model.isNumber(value);
-    if (indexOrValueIsNotNumeric) throw new Error('Value and index should be numeric');
-
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
-
-    const indexIsOutOfRange = index < 0 || index >= handlerCount;
-    if (indexIsOutOfRange) throw new Error('There is no value with such index');
 
     const pass = this.options.handlerInteraction === 'pass';
 
@@ -158,6 +167,18 @@ class Model extends Subject implements TModel {
     }
   }
 
+  static countNumericOptions(o: TModelOptionsPartial): number {
+    let count = 0;
+
+    Object.values(o).forEach((value) => {
+      if (Model.isNumber(value)) {
+        count += 1;
+      }
+    });
+
+    return count;
+  }
+
   private configureSingleOption(key: string, value: number) {
     switch (key) {
       case 'minValue':
@@ -176,9 +197,15 @@ class Model extends Subject implements TModel {
     }
   }
 
-  private configureFourOptions(o: TModelOptionsNumeric) {
-    const { minValue, maxValue, stepSize, handlerCount } = o;
-    const { allowReversedValues, handlerInteraction } = this.options;
+  private configureFourOptions(o: TModelOptions) {
+    const {
+      minValue,
+      maxValue,
+      stepSize,
+      handlerCount,
+      allowReversedValues,
+      handlerInteraction,
+    } = o;
 
     const cannotReverse = !allowReversedValues && minValue > maxValue;
     if (cannotReverse) return;
@@ -206,48 +233,6 @@ class Model extends Subject implements TModel {
     if (hasHandlerCountChanged) this.initValues();
 
     this.setEachValue();
-  }
-
-  private configure(o: TModelOptionsPartial) {
-    const validOptions: TModelOptionsPartial = {};
-
-    const { allowReversedValues } = o;
-    if (typeof allowReversedValues === 'boolean') {
-      this.options.allowReversedValues = allowReversedValues;
-    }
-
-    const { handlerInteraction } = o;
-    if (handlerInteraction && ['block', 'move', 'pass'].includes(handlerInteraction)) {
-      this.options.handlerInteraction = handlerInteraction;
-    }
-
-    // Strip non-numeric entries, save to new object
-    // Mutating existing object will break view configuration
-    Object.keys(o).forEach((key) => {
-      if (Model.isNumber(o[key])) {
-        validOptions[key] = o[key];
-      }
-    });
-
-    const keys = Object.keys(validOptions);
-    const len = keys.length;
-    const firstKey = keys[0];
-    const firstValue = validOptions[firstKey];
-
-    switch (len) {
-      case 1:
-        this.configureSingleOption(firstKey, firstValue as number);
-        break;
-      case 4:
-        this.configureFourOptions(<TModelOptionsNumeric>validOptions);
-        break;
-      default:
-        return this.options;
-    }
-
-    this.notifyObservers(this.values);
-
-    return this.options;
   }
 
   private initValues() {
