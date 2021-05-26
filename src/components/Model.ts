@@ -83,6 +83,8 @@ class Model extends Subject implements TModel {
 
   public setValues(v: number[]) {
     this.values = v;
+
+    this.setEachValue();
   }
 
   private setEachValue() {
