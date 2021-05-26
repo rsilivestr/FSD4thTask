@@ -102,7 +102,8 @@ class Panel implements TPanel {
       const input = <HTMLInputElement>e.target;
       const minValue = parseInt(input.value, 10);
 
-      this.options = this.slider.setConfig({ minValue });
+      this.slider.setConfig({ minValue });
+      this.options = this.slider.getConfig();
       input.value = this.options.minValue.toString(10);
     }
   }
@@ -113,7 +114,8 @@ class Panel implements TPanel {
       const input = <HTMLInputElement>e.target;
       const maxValue = parseInt(input.value, 10);
 
-      this.options = this.slider.setConfig({ maxValue });
+      this.slider.setConfig({ maxValue });
+      this.options = this.slider.getConfig();
       input.value = this.options.maxValue.toString(10);
     }
   }
@@ -124,7 +126,8 @@ class Panel implements TPanel {
       const input = <HTMLInputElement>e.target;
       const stepSize = parseInt(input.value, 10);
 
-      this.options = this.slider.setConfig({ stepSize });
+      this.slider.setConfig({ stepSize });
+      this.options = this.slider.getConfig();
       input.value = this.options.stepSize.toString(10);
     }
   }
@@ -135,10 +138,10 @@ class Panel implements TPanel {
       const input = <HTMLInputElement>e.target;
       const handlerCount = parseInt(input.value, 10);
 
-      this.options = this.slider.setConfig({ handlerCount });
+      this.slider.setConfig({ handlerCount });
+      this.options = this.slider.getConfig();
       input.value = this.options.handlerCount.toString(10);
 
-      // Update showProgress input
       this.UI.configInputs.showProgress.checked = this.options.showProgress;
     }
   }
@@ -148,7 +151,8 @@ class Panel implements TPanel {
     const input = <HTMLInputElement>e.target;
     const isHorizontal = input.checked;
 
-    this.options = this.slider.setConfig({ isHorizontal });
+    this.slider.setConfig({ isHorizontal });
+    this.options = this.slider.getConfig();
     input.checked = this.options.isHorizontal;
   }
 
@@ -157,7 +161,8 @@ class Panel implements TPanel {
     const input = <HTMLInputElement>e.target;
     const showProgress = input.checked;
 
-    this.options = this.slider.setConfig({ showProgress });
+    this.slider.setConfig({ showProgress });
+    this.options = this.slider.getConfig();
     input.checked = this.options.showProgress;
   }
 
@@ -166,7 +171,8 @@ class Panel implements TPanel {
     const input = <HTMLInputElement>e.target;
     const showScale = input.checked;
 
-    this.options = this.slider.setConfig({ showScale });
+    this.slider.setConfig({ showScale });
+    this.options = this.slider.getConfig();
     input.checked = this.options.showScale;
   }
 
@@ -175,7 +181,8 @@ class Panel implements TPanel {
     const input = <HTMLInputElement>e.target;
     const showTooltip = input.checked;
 
-    this.options = this.slider.setConfig({ showTooltip });
+    this.slider.setConfig({ showTooltip });
+    this.options = this.slider.getConfig();
     input.checked = this.options.showTooltip;
   }
 

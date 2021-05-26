@@ -43,10 +43,6 @@ describe('Slider', () => {
     it('Should be a function', () => {
       expect(SLIDER.setConfig).to.be.a('function');
     });
-
-    it('Should return SliderOptions object', () => {
-      expect(SLIDER.setConfig({ minValue: 0 })).to.have.deep.keys(CONFIG_KEYS);
-    });
   });
 
   describe('getValue(index: number): number', () => {
@@ -56,22 +52,20 @@ describe('Slider', () => {
   });
 
   describe('setValue(index: number, value: number): number', () => {
-    it('Should return set value', () => {
-      expect(SLIDER.setValue(0, 20)).to.equal(20);
-    });
-
     it('Should set and return minValue if new value is less than minValue', () => {
       const { minValue } = DEFAULT_CONFIG;
       const value = minValue - 999;
 
-      expect(SLIDER.setValue(0, value)).to.equal(minValue);
+      SLIDER.setValue(0, value);
+      expect(SLIDER.getValue(0)).to.equal(minValue);
     });
 
     it('Should set and return maxValue if new value is greater than maxValue', () => {
       const { maxValue } = DEFAULT_CONFIG;
       const value = maxValue + 999;
 
-      expect(SLIDER.setValue(0, value)).to.equal(maxValue);
+      SLIDER.setValue(0, value);
+      expect(SLIDER.getValue(0)).to.equal(maxValue);
     });
   });
 

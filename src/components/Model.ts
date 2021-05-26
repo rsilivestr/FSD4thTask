@@ -32,7 +32,7 @@ class Model extends Subject implements TModel {
   }
 
   public setConfig(o: TModelOptionsPartial = {}) {
-    return this.configure(o);
+    this.configure(o);
   }
 
   public getValue(index: number) {
@@ -79,13 +79,10 @@ class Model extends Subject implements TModel {
     this.values[index] = val;
 
     this.updateValues(index, val);
-    return val;
   }
 
   public setValues(v: number[]) {
     this.values = v;
-
-    return this.values;
   }
 
   private setEachValue() {
@@ -235,7 +232,6 @@ class Model extends Subject implements TModel {
     const firstKey = keys[0];
     const firstValue = validOptions[firstKey];
 
-    // Allow either 1 or 4 options
     switch (len) {
       case 1:
         this.configureSingleOption(firstKey, firstValue as number);
@@ -328,12 +324,8 @@ class Model extends Subject implements TModel {
         });
         break;
       }
-      case 'pass': {
-        // Do nothing
-        break;
-      }
+      case 'pass':
       default:
-      // Do nothing
     }
 
     this.notifyObservers(this.values);

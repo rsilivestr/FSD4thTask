@@ -48,22 +48,20 @@ export default (container: HTMLElement, options: TSliderOptionsPartial = {}) => 
       return { ...mConfig, ...vConfig };
     },
     setConfig(o: TSliderOptions) {
-      const mConfig = model.setConfig(o);
-      const vConfig = view.setConfig(o);
-
-      return { ...mConfig, ...vConfig };
+      model.setConfig(o);
+      view.setConfig(o);
     },
     getValue(index: number = 0) {
       return model.getValue(index);
     },
     setValue(index: number, value: number) {
-      return model.setValue(index, value);
+      model.setValue(index, value);
     },
     getValues() {
       return model.getValues();
     },
     setValues(v: number[] = []) {
-      return model.setValues(v);
+      model.setValues(v);
     },
     addObserver,
     removeObserver,

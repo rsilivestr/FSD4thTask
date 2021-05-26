@@ -30,16 +30,6 @@ describe('RSPresenter', () => {
     });
   });
 
-  describe('setModelValue(index: number, value: number): number', () => {
-    it('Should return a number', () => {
-      expect(PRESENTER.setModelValue(0, 40)).to.be.a('number');
-    });
-
-    it('Should return a multiple of stepSize', () => {
-      expect(PRESENTER.setModelValue(0, 43)).to.equal(40);
-    });
-  });
-
   describe('update(v: number[]): void', () => {
     it('Should call MODEL.getConfig without argumens', () => {
       const spy = sinon.spy(MODEL, 'getConfig');

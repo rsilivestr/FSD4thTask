@@ -33,35 +33,51 @@ describe('Model', () => {
   });
 
   describe('setConfig(config: ModelOptions): ModelOptions', () => {
-    it('Should return ModelOptions object', () => {
-      expect(MODEL.setConfig({ stepSize: 20 })).to.have.deep.keys(CONFIG_KEYS);
+    it('Should work with sole minValue option provided', () => {
+      MODEL.setConfig({ minValue: 20 });
+      expect(MODEL.getConfig().minValue).to.equal(20);
     });
 
-    it('Should work with single option provided', () => {
-      expect(MODEL.setConfig({ minValue: 20 }).minValue).to.equal(20);
-      expect(MODEL.setConfig({ maxValue: 120 }).maxValue).to.equal(120);
-      expect(MODEL.setConfig({ stepSize: 20 }).stepSize).to.equal(20);
-      expect(MODEL.setConfig({ handlerCount: 2 }).handlerCount).to.equal(2);
+    it('Should work with sole maxValue option provided', () => {
+      MODEL.setConfig({ maxValue: 120 });
+      expect(MODEL.getConfig().maxValue).to.equal(120);
     });
 
-    it('Should not work with 2 or 3 options', () => {
-      expect(MODEL.setConfig({ minValue: 20, maxValue: 120 })).to.eql(DEFAULT_CONFIG);
-      expect(MODEL.setConfig({ minValue: 20, stepSize: 20 })).to.eql(DEFAULT_CONFIG);
-      expect(MODEL.setConfig({ minValue: 20, handlerCount: 3 })).to.eql(DEFAULT_CONFIG);
-      expect(
-        MODEL.setConfig({
-          minValue: 20,
-          maxValue: 120,
-          stepSize: 5,
-        })
-      ).to.eql(DEFAULT_CONFIG);
-      expect(
-        MODEL.setConfig({
-          minValue: 20,
-          maxValue: 120,
-          handlerCount: 4,
-        })
-      ).to.eql(DEFAULT_CONFIG);
+    it('Should work with sole stepSize option provided', () => {
+      MODEL.setConfig({ stepSize: 20 });
+      expect(MODEL.getConfig().stepSize).to.equal(20);
+    });
+
+    it('Should work with sole handlerCount option provided', () => {
+      MODEL.setConfig({ handlerCount: 2 });
+      expect(MODEL.getConfig().handlerCount).to.equal(2);
+    });
+
+    it('Should not work with 2 options provided', () => {
+      MODEL.setConfig({ minValue: 20, maxValue: 120 });
+      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
+
+      MODEL.setConfig({ minValue: 20, stepSize: 20 });
+      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
+
+      MODEL.setConfig({ minValue: 20, handlerCount: 3 });
+      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
+    });
+
+    it('Should not work with 3 options provided', () => {
+      MODEL.setConfig({
+        minValue: 20,
+        maxValue: 120,
+        stepSize: 5,
+      });
+      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
+
+      MODEL.setConfig({
+        minValue: 20,
+        maxValue: 120,
+        handlerCount: 4,
+      });
+      expect(MODEL.getConfig()).to.eql(DEFAULT_CONFIG);
     });
 
     it('Should work with all four options provided', () => {
@@ -73,7 +89,9 @@ describe('Model', () => {
       };
       const { allowReversedValues, handlerInteraction } = MODEL.getConfig();
 
-      expect(MODEL.setConfig(conf)).to.eql({
+      MODEL.setConfig(conf);
+
+      expect(MODEL.getConfig()).to.eql({
         ...conf,
         allowReversedValues,
         handlerInteraction,
@@ -83,18 +101,21 @@ describe('Model', () => {
     it('Should not be able to set minValue = maxValue and vice versa', () => {
       const { minValue, maxValue } = MODEL.getConfig();
 
-      expect(MODEL.setConfig({ maxValue: minValue }).maxValue).to.not.equal(minValue);
-      expect(MODEL.setConfig({ minValue: maxValue }).minValue).to.not.equal(maxValue);
+      MODEL.setConfig({ maxValue: minValue });
+      expect(MODEL.getConfig().maxValue).to.not.equal(minValue);
+
+      MODEL.setConfig({ minValue: maxValue });
+      expect(MODEL.getConfig().minValue).to.not.equal(maxValue);
     });
 
     it('Should not be able to set minValue < maxValue if allowReversedValues is OFF', () => {
-      expect(MODEL.setConfig({ maxValue: -100 }).maxValue).to.equal(100);
+      MODEL.setConfig({ allowReversedValues: false, maxValue: -100 });
+      expect(MODEL.getConfig().maxValue).to.equal(100);
     });
 
     it('Should be able to set minValue < maxValue if allowReversedValues is ON', () => {
-      expect(
-        MODEL.setConfig({ allowReversedValues: true, maxValue: -100 }).maxValue
-      ).to.equal(-100);
+      MODEL.setConfig({ allowReversedValues: true, maxValue: -100 });
+      expect(MODEL.getConfig().maxValue).to.equal(-100);
     });
   });
 
@@ -118,29 +139,18 @@ describe('Model', () => {
   });
 
   describe('setValue(index: number, value: number): number', () => {
-    it('Should return a number', () => {
-      [10, 30, 40, 100].forEach((n) => {
-        expect(MODEL.setValue(0, n)).to.equal(n);
-      });
-    });
-
-    it('Should return a multiple of stepSize', () => {
-      const { minValue, stepSize } = MODEL.getConfig(); // 0, 10
-      [7, 15, 33, 59].forEach((n) => {
-        expect((MODEL.setValue(0, n) - minValue) % stepSize).to.equal(0);
-      });
-    });
-
     it('Shuold set value = minValue if provided value < minValue', () => {
       const { minValue } = MODEL.getConfig();
 
-      expect(MODEL.setValue(0, -999)).to.equal(minValue);
+      MODEL.setValue(0, -999);
+      expect(MODEL.getValue(0)).to.equal(minValue);
     });
 
     it('Should set value = maxValue if provided value > maxValue', () => {
       const { maxValue } = MODEL.getConfig();
 
-      expect(MODEL.setValue(0, 9001)).to.equal(maxValue);
+      MODEL.setValue(0, 9001);
+      expect(MODEL.getValue(0)).to.equal(maxValue);
     });
 
     it('Should change other values so there is a minimum of 1 stepSize between handlers', () => {
@@ -167,12 +177,6 @@ describe('Model', () => {
           'There is no value with such index'
         );
       });
-    });
-  });
-
-  describe('setValues(values: number[]): number[]', () => {
-    it('Should return a number array', () => {
-      expect(MODEL.setValues([80])).to.eql([80]);
     });
   });
 });

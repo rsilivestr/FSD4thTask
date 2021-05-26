@@ -29,7 +29,7 @@ class Presenter implements TPresenter {
   // Invoked on view change (Observer)
   @boundMethod
   public setModelValue(index: number, value: number) {
-    return this.model.setValue(index, value);
+    this.model.setValue(index, value);
   }
 
   // Invoked on model change (Observer)

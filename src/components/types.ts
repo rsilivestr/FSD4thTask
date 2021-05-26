@@ -37,14 +37,14 @@ export type TSlider = {
   removeObserver(o: Function): void;
   getContainer(): HTMLElement;
 
-  setConfig(o: TSliderOptionsPartial): TSliderOptions;
+  setConfig(o: TSliderOptionsPartial): void;
   getConfig(): TSliderOptions;
 
   getValue(index?: number): number;
-  setValue(index: number, value: number): number;
+  setValue(index: number, value: number): void;
 
   getValues(): number[];
-  setValues(values?: number[]): number[];
+  setValues(values?: number[]): void;
 
   rslider(method: string, payload?: any): void;
 };
@@ -78,16 +78,16 @@ export type TModelOptionsPartial = {
 
 export type TModel = TSubject & {
   getConfig(): TModelOptions;
-  setConfig(o?: TModelOptions): TModelOptions;
+  setConfig(o?: TModelOptions): void;
   getValue(index: number): number | null;
   getValues(): number[];
-  setValue(index: number, v: number): number;
-  setValues(v: number[]): number[];
+  setValue(index: number, v: number): void;
+  setValues(v: number[]): void;
 };
 
 export type TPresenter = {
   getValues(): number[];
-  setModelValue(index: number, value: number): number;
+  setModelValue(index: number, value: number): void;
 };
 
 export type TPanel = {

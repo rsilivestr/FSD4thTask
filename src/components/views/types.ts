@@ -86,7 +86,7 @@ export type TViewOptionsPartial = {
 
 export type TView = TSubject & {
   getConfig(): TViewOptions;
-  setConfig(o: TViewOptions): TViewOptions;
-  setModelOptions(o: TModelOptions): TModelOptions;
+  setConfig(o: TViewOptions): void;
+  setModelOptions(o: TModelOptions): void;
   setValues(v: number[]): void;
 };

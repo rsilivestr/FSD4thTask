@@ -17,15 +17,6 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     'showTooltip',
   ];
 
-  const MODEL_KEYS = [
-    'minValue',
-    'maxValue',
-    'stepSize',
-    'handlerCount',
-    'handlerInteraction',
-    'allowReversedValues',
-  ];
-
   const MODEL_DEFAULT_CONFIG: types.TModelOptions = {
     minValue: 0,
     maxValue: 30,
@@ -49,10 +40,8 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
   const VIEW = new View(container, SLIDER_DEFAULTS);
 
   beforeEach(() => {
-    // Re-apply default config
     VIEW.setConfig(VIEW_DEFAULT_CONFIG);
     VIEW.setModelOptions(MODEL_DEFAULT_CONFIG);
-    // Make sure that value(s) is(are) set
     VIEW.setValues([0]);
   });
 
@@ -68,10 +57,6 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
   });
 
   describe('setConfig(o: TViewOptions): TViewOptions', () => {
-    it('Should return TViewOptions object', () => {
-      expect(VIEW.setConfig({})).to.have.deep.keys(CONFIG_KEYS);
-    });
-
     it('Should return changed config values', () => {
       const conf = {
         isHorizontal: false,
@@ -81,7 +66,8 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
         showTooltip: true,
       };
 
-      expect(VIEW.setConfig(conf)).to.eql(conf);
+      VIEW.setConfig(conf);
+      expect(VIEW.getConfig()).to.eql(conf);
     });
 
     it('Should change orientation', () => {
@@ -136,26 +122,6 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     });
   });
 
-  describe('setModelOptions(o: ModelOptions): ModelOptions', () => {
-    it('Should return TModelOptions object', () => {
-      const conf: types.TModelOptions = {
-        minValue: 10,
-        maxValue: 30,
-        stepSize: 5,
-        handlerCount: 2,
-        handlerInteraction: 'block',
-        allowReversedValues: false,
-      };
-
-      const res = VIEW.setModelOptions(conf);
-
-      // Should update values when handlerCount changes
-      VIEW.setValues([10, 25]);
-
-      expect(res).to.have.deep.keys(MODEL_KEYS);
-    });
-  });
-
   describe('onScaleClick(value: number): void', () => {
     let spy: sinon.SinonSpy<any, void>;
 
@@ -177,6 +143,4 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
       spy.should.have.been.calledOnceWith(0, 9);
     });
   });
-
-  // describe('onTrackMousedown(e: MouseEvent): void', () => {});
 });

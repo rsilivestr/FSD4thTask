@@ -57,10 +57,10 @@ class View extends Subject implements TView {
   }
 
   public setConfig(o: TViewOptionsPartial) {
-    return this.configure(o);
+    this.configure(o);
   }
 
-  public setModelOptions(o: TModelOptions): TModelOptions {
+  public setModelOptions(o: TModelOptions): void {
     const {
       minValue,
       maxValue,
@@ -117,8 +117,6 @@ class View extends Subject implements TView {
         allowReversedValues,
       };
     }
-
-    return this.modelOptions;
   }
 
   public onScaleClick(value: number): void {
