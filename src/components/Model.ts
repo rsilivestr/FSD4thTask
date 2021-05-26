@@ -75,8 +75,8 @@ class Model extends Subject implements TModel {
     if (pass) max = maxValue;
 
     const valueIsBelowMin = value * this.directionMod < min * this.directionMod;
-    const closeToMax =
-      max * this.directionMod - ((stepSize - maxDiff) / 2) * this.directionMod;
+    const closeToMax = max * this.directionMod - (stepSize - maxDiff) / 2;
+
     const valueIsCloseToOrAboveMax = value * this.directionMod >= closeToMax;
 
     let val = 0;
