@@ -62,11 +62,6 @@ class Model extends Subject implements TModel {
   }
 
   public setValue(index: number, value: number) {
-    if (Number.isNaN(value)) {
-      this.notifyObservers();
-      return;
-    }
-
     const { minValue, maxValue, stepSize, handlerCount } = this.options;
 
     const pass = this.options.handlerInteraction === 'pass';

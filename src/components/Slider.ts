@@ -55,7 +55,9 @@ export default (container: HTMLElement, options: TSliderOptionsPartial = {}) => 
       return model.getValue(index);
     },
     setValue(index: number, value: number) {
-      model.setValue(index, value);
+      const valid = !Number.isNaN(index) && !Number.isNaN(value);
+
+      if (valid) model.setValue(index, value);
     },
     getValues() {
       return model.getValues();
