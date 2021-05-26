@@ -27,23 +27,26 @@ class Model extends Subject implements TModel {
   }
 
   public setConfig(o: TModelOptionsPartial) {
-    const { allowReversedValues } = o;
-    if (typeof allowReversedValues === 'boolean') {
-      this.options.allowReversedValues = allowReversedValues;
+    if (typeof o.allowReversedValues === 'boolean') {
+      this.options.allowReversedValues = o.allowReversedValues;
     }
 
-    const { handlerInteraction } = o;
-    if (handlerInteraction && ['block', 'move', 'pass'].includes(handlerInteraction)) {
-      this.options.handlerInteraction = handlerInteraction;
+    const isHandlerInteractionValid =
+      o.handlerInteraction !== undefined &&
+      ['block', 'move', 'pass'].includes(o.handlerInteraction);
+    if (isHandlerInteractionValid) {
+      this.options.handlerInteraction = <'block' | 'move' | 'pass'>o.handlerInteraction;
     }
 
-    const numericOptionsCount = Model.countNumericOptions(o);
+    const numericOptionCount = Model.countNumericOptions(o);
 
-    if (numericOptionsCount === 1) {
+    if (numericOptionCount === 1) {
       Object.entries(o).forEach(([key, value]) => {
-        if (Model.isNumber(value)) this.configureSingleOption(key, value);
+        if (Model.isNumber(value)) {
+          this.configureSingleOption(key, <number>value);
+        }
       });
-    } else {
+    } else if (numericOptionCount > 1) {
       this.configureFourOptions({ ...this.options, ...o });
     }
 

@@ -59,8 +59,6 @@ export type TModelOptions = {
 };
 
 export type TModelOptionsPartial = {
-  // Index signature to iterate through Object.keys()
-  [key: string]: any;
   minValue?: number;
   maxValue?: number;
   stepSize?: number;
