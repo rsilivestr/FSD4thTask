@@ -100,8 +100,6 @@ class Model extends Subject implements TModel {
   }
 
   private setEachValue() {
-    if (!this.values) return;
-
     this.values.forEach((value, index) => this.setValue(index, value));
   }
 
