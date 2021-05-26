@@ -1,7 +1,7 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Subject from '@/components/Subject';
-import { TSliderOptions, TModelOptions } from '@/components/types';
+import { TSliderOptionsPartial } from '@/components/types';
 
 import { TScale, TScaleElements } from './types';
 
@@ -10,11 +10,11 @@ class Scale extends Subject implements TScale {
 
   private stepCountLimit: number = 10;
 
-  private options!: TSliderOptions;
+  private options!: TSliderOptionsPartial;
 
   private UI!: TScaleElements;
 
-  constructor(slider: HTMLElement, options: TSliderOptions) {
+  constructor(slider: HTMLElement, options: TSliderOptionsPartial) {
     super();
 
     this.init(slider, options);
@@ -33,8 +33,7 @@ class Scale extends Subject implements TScale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public setConfig(newOptions: TModelOptions): void {
-    // Overwrite current config, can recieve partial config object
+  public setConfig(newOptions: TSliderOptionsPartial): void {
     this.options = { ...this.options, ...newOptions };
 
     this.populateScale();
@@ -42,6 +41,10 @@ class Scale extends Subject implements TScale {
 
   private calcScaleStep(): number {
     const { minValue, maxValue, stepSize } = this.options;
+
+    if (minValue === undefined || maxValue === undefined || stepSize === undefined)
+      return NaN;
+
     const stepCount = Math.abs((maxValue - minValue) / stepSize);
 
     if (stepCount > this.stepCountLimit) {
@@ -72,7 +75,13 @@ class Scale extends Subject implements TScale {
   private populateScale(): HTMLUListElement {
     this.UI.scale.textContent = '';
 
-    const { minValue, maxValue, isHorizontal, handlerRadius } = this.options;
+    const {
+      minValue = 0,
+      maxValue = 100,
+      isHorizontal = true,
+      handlerRadius = 8,
+    } = this.options;
+
     const scaleRange: number = Math.abs(maxValue - minValue);
     const scaleStepSize: number = this.calcScaleStep();
     const isLastStepFull: boolean = !(scaleRange % scaleStepSize);
@@ -117,7 +126,7 @@ class Scale extends Subject implements TScale {
     this.notifyObservers(value);
   }
 
-  private init(slider: HTMLElement, options: TSliderOptions) {
+  private init(slider: HTMLElement, options: TSliderOptionsPartial) {
     this.UI = {
       slider,
       scale: document.createElement('ul'),

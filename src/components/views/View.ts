@@ -56,7 +56,7 @@ class View extends Subject implements TView {
     return this.options;
   }
 
-  public setConfig(o: TViewOptions) {
+  public setConfig(o: TViewOptionsPartial) {
     return this.configure(o);
   }
 

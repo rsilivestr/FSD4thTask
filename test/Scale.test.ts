@@ -4,12 +4,13 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { Scale } from '@/components/views';
+import { TSliderOptionsPartial } from '@/components/types';
 
 chai.use(sinonChai);
 
 describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
   const SLIDER = document.createElement('div');
-  const DEFAULT_CONFIG = {
+  const DEFAULT_CONFIG: TSliderOptionsPartial = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,
@@ -98,7 +99,7 @@ describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
       const markElements = ELEMENT.querySelectorAll('.rscale__mark');
 
       markElements.forEach((mark) => {
-        const value = parseInt(mark.textContent, 10);
+        const value = parseInt(<string>mark.textContent, 10);
 
         mark.dispatchEvent(click);
 

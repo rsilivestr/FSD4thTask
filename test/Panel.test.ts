@@ -7,7 +7,7 @@ import * as types from '@/components/types';
 
 describe('Panel(s: Slider)', () => {
   const CONTAINER = document.createElement('div');
-  const DEFAULT_CONFIG: types.TSliderOptions = {
+  const DEFAULT_CONFIG: types.TSliderOptionsPartial = {
     minValue: 0,
     maxValue: 10,
     stepSize: 1,
@@ -21,14 +21,14 @@ describe('Panel(s: Slider)', () => {
   const SLIDER = createSlider(CONTAINER, DEFAULT_CONFIG);
   const PANEL = new Panel(SLIDER);
   const labels = Array.from(
-    CONTAINER.querySelector('.rslider-panel').querySelectorAll('label')
+    (<HTMLElement>CONTAINER.querySelector('.rslider-panel')).querySelectorAll('label')
   );
   const INPUTS: { [key: string]: HTMLInputElement } = {};
   labels.forEach((label) => {
     const title = label.textContent;
     const input = label.querySelector('input');
 
-    INPUTS[title] = input;
+    if (title && input) INPUTS[title] = input;
   });
   const KEYDOWN_EVENT = new KeyboardEvent('keydown', { key: 'Enter' });
   const CLICK_EVENT = new MouseEvent('click');

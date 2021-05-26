@@ -12,7 +12,8 @@ chai.use(sinonChai);
 const CONTAINER = document.createElement('div');
 
 const MODEL = new Model();
-const VIEW = new View(CONTAINER);
+const modelConfig = MODEL.getConfig();
+const VIEW = new View(CONTAINER, modelConfig);
 const PRESENTER = new Presenter(MODEL, VIEW);
 
 describe('RSPresenter', () => {

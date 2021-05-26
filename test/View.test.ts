@@ -22,14 +22,16 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
     'maxValue',
     'stepSize',
     'handlerCount',
+    'handlerInteraction',
     'allowReversedValues',
   ];
 
-  const MODEL_DEFAULT_CONFIG: types.TSliderOptions = {
+  const MODEL_DEFAULT_CONFIG: types.TModelOptions = {
     minValue: 0,
     maxValue: 30,
     stepSize: 3,
     handlerCount: 1,
+    handlerInteraction: 'block',
     allowReversedValues: false,
   };
 
@@ -135,13 +137,14 @@ describe('View(container: HTMLElement, o: SliderOptions)', () => {
   });
 
   describe('setModelOptions(o: ModelOptions): ModelOptions', () => {
-    it('Should return ModelOptions object', () => {
-      const conf = {
+    it('Should return TModelOptions object', () => {
+      const conf: types.TModelOptions = {
         minValue: 10,
         maxValue: 30,
         stepSize: 5,
         handlerCount: 2,
-        allowReversedValue: false,
+        handlerInteraction: 'block',
+        allowReversedValues: false,
       };
 
       const res = VIEW.setModelOptions(conf);
