@@ -57,13 +57,24 @@ export default (container: HTMLElement, options: TSliderOptionsPartial = {}) => 
     setValue(index: number, value: number) {
       const valid = !Number.isNaN(index) && !Number.isNaN(value);
 
-      if (valid) model.setValue(index, value);
+      if (!valid) return;
+
+      model.setValue(index, value);
     },
     getValues() {
       return model.getValues();
     },
-    setValues(v: number[] = []) {
-      model.setValues(v);
+    setValues(values: number[] = []) {
+      if (!Array.isArray(values)) return;
+
+      const numericValues = values.filter(
+        (value) => typeof value === 'number' && !Number.isNaN(value)
+      );
+      const { handlerCount } = this.getConfig();
+
+      if (numericValues.length !== handlerCount) return;
+
+      model.setValues(values);
     },
     addObserver,
     removeObserver,
