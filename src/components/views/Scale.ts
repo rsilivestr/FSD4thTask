@@ -1,20 +1,20 @@
 import { boundMethod } from 'autobind-decorator';
 
 import Subject from '@/components/Subject';
-import { TSliderOptionsPartial } from '@/components/types';
 
 import { TScale, TScaleElements } from './types';
+import { TSliderOptions } from '../types';
 
 class Scale extends Subject implements TScale {
   private markValues: number[] = [];
 
   private stepCountLimit: number = 10;
 
-  private options!: TSliderOptionsPartial;
+  private options!: Partial<TSliderOptions>;
 
   private UI!: TScaleElements;
 
-  constructor(slider: HTMLElement, options: TSliderOptionsPartial) {
+  constructor(slider: HTMLElement, options: Partial<TSliderOptions>) {
     super();
 
     this.init(slider, options);
@@ -33,7 +33,7 @@ class Scale extends Subject implements TScale {
     this.UI.scale.classList.add(`rscale--layout_${layout}`);
   }
 
-  public setConfig(newOptions: TSliderOptionsPartial): void {
+  public setConfig(newOptions: Partial<TSliderOptions>): void {
     this.options = { ...this.options, ...newOptions };
 
     this.populateScale();
@@ -126,7 +126,7 @@ class Scale extends Subject implements TScale {
     this.notifyObservers(value);
   }
 
-  private init(slider: HTMLElement, options: TSliderOptionsPartial) {
+  private init(slider: HTMLElement, options: Partial<TSliderOptions>) {
     this.UI = {
       slider,
       scale: document.createElement('ul'),

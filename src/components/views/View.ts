@@ -2,12 +2,11 @@ import { boundMethod } from 'autobind-decorator';
 
 import Subject from '@/components/Subject';
 
-import { TModelOptions, TSliderOptions, TSliderOptionsPartial } from '../types';
+import { TModelOptions, TSliderOptions } from '../types';
 import {
   TView,
   TViewChildren,
   TViewOptions,
-  TViewOptionsPartial,
   TViewElements,
   TProgressCoords,
   THandler,
@@ -38,7 +37,7 @@ class View extends Subject implements TView {
 
   private values: number[] = [];
 
-  constructor(container: HTMLElement, o: TSliderOptionsPartial & TModelOptions) {
+  constructor(container: HTMLElement, o: Partial<TSliderOptions> & TModelOptions) {
     super();
 
     this.container = container;
@@ -56,7 +55,7 @@ class View extends Subject implements TView {
     return this.options;
   }
 
-  public setConfig(o: TViewOptionsPartial) {
+  public setConfig(o: Partial<TViewOptions>) {
     this.configure(o);
   }
 
@@ -173,7 +172,7 @@ class View extends Subject implements TView {
     }
   }
 
-  private init(o: TSliderOptionsPartial & TModelOptions): void {
+  private init(o: Partial<TSliderOptions> & TModelOptions): void {
     this.configure(o);
 
     this.setModelOptions(o);
@@ -462,7 +461,7 @@ class View extends Subject implements TView {
     this.children.handlers.forEach((h) => h.toggleLayout(layout));
   }
 
-  private configure(o: TViewOptionsPartial) {
+  private configure(o: Partial<TViewOptions>) {
     const { isHorizontal, handlerRadius, showProgress, showScale, showTooltip } = o;
 
     if (!this.options) this.options = <TViewOptions>{};

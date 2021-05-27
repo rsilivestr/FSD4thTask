@@ -3,11 +3,11 @@ import { expect } from 'chai';
 
 import Panel from '@/components/Panel';
 import createSlider from '@/components/Slider';
-import * as types from '@/components/types';
+import { TSliderOptions } from '@/components/types';
 
 describe('Panel(s: Slider)', () => {
   const CONTAINER = document.createElement('div');
-  const DEFAULT_CONFIG: types.TSliderOptionsPartial = {
+  const DEFAULT_CONFIG: Partial<TSliderOptions> = {
     minValue: 0,
     maxValue: 10,
     stepSize: 1,

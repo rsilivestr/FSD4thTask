@@ -1,5 +1,5 @@
 import Subject from './Subject';
-import { TModel, TModelOptions, TModelOptionsPartial } from './types';
+import { TModel, TModelOptions } from './types';
 
 class Model extends Subject implements TModel {
   private directionMod: 1 | -1 = 1;
@@ -15,7 +15,7 @@ class Model extends Subject implements TModel {
 
   private values: number[] = [];
 
-  constructor(o: TModelOptionsPartial = {}) {
+  constructor(o: Partial<TModelOptions> = {}) {
     super();
 
     this.initValues();
@@ -26,7 +26,7 @@ class Model extends Subject implements TModel {
     return this.options;
   }
 
-  public setConfig(o: TModelOptionsPartial) {
+  public setConfig(o: Partial<TModelOptions>) {
     if (typeof o.allowReversedValues === 'boolean') {
       this.options.allowReversedValues = o.allowReversedValues;
     }
@@ -168,7 +168,7 @@ class Model extends Subject implements TModel {
     }
   }
 
-  static countNumericOptions(o: TModelOptionsPartial): number {
+  static countNumericOptions(o: Partial<TModelOptions>): number {
     let count = 0;
 
     Object.values(o).forEach((value) => {

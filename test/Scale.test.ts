@@ -4,13 +4,13 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import { Scale } from '@/components/views';
-import { TSliderOptionsPartial } from '@/components/types';
+import { TSliderOptions } from '@/components/types';
 
 chai.use(sinonChai);
 
 describe('Scale(container: HTMLElement, o: SliderOptions)', () => {
   const SLIDER = document.createElement('div');
-  const DEFAULT_CONFIG: TSliderOptionsPartial = {
+  const DEFAULT_CONFIG: Partial<TSliderOptions> = {
     minValue: 0,
     maxValue: 100,
     stepSize: 10,

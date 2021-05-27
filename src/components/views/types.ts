@@ -1,4 +1,4 @@
-import { TSubject, TModelOptions, TSliderOptionsPartial } from '@/components/types';
+import { TSubject, TModelOptions, TSliderOptions } from '@/components/types';
 
 export type THandler = {
   getElement(): HTMLElement;
@@ -38,7 +38,7 @@ export type TScaleElements = {
 export type TScale = TSubject & {
   getElement: () => HTMLUListElement;
   toggleLayout: (layout: 'horizontal' | 'vertical') => void;
-  setConfig: (o: TSliderOptionsPartial) => void;
+  setConfig: (o: Partial<TSliderOptions>) => void;
 };
 
 export type TTrackRect = {
@@ -74,14 +74,6 @@ export type TViewOptions = {
   showProgress: boolean;
   showScale: boolean;
   showTooltip: boolean;
-};
-
-export type TViewOptionsPartial = {
-  isHorizontal?: boolean;
-  handlerRadius?: number;
-  showProgress?: boolean;
-  showScale?: boolean;
-  showTooltip?: boolean;
 };
 
 export type TView = TSubject & {

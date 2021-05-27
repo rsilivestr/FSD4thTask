@@ -18,26 +18,12 @@ export type TSliderOptions = {
   showTooltip: boolean;
 };
 
-export type TSliderOptionsPartial = {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-  allowReversedValues?: boolean;
-  handlerInteraction?: 'block' | 'move' | 'pass';
-  isHorizontal?: boolean;
-  handlerRadius?: number;
-  showProgress?: boolean;
-  showScale?: boolean;
-  showTooltip?: boolean;
-};
-
 export type TSlider = {
   addObserver(o: Function): void;
   removeObserver(o: Function): void;
   getContainer(): HTMLElement;
 
-  setConfig(o: TSliderOptionsPartial): void;
+  setConfig(o: Partial<TSliderOptions>): void;
   getConfig(): TSliderOptions;
 
   getValue(index?: number): number;
@@ -58,18 +44,9 @@ export type TModelOptions = {
   handlerInteraction: 'block' | 'move' | 'pass';
 };
 
-export type TModelOptionsPartial = {
-  minValue?: number;
-  maxValue?: number;
-  stepSize?: number;
-  handlerCount?: number;
-  allowReversedValues?: boolean;
-  handlerInteraction?: 'block' | 'move' | 'pass';
-};
-
 export type TModel = TSubject & {
   getConfig(): TModelOptions;
-  setConfig(o: TModelOptionsPartial): void;
+  setConfig(o: Partial<TModelOptions>): void;
   getValue(index: number): number | null;
   getValues(): number[];
   setValue(index: number, v: number): void;
