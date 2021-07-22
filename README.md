@@ -73,7 +73,7 @@ $mySlider.rslider('setConfig', config: SliderOptions): SliderOptions;
   maxValue: 50,                 // number
   stepSize: 20,                 // number
   handlerCount: 1,              // number
-  allowReversedValues: false    // boolean
+  allowReversedValues: false,    // boolean
   handlerInteraction: 'block',  // 'block' | 'pass' | 'move'
 
   // Настройки отображения
