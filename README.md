@@ -2,7 +2,7 @@
 
 ## Live preview
 
-[Netlify](https://peaceful-joliot-362591.netlify.app/demo.html)
+[Netlify](https://confident-newton-e6d4ca.netlify.app/demo.html)
 
 ## Команды
 
