@@ -1,12 +1,14 @@
+@use 'sass:math'
+
 $color_accent: #ffffff
 $color_primary: #fa28c4
-$color_secondary:#4264ca
+$color_secondary: #4264ca
 
 $handlerSize: 16px
 $maxLength: 320px
 $trackThickness: 6px
-$trackSideOffset: ( $handlerSize - $trackThickness ) / 2
-$trackTipOffset: $handlerSize / 2
+$trackSideOffset: math.div($handlerSize - $trackThickness, 2)
+$trackTipOffset: math.div($handlerSize,2)
 
 .rslider *
   box-sizing: border-box
@@ -37,7 +39,7 @@ $trackTipOffset: $handlerSize / 2
 
   &__track
     background-color: lighten($color_secondary, 30 )
-    border-radius: $trackThickness / 2
+    border-radius: math.div($trackThickness, 2)
     bottom: $trackSideOffset
     cursor: pointer
     left: $trackTipOffset
